@@ -1,7 +1,7 @@
-import TextEditor from "@/components/TextEditor"; // @ for proj root, cleaner
+import { Editor } from "@/components/DynamicEditor";
 
 export default function Page() {
     return (
-        <TextEditor/>   
+        <Editor/>   
     );
 }
