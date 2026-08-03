@@ -5,7 +5,7 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  output   = "@/app/generated/prisma"
 }
 
 datasource db {
@@ -13,7 +13,8 @@ datasource db {
 }
 
 model User {
-  id String @id
+  id    String @id
+  pages Page[]
 }
 
 model Page {
@@ -21,5 +22,7 @@ model Page {
   favorite Boolean @default(false)
   title    String  @default("")
   blocks   String
-  user_id  String // FK, to-do
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
 }
