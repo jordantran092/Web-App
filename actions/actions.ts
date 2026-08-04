@@ -2,9 +2,9 @@
 
 import { prisma } from "@/lib/prisma";
 
-export async function updatePage(blocks: string) {
+export async function updatePage(id: string, blocks: string) {
     await prisma.page.update({
-        where: { id: ("one") }, // temp. just { id } when use params
+        where: { id }, 
 
         data: {
             blocks: blocks,
