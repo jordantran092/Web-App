@@ -1,6 +1,6 @@
 // lib/prisma.ts
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
-import { PrismaClient } from "@/app/generated/prisma/client";
+import { PrismaClient } from "@/app/generated/prisma/client"; // default path
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 

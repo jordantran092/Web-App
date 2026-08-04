@@ -8,8 +8,9 @@ import "@blocknote/mantine/style.css";
 import "@blocknote/core/fonts/inter.css";
 
 
-import { updatePage } from "@/actions/actions";
+import { updatePage } from "@/actions/PageActions";
 import { Block, createExtension } from "@blocknote/core";
+import { PageUpdateInput } from "@/app/generated/prisma/models/Page";
 
 
 type EditorProps = {
@@ -36,6 +37,13 @@ export default function Editor({id, initialContent} : EditorProps) {
 
                         const savedBlocks = JSON.stringify(editor.document);
 
+                        
+                        const pageEntity: PageUpdateInput = {
+                            id: id,
+                            blocks: savedBlocks,
+                        };
+
+                        
                         updatePage(id, savedBlocks);
                         
 
