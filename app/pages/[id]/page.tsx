@@ -1,42 +1,38 @@
-import { Editor } from "@/components/DynamicEditor";
 
 import * as PageActions from "@/actions/PageActions";
-import { Block } from "@blocknote/core";
-import type { Page } from "@/app/generated/prisma/client";
+import Page from "@/components/Page";
+import { Block } from "@blocknote/core/blocks";
 
 
-type PageProps = {
+type PagesProps = {
     // the params from the browser url, in this case corresponds to the page id
     params: Promise<{ id: string }>;
 }
 
-export default async function Page({ params } : PageProps) {
+export default async function Pages({ params } : PagesProps) {
+    
+    
 
     const {id} = await params;
 
 
-    /*
-
-    get the relevant page object with id, access blocks, and convert that string into block array
-
-    For loading initial content, seems like we have map the json into array of block objects. That’s similar to object mapper, find that kind of library, don’t think should do it manually
-
-    */
-
+    /* Loading saved blocks */
     const page = await PageActions.getPage(id);
-
-
 
     let initialContent: Block[] = [];
 
     if(page) {
         const blocks = page.blocks;
+        // need initialContent prop as a Block[]
         initialContent = JSON.parse(blocks) as Block[];
     }
 
 
 
     return (
-        <Editor id={id} initialContent={initialContent}/>   
+        <>
+            <Page id={id} initialContent={initialContent}/>
+        </>
+        
     );
 }

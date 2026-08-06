@@ -1,4 +1,4 @@
-"use client";
+
 
 import { useCreateBlockNote, useEditorChange } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
@@ -17,9 +17,10 @@ import { updatePage } from "@/actions/PageActions";
 type EditorProps = {
     id: string,
     initialContent?: Block<any, any, any>[],
+    setIsSaving: (value: boolean) => void;
 }
 
-export default function Editor({id, initialContent} : EditorProps) {
+export default function Editor({id, initialContent, setIsSaving} : EditorProps) {
     // Create a new editor instance
     const editor = useCreateBlockNote({
 
@@ -45,7 +46,14 @@ export default function Editor({id, initialContent} : EditorProps) {
                         };
 
                         
-                        updatePage(pageEntity);
+                        setIsSaving(true);
+                        updatePage(pageEntity)
+                            .then(_ => {
+                                setIsSaving(false);
+                            })
+                            .catch((error) => {
+                                console.log("Error: Page updated failed. " + error);
+                            })
                         
 
                         return true; // tell BlockNote the shortcut was handled, so that browser does not try to handle it with default response
