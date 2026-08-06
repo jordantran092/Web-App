@@ -1,24 +1,24 @@
 "use server";
 
-import { PageUpdateInput } from "@/app/generated/prisma/models/Page";
-import { prisma } from "@/lib/prisma";
+
+import * as PageService from "@/services/PageService";
+import { PageUpdateInput } from "@/types/Page";
 
 
-// export async function updatePage(id: string, blocks: string) {
-export async function updatePage(pageEntity: PageUpdateInput) {
 
-    const id: string = pageEntity.id?
-
-    const blocks: string = pageEntity.blocks?
-
+// Controller method for updating page
+export async function updatePage({ id, ...data } : PageUpdateInput) {
     
+    // auth for later
 
-    await prisma.page.update({
-        where: { id }, 
+    PageService.updatePage( {id, ...data} );
+    
+}
 
-        data: {
-            blocks: blocks,
-        },
+export async function getPage(id: string) {
+    
+    // auth for later
 
-    });
+    return PageService.getPage(id);
+    
 }

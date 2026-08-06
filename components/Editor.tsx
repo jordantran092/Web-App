@@ -8,9 +8,10 @@ import "@blocknote/mantine/style.css";
 import "@blocknote/core/fonts/inter.css";
 
 
-import { updatePage } from "@/actions/PageActions";
+
 import { Block, createExtension } from "@blocknote/core";
-import { PageUpdateInput } from "@/app/generated/prisma/models/Page";
+import { PageUpdateInput } from "@/types/Page";
+import { updatePage } from "@/actions/PageActions";
 
 
 type EditorProps = {
@@ -44,7 +45,7 @@ export default function Editor({id, initialContent} : EditorProps) {
                         };
 
                         
-                        updatePage(id, savedBlocks);
+                        updatePage(pageEntity);
                         
 
                         return true; // tell BlockNote the shortcut was handled, so that browser does not try to handle it with default response
