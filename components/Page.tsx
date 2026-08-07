@@ -11,7 +11,9 @@ import { useState } from "react";
 import NavBar from "./NavBar";
 import { Editor } from "@/components/DynamicEditor";
 
+// Need Page component to share isSaving stateful variable with navbar and editor
 export default function Page({id, initialContent} : PageProps) {
+
 
     // need state variable here in this parent component so that it can be shared between navbar and editor to handle saving indicator
     const [isSaving, setIsSaving] = useState(false);
