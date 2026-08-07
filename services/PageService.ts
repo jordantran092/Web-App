@@ -1,7 +1,7 @@
 "use server";
 
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma"; // single prisma client generated from the prisma.ts file
 import { PageUpdateInput } from "@/types/Page";
 
 

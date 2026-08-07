@@ -4,7 +4,13 @@ import { PrismaClient } from "@/app/generated/prisma/client"; // default path
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-const adapter = new PrismaBetterSqlite3({ url: process.env.DATABASE_URL });
+const databaseUrl = process.env.DATABASE_URL;
+
+if (!databaseUrl) {
+  throw new Error("DATABASE_URL is not set");
+}
+
+const adapter = new PrismaBetterSqlite3({ url: databaseUrl });
 export const prisma = globalForPrisma.prisma || new PrismaClient({adapter: adapter}); // passing in object that has property adapter using your adapter var
    
 
