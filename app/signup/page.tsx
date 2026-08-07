@@ -1,5 +1,7 @@
 import { signUp } from "@/actions/AuthActions";
 
+// change to authactions.signup
+
 
 export default function SignUpPage() {
     
