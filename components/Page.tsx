@@ -1,4 +1,4 @@
-"use client";
+"use client"; // because need stateful variable
 
 
 type PageProps = {
