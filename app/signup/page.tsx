@@ -12,12 +12,16 @@ export default function SignUpPage() {
             <label>Enter your email:
                 <input type="text" name="email" required />
             </label>
+            <br/>
             <label>Enter your password:
-                <input type="text" name="password" required />
+                <input type="password" name="password" required />
             </label>
+            <br/>
             <label>Enter your name:
                 <input type="text" name="name" required />
             </label>
+            <br/>
+            <button>Submit</button>
         </form>
     );
 }
