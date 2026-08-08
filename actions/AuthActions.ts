@@ -40,7 +40,7 @@ export async function signIn(formData : FormData) {
 
 export async function signOut() {
     auth.api.signOut({
-        headers: await headers(), // to provide header data which will be used to help server know which user to invalidate their session, from the incoming HTTP request for this server action, provided by nextjs function
+        headers: await headers(), // to provide header data which will be used to help server know which user to invalidate their session, this server action is like an API endpoint that when called involves an HTTP incoming request that contains authorization headers, retrieved by this nextjs function
     });
 
     redirect("/");

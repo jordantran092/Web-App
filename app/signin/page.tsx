@@ -3,12 +3,12 @@ import * as AuthActions from "@/actions/AuthActions";
 
 
 
-export default function SignUpPage() {
+export default function SignInPage() {
     
 
 
     return (
-        <form action={AuthActions.signUp}>
+        <form action={AuthActions.signIn}>
             <label>Enter your email:
                 <input type="text" name="email" required />
             </label>
@@ -17,9 +17,6 @@ export default function SignUpPage() {
                 <input type="password" name="password" required />
             </label>
             <br/>
-            <label>Enter your name:
-                <input type="text" name="name" required />
-            </label>
             <br/>
             <button>Submit</button>
         </form>
