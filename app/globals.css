@@ -1,8 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --background: #ffffff;
+  --foreground: #171717; */
+
+  /* Keep */
+  --background: #1f1f1f; /* same color as text editor */
+  --foreground: #ededed;
+
+  
 }
 
 @theme inline {
@@ -12,12 +18,23 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/*
+Force color to be the same as top
+
 @media (prefers-color-scheme: dark) {
   :root {
+
+
+    //Defaults
     --background: #0a0a0a;
+    --foreground: #ededed; 
+
+
+    --background: #1f1f1f;
     --foreground: #ededed;
   }
 }
+*/
 
 body {
   background: var(--background);

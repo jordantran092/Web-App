@@ -9,9 +9,11 @@ import "@blocknote/core/fonts/inter.css";
 
 
 
+
 import { Block, createExtension } from "@blocknote/core";
 import { PageUpdateInput } from "@/types/Page";
 import { updatePage } from "@/actions/PageActions";
+import "@/styles.css";
 
 
 type EditorProps = {
@@ -67,5 +69,6 @@ export default function Editor({id, initialContent, setIsSaving} : EditorProps) 
 
 
     // Render the editor
-    return <BlockNoteView editor={editor} />;
+    // For responsiveness, mobile screens take full width hence no breakpoint
+    return <BlockNoteView editor={editor} theme={"dark"} className="md:mx-32 xl:mx-70" />; 
 }

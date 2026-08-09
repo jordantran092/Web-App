@@ -44,8 +44,8 @@ export default async function Pages({ params } : PagesProps) {
         
         const blocks = page.blocks; 
 
-        // need initialContent prop as a Block[]
-        initialContent = JSON.parse(blocks) as Block[];
+        // need initialContent prop as a Block[]. Null checking to avoid JSON parse gives error
+        if(blocks) initialContent = JSON.parse(blocks) as Block[];
     
 
 
