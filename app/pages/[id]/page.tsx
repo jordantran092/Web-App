@@ -18,53 +18,45 @@ export default async function Pages({ params } : PagesProps) {
     const {id} = await params;
     const page = await PageActions.getPage(id);
 
+    if(!page) return notFound();
 
-    if(page) {
-    
-        
-        /* Auth Check to see if user owns this page */
-        const session = await auth.api.getSession({
-            headers: await headers(),
-        });
-
-
-        if(session) {
-
-            const userId = session.user.id;
-    
-            if(page.userId == userId) {
-
-                /* Loading saved blocks */
             
-        
-                let initialContent: Block[] = [];
-        
-                
-                const blocks = page.blocks; //fixme SADF82349823984
-                // need initialContent prop as a Block[]
-                initialContent = JSON.parse(blocks) as Block[];
-            
-        
-        
-        
-                return (
-                    <>
-                        <Page id={id} initialContent={initialContent}/>
-                    </>
-                    
-                );
-            }
-    
-        }
+    /* Auth Check to see if user owns this page */
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
 
+    // Not logged in to any account / no session
+    if(!session) return notFound();
+
+
+    const userId = session.user.id;
+
+    if(page.userId == userId) {
+
+        // User is authenticated
+
+        /* Loading saved blocks */
+    
+
+        let initialContent: Block[] = [];
+
+        
+        const blocks = page.blocks; 
+
+        // need initialContent prop as a Block[]
+        initialContent = JSON.parse(blocks) as Block[];
+    
+
+
+
+        return (
+            <>
+                <Page id={id} initialContent={initialContent}/>
+            </>
+            
+        );
     }
-
-
-    
-    return (
-        notFound()
-    );
-
 
    
 }

@@ -66,26 +66,6 @@ export default function Editor({id, initialContent, setIsSaving} : EditorProps) 
 
 
 
-    // useEditorChange((editor) => {
-    //     // The current document content as a string
-    //     const savedBlocks = JSON.stringify(editor.document);
-
-    //     // storeToDB(savedBlocks);
-    //     /*
-        
-    //     putting arrow function to be async for now
-
-    //     temp for now, just testing out saving. may do like a delayed save for better performance
-
-    //     */
-
-    //     // updatePage(savedBlocks);
-
-
-
-    // }, editor);
-
-
     // Render the editor
     return <BlockNoteView editor={editor} />;
 }
