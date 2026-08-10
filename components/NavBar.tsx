@@ -15,6 +15,7 @@ export default function NavBar({ isSaving }: NavBarProps) {
             {/* put back when finished */}
             {/* {isSaving && <p>Saving...</p>} */}
 
+            {/* flex to align items inline, and gap to give some space between the 2 items */}
             <div className="flex gap-2">
                 <div className="mt-1">
                     <LoadingSpinner />
