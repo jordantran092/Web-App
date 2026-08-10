@@ -15,6 +15,8 @@ export default function NavBar({isSaving} : NavBarProps) {
         <>
             {isSaving && <p>Saving...</p>}
 
+    
+
         </>
     );
 }
