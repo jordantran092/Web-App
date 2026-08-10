@@ -1,22 +1,28 @@
-"use client";
+'use client';
 
+import LoadingSpinner from './LoadingSpinner';
 
 type NavBarProps = {
     isSaving: boolean;
-}
+};
 
-export default function NavBar({isSaving} : NavBarProps) {
-    
-
+export default function NavBar({ isSaving }: NavBarProps) {
     /* debugging */
-    if(isSaving) console.log("Saving")
+    if (isSaving) console.log('Saving');
 
     return (
         <>
-            {isSaving && <p>Saving...</p>}
+            {/* put back when finished */}
+            {/* {isSaving && <p>Saving...</p>} */}
 
-    
-
+            <div className="flex gap-2">
+                <div className="mt-1">
+                    <LoadingSpinner />
+                </div>
+                <div className="mt-1">
+                    <p className="text-sm">Saving...</p>
+                </div>
+            </div>
         </>
     );
 }
