@@ -1,4 +1,4 @@
-import * as PageActions from '@/actions/PageActions';
+import * as PageService from '@/services/PageService';
 import Page from '@/components/Page';
 import { auth } from '@/lib/auth';
 import { Block } from '@blocknote/core/blocks';
@@ -20,30 +20,19 @@ export default async function Pages({ params }: PagesProps) {
     if (!session) return notFound();
 
     const { id } = await params;
-    const page = await PageActions.getPage(id);
-
-    if (!page) return notFound();
-
-    /* Auth Check to see if user owns this page */
-
-    const userId = session.user.id;
-
-    if (page.userId == userId) {
-        // User is authenticated
-
-        /* Loading saved blocks */
-
-        let initialContent: Block[] = [];
-
-        const blocks = page.blocks;
-
-        // need initialContent prop as a Block[]. Null checking to avoid JSON parse gives error
-        if (blocks) initialContent = JSON.parse(blocks) as Block[];
-
-        return (
-            <>
-                <Page id={id} initialContent={initialContent} />
-            </>
-        );
+    let initialContent: Block[] = [];
+    try {
+        initialContent = await PageService.getContentOfPage(session, id);
+    } catch (error: any) {
+        if (error.message === 'NOT_FOUND' || error.message === 'UNAUTHORIZED') {
+            console.log(error.message);
+            return notFound();
+        }
     }
+
+    return (
+        <>
+            <Page id={id} initialContent={initialContent} />
+        </>
+    );
 }
