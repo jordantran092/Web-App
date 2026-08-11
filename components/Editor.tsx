@@ -8,6 +8,7 @@ import '@blocknote/core/fonts/inter.css';
 import { Block, createExtension } from '@blocknote/core';
 import { PageUpdateInput } from '@/types/Page';
 import { updatePage } from '@/actions/PageActions';
+import { useEffect, useRef } from 'react';
 
 type EditorProps = {
     id: string;
@@ -26,6 +27,25 @@ export default function Editor({
     isSavingTimerOn,
     setIsSavingTimerOn,
 }: EditorProps) {
+    /*
+
+    Stale closure with the `'Mod-s': ({ editor }) => {` closure captures isSaving, etc. at that time, never re-built from BlockNote, so it doesn't get updated. Basically call by value with a variable value, instead of call by value with a reference (useRef) so you can access updated values
+
+    Still need state (e.g. isSaving) to trigger re-render
+
+    */
+    const isSavingRef = useRef(isSaving);
+    const isSavingTimerOnRef = useRef(isSavingTimerOn);
+
+    // Keep refs in sync with incoming prop state even though handler does too in a diff way (in case for other external updates when parent component passes in new props e.g. maybe autosave)
+    useEffect(() => {
+        isSavingRef.current = isSaving;
+    }, [isSaving]);
+
+    useEffect(() => {
+        isSavingTimerOnRef.current = isSavingTimerOn;
+    }, [isSavingTimerOn]);
+
     // Create a new editor instance
     const editor = useCreateBlockNote({
         initialContent,
@@ -39,7 +59,7 @@ export default function Editor({
                 keyboardShortcuts: {
                     'Mod-s': ({ editor }) => {
                         // do not allow saving if already in process of saving to avoid any desync of values
-                        if (!(isSaving || isSavingTimerOn)) {
+                        if (!(isSavingRef.current || isSavingTimerOnRef.current)) {
                             const savedBlocks = JSON.stringify(editor.document);
 
                             const pageEntity: PageUpdateInput = {
@@ -47,15 +67,25 @@ export default function Editor({
                                 blocks: savedBlocks,
                             };
 
-                            console.log('timer: ' + isSavingTimerOn);
+                            // update refs immediately so any subsequent fast events see the in-flight save
+                            isSavingRef.current = true;
+                            isSavingTimerOnRef.current = true;
+
+                            // still update parent state for UI
+                            // console.log('timer: ' + isSavingTimerOn);
                             setIsSaving(true);
                             setIsSavingTimerOn(true);
+
                             updatePage(pageEntity)
-                                .then((_) => {
-                                    setIsSaving(false);
-                                })
+                                // catch to handle error first so it doesn't propgate further
                                 .catch((error) => {
                                     console.log('Error: Page updated failed. ' + error);
+                                })
+                                // regardless of fail or success update, make sure variables are reset
+                                .finally(() => {
+                                    // clear ref + parent state when done
+                                    isSavingRef.current = false;
+                                    setIsSaving(false);
                                 });
 
                             console.log('saving!');
@@ -80,81 +110,4 @@ export default function Editor({
             className="mt-10 md:mx-32 md:mt-20 xl:mx-70 2xl:mx-132 2xl:mt-36"
         />
     );
-}
-
-//-----
-import { useCallback, useEffect, useRef } from 'react';
-import { PageUpdateInput } from '@/types/Page';
-import { updatePage } from '@/actions/PageActions';
-
-type UseEditorSaveGuardParams = {
-    id: string;
-    setIsSaving: (value: boolean) => void;
-    isSaving: boolean;
-    isSavingTimerOn: boolean;
-    setIsSavingTimerOn: (value: boolean) => void;
-};
-
-// Hook that provides a stable keyboard shortcut handler which uses refs
-// internally to avoid stale closure reads of isSaving/isSavingTimerOn.
-export default function useEditorSaveGuard({
-    id,
-    setIsSaving,
-    isSaving,
-    isSavingTimerOn,
-    setIsSavingTimerOn,
-}: UseEditorSaveGuardParams) {
-    const isSavingRef = useRef(isSaving);
-    const isSavingTimerOnRef = useRef(isSavingTimerOn);
-
-    // Keep refs in sync with incoming prop state (for external updates)
-    useEffect(() => {
-        isSavingRef.current = isSaving;
-    }, [isSaving]);
-
-    useEffect(() => {
-        isSavingTimerOnRef.current = isSavingTimerOn;
-    }, [isSavingTimerOn]);
-
-    // Returns a handler suitable for BlockNote keyboardShortcuts, e.g.:
-    // { 'Mod-s': saveShortcutHandler }
-    const getSaveShortcutHandler = useCallback(() => {
-        return ({ editor }: { editor: any }) => {
-            // Read/writes to refs are synchronous and avoid stale closures.
-            if (!(isSavingRef.current || isSavingTimerOnRef.current)) {
-                const savedBlocks = JSON.stringify(editor.document);
-
-                const pageEntity: PageUpdateInput = {
-                    id: id,
-                    blocks: savedBlocks,
-                };
-
-                // update refs immediately so any subsequent fast events see the in-flight save
-                isSavingRef.current = true;
-                isSavingTimerOnRef.current = true;
-
-                // still update parent state for UI
-                setIsSaving(true);
-                setIsSavingTimerOn(true);
-
-                updatePage(pageEntity)
-                    .then((_) => {
-                        // clear ref + parent state when done
-                        isSavingRef.current = false;
-                        setIsSaving(false);
-                    })
-                    .catch((error) => {
-                        console.log('Error: Page updated failed. ' + error);
-                    });
-
-                console.log('saving!');
-            } else {
-                console.log('already saving!');
-            }
-
-            return true; // indicate the shortcut was handled
-        };
-    }, [id, setIsSaving, setIsSavingTimerOn]);
-
-    return { getSaveShortcutHandler };
 }

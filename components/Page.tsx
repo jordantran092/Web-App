@@ -19,7 +19,6 @@ export default function Page({ id, initialContent }: PageProps) {
     return (
         <>
             {(isSaving || isSavingTimerOn) && (
-                // remove setissavingtimeron prop if no longer need
                 <SavingIndicator setIsSavingTimerOn={setIsSavingTimerOn} />
             )}
 

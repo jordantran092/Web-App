@@ -15,6 +15,7 @@ export default function SavingIndicator({ setIsSavingTimerOn }: SavingIndicatorP
         }, 5000);
 
         // Cleanup function to clear the timer if component unmounts
+        // clearTimeout is a closure on timer, so timer will still live on until cleanup function finishes
         return () => clearTimeout(timer);
     }, []); // Empty array ensures this runs only once on mount
 
