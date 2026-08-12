@@ -1,3 +1,5 @@
+// client side as used by dynamiceditor component
+
 import { useCreateBlockNote, useEditorChange } from '@blocknote/react';
 import { BlockNoteView } from '@blocknote/mantine';
 // Default styles for the mantine editor

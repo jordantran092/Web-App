@@ -20,12 +20,18 @@ export default async function Pages({ params }: PagesProps) {
     // Not logged in to any account / no session
     if (!session) return notFound();
 
+    // Check if page exist as early as possible to avoid going deeper
     const { id } = await params;
+    const page = await PageService.getPage(id);
+    if (!page) {
+        return notFound();
+    }
+
     let initialContent: Block[] = [];
     try {
         initialContent = await PageService.getContentOfPage(session, id);
     } catch (error: any) {
-        if (error.message === ERROR.NOT_FOUND || error.message === ERROR.UNAUTHORIZED) {
+        if (error.message === ERROR.UNAUTHORIZED) {
             return notFound();
         }
     }
