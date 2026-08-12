@@ -1,11 +1,8 @@
 'use server';
 
-import { auth, Session } from '@/lib/auth';
-import { prisma } from '@/lib/prisma'; // single prisma client generated from the prisma.ts file
-import { PageUpdateInput } from '@/types/Page';
-import { Block } from '@blocknote/core/blocks';
-import * as ERROR from '@/utils/constants';
-import { forbidden, redirect, unauthorized } from 'next/navigation';
+import { auth } from '@/lib/auth';
+import { redirect } from 'next/navigation';
+import { headers } from 'next/headers';
 
 export async function signUp(formData: FormData) {
     const email = formData.get('email') as string;
@@ -23,4 +20,25 @@ export async function signUp(formData: FormData) {
     redirect('/');
 }
 
+export async function signIn(formData: FormData) {
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    await auth.api.signInEmail({
+        body: {
+            email,
+            password,
+        },
+    });
+
+    redirect('/');
+}
+
+export async function signOut() {
+    auth.api.signOut({
+        headers: await headers(), // to provide header data which will be used to help server know which user to invalidate their session, this server action is like an API endpoint that when called involves an HTTP incoming request that contains authorization headers, retrieved by this nextjs function
+    });
+
+    redirect('/');
+}
 /* Helper Methods */
