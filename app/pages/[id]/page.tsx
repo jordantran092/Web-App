@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth';
 import { Block } from '@blocknote/core/blocks';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
+import * as ERROR from '@/utils/constants';
 
 type PagesProps = {
     // the params from the browser url, in this case corresponds to the page id
@@ -24,8 +25,7 @@ export default async function Pages({ params }: PagesProps) {
     try {
         initialContent = await PageService.getContentOfPage(session, id);
     } catch (error: any) {
-        if (error.message === 'NOT_FOUND' || error.message === 'UNAUTHORIZED') {
-            console.log(error.message);
+        if (error.message === ERROR.NOT_FOUND || error.message === ERROR.UNAUTHORIZED) {
             return notFound();
         }
     }
