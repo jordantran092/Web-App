@@ -5,8 +5,13 @@ import { prisma } from '@/lib/prisma'; // single prisma client generated from th
 import { PageUpdateInput } from '@/types/Page';
 import { Block } from '@blocknote/core/blocks';
 import * as ERROR from '@/utils/constants';
+import { forbidden } from 'next/navigation';
 
-export async function updatePage({ id, ...data }: PageUpdateInput) {
+export async function updatePage({ id, ...data }: PageUpdateInput, session: Session) {
+    if (!(await doesUserOwnPage(session, id))) {
+        return forbidden();
+    }
+
     await prisma.page.update({
         where: { id },
 
@@ -21,6 +26,12 @@ export async function getPage(id: string) {
     });
 }
 
+// export async function isPageExist(id: string) {
+//     const page = await getPage(id);
+
+//     return page ? true : false;
+// }
+
 export async function getContentOfPage(session: Session, id: string) {
     const page = await getPage(id);
 
@@ -28,14 +39,10 @@ export async function getContentOfPage(session: Session, id: string) {
         throw new Error(ERROR.NOT_FOUND);
     }
 
-    /* Auth Check to see if user owns this page */
-
-    const userId = session.user.id;
-
     let initialContent: Block[] = [];
 
-    if (page.userId == userId) {
-        console.log('authorized');
+    /* Business level authorization check to see if user owns this page */
+    if (await doesUserOwnPage(session, id)) {
         // User is authorized
 
         /* Loading saved blocks */
@@ -49,4 +56,13 @@ export async function getContentOfPage(session: Session, id: string) {
     }
 
     return initialContent;
+}
+
+/* Helper Methods */
+
+async function doesUserOwnPage(session: Session, id: string) {
+    const page = await getPage(id);
+    const userId = session.user.id;
+
+    return page?.userId == userId ? true : false;
 }
