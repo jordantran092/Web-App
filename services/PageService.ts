@@ -4,6 +4,7 @@ import { Session } from '@/lib/auth';
 import { prisma } from '@/lib/prisma'; // single prisma client generated from the prisma.ts file
 import { PageUpdateInput } from '@/types/Page';
 import { Block } from '@blocknote/core/blocks';
+import * as ERROR from '@/utils/constants';
 
 export async function updatePage({ id, ...data }: PageUpdateInput) {
     await prisma.page.update({
@@ -24,7 +25,7 @@ export async function getContentOfPage(session: Session, id: string) {
     const page = await getPage(id);
 
     if (!page) {
-        throw new Error('NOT_FOUND');
+        throw new Error(ERROR.NOT_FOUND);
     }
 
     /* Auth Check to see if user owns this page */
@@ -44,7 +45,7 @@ export async function getContentOfPage(session: Session, id: string) {
         // need initialContent prop as a Block[]. Null checking to avoid JSON parse gives error
         if (blocks) initialContent = JSON.parse(blocks) as Block[];
     } else {
-        throw new Error('UNAUTHORIZED');
+        throw new Error(ERROR.UNAUTHORIZED);
     }
 
     return initialContent;
