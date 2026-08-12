@@ -3,7 +3,7 @@ import Page from '@/components/Page';
 import { auth } from '@/lib/auth';
 import { Block } from '@blocknote/core/blocks';
 import { headers } from 'next/headers';
-import { notFound } from 'next/navigation';
+import { forbidden, notFound } from 'next/navigation';
 import * as ERROR from '@/utils/constants';
 
 type PagesProps = {
@@ -22,7 +22,7 @@ export default async function Pages({ params }: PagesProps) {
 
     // Check if page exist as early as possible to avoid going deeper
     const { id } = await params;
-    const page = await PageService.getPage(id);
+    const page = await PageService.getPage(id, session);
     if (!page) {
         return notFound();
     }
@@ -32,7 +32,7 @@ export default async function Pages({ params }: PagesProps) {
         initialContent = await PageService.getContentOfPage(session, id);
     } catch (error: any) {
         if (error.message === ERROR.UNAUTHORIZED) {
-            return notFound();
+            return forbidden();
         }
     }
 

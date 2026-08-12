@@ -6,7 +6,8 @@ import { PageUpdateInput } from '@/types/Page';
 import { headers } from 'next/headers';
 import { notFound, unauthorized } from 'next/navigation';
 
-// Controller method for updating page
+/* Controller-like methods */
+
 export async function updatePage({ id, ...data }: PageUpdateInput) {
     // Check if any valid session / logged in
     const session = await auth.api.getSession({
@@ -14,7 +15,7 @@ export async function updatePage({ id, ...data }: PageUpdateInput) {
     });
     if (!session) return unauthorized(); // next.js treats this as unauthenticated / not logged in
 
-    const page = await PageService.getPage(id);
+    const page = await PageService.getPage(id, session);
     if (!page) {
         return notFound();
     }
@@ -23,7 +24,11 @@ export async function updatePage({ id, ...data }: PageUpdateInput) {
 }
 
 export async function getPage(id: string) {
-    // auth for later
+    // Check if any valid session / logged in
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+    if (!session) return unauthorized();
 
-    return PageService.getPage(id);
+    return PageService.getPage(id, session);
 }

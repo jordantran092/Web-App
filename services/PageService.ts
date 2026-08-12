@@ -19,7 +19,11 @@ export async function updatePage({ id, ...data }: PageUpdateInput, session: Sess
     });
 }
 
-export async function getPage(id: string) {
+export async function getPage(id: string, session: Session) {
+    if (!(await doesUserOwnPage(session, id))) {
+        return forbidden();
+    }
+
     // async function will wrap return in a promise again, so await here will be useless
     return prisma.page.findUnique({
         where: { id },
@@ -33,7 +37,7 @@ export async function getPage(id: string) {
 // }
 
 export async function getContentOfPage(session: Session, id: string) {
-    const page = await getPage(id);
+    const page = await getPage(id, session);
 
     if (!page) {
         throw new Error(ERROR.NOT_FOUND);
@@ -61,7 +65,11 @@ export async function getContentOfPage(session: Session, id: string) {
 /* Helper Methods */
 
 async function doesUserOwnPage(session: Session, id: string) {
-    const page = await getPage(id);
+    // Do not re-use getPage or else, self looping
+    const page = await prisma.page.findUnique({
+        where: { id },
+    });
+
     const userId = session.user.id;
 
     return page?.userId == userId ? true : false;
