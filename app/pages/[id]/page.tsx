@@ -18,7 +18,7 @@ export default async function Pages({ params }: PagesProps) {
     });
 
     // Not logged in to any account / no session
-    if (!session) return notFound();
+    if (!session) return forbidden();
 
     // Check if page exist as early as possible to avoid going deeper
     const { id } = await params;

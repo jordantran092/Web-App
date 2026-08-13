@@ -13,7 +13,7 @@ export async function signUp(formData: FormData) {
     if (session) return forbidden();
 
     // If not logged in, allow sign up
-    AuthService.signUp(formData);
+    await AuthService.signUp(formData); // must have await or else next.js won't be able to receive the redirect exception within the promise
 }
 
 export async function signIn(formData: FormData) {
@@ -24,7 +24,7 @@ export async function signIn(formData: FormData) {
     if (session) return forbidden();
 
     // If not logged in, allow sign in
-    AuthService.signIn(formData);
+    await AuthService.signIn(formData);
 }
 
 export async function signOut() {
@@ -35,5 +35,5 @@ export async function signOut() {
     if (!session) return unauthorized();
 
     // If logged in, allow sign out
-    AuthService.signOut();
+    await AuthService.signOut();
 }
