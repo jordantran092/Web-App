@@ -12,6 +12,8 @@
     "@blocknote/core": "^0.52.1",
     "@blocknote/mantine": "^0.52.1",
     "@blocknote/react": "^0.52.1",
+    "@heroui/react": "^3.2.4",
+    "@heroui/styles": "^3.2.4",
     "@mantine/core": "^9.5.0",
     "@mantine/hooks": "^9.5.0",
     "@mantine/utils": "^6.0.22",
@@ -36,5 +38,4 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   }
-
 }
