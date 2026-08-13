@@ -8,8 +8,8 @@
     /* --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0); */
 
-    /*#1f1f1f;*/
-    --background: #454545;
+    /**/
+    --background: #1f1f1f;
     --foreground: oklch(0.985 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
