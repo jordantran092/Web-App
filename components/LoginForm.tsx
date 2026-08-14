@@ -6,56 +6,35 @@ import { Input } from '@/components/ui/input';
 import * as AuthActions from '@/actions/AuthActions';
 import Link from 'next/link';
 
-/*
-className → customize the styling
-
-...props → allow normal HTML props
-
-ComponentProps<'div'> → TypeScript knows which props are valid
-
-cn() → combine/resolve Tailwind classes
-
-*/
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
+    // Props come from parent component div and only accepts div attributes, also pulling the className
     return (
+        // Merge these hardcoded classes with the prop tailwind classes from args, and transfer over the parent's props
         <div className={cn('flex flex-col gap-6', className)} {...props}>
             <form action={AuthActions.signIn}>
                 <FieldGroup>
                     <Field>
-                        {/* <FieldLabel htmlFor="email">Email</FieldLabel> */}
                         <Input
                             id="email"
                             type="email"
                             placeholder="Email"
                             name="email"
                             required
-                            className="bg-white"
+                            className="bg-white text-black"
                         />
                     </Field>
                     <Field>
-                        <div className="flex items-center">
-                            {/* <FieldLabel htmlFor="password">Password</FieldLabel> */}
-                            {/* <a
-                                        href="#"
-                                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
-                                        Forgot your password?
-                                    </a> */}
-                        </div>
                         <Input
                             id="password"
                             type="password"
                             name="password"
                             placeholder="Password"
                             required
-                            className="bg-white"
+                            className="bg-white text-black"
                         />
                     </Field>
                     <Field className="mt-10">
                         <Button type="submit">Log in</Button>
-
-                        {/* <FieldDescription className="text-center">
-                                    Don&apos;t have an account? <a href="#">Sign up</a>
-                                </FieldDescription> */}
                     </Field>
                     <Field>
                         <Link
