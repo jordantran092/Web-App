@@ -1,16 +1,17 @@
-// client side as used by dynamiceditor component
+// becomes client side as it is used by dynamiceditor component
 
-import { useCreateBlockNote, useEditorChange } from '@blocknote/react';
+import { SuggestionMenuController, useCreateBlockNote, useEditorChange } from '@blocknote/react';
 import { BlockNoteView } from '@blocknote/mantine';
 // Default styles for the mantine editor
 import '@blocknote/mantine/style.css';
 // Include the included Inter font
 import '@blocknote/core/fonts/inter.css';
 
-import { Block, createExtension } from '@blocknote/core';
+import { Block, createExtension, filterSuggestionItems } from '@blocknote/core';
 import { PageUpdateInput } from '@/types/Page';
 import { updatePage } from '@/actions/PageActions';
 import { useEffect, useRef } from 'react';
+import { getCustomSlashMenuItems } from './slash-menu/customSlashMenuItems';
 
 type EditorProps = {
     id: string;
@@ -105,11 +106,20 @@ export default function Editor({
 
     // Render the editor
     // For responsiveness, mobile screens take full width hence no breakpoint
+
     return (
         <BlockNoteView
             editor={editor}
             theme={'dark'}
-            className="mt-10 md:mx-32 md:mt-20 xl:mx-70 2xl:mx-132 2xl:mt-36"
-        />
+            slashMenu={false}
+            className="mt-10 md:mx-32 md:mt-20 xl:mx-70 2xl:mx-132 2xl:mt-36">
+            <SuggestionMenuController
+                triggerCharacter={'/'}
+                // Replaces the default Slash Menu items with our custom ones.
+                getItems={async (query) =>
+                    filterSuggestionItems(getCustomSlashMenuItems(editor), query)
+                }
+            />
+        </BlockNoteView>
     );
 }

@@ -8,7 +8,7 @@ type PageProps = {
 import { Block } from '@blocknote/core/blocks';
 import { useState } from 'react';
 import SavingIndicator from './SavingIndicator';
-import { Editor } from '@/components/DynamicEditor';
+import { Editor } from '@/components/editor/DynamicEditor';
 
 // Need Page component to share isSaving stateful variable with navbar and editor
 export default function Page({ id, initialContent }: PageProps) {

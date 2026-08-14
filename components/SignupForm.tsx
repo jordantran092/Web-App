@@ -19,7 +19,7 @@ export function SignupForm() {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="size-6">
+                    className="mb-20 size-10 rounded-full p-2 transition duration-50 hover:bg-[#bdbdbd38]">
                     <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -27,7 +27,7 @@ export function SignupForm() {
                     />
                 </svg>
             </Link>
-            <p className="mb-20">Get started on X</p>
+            <p className="mb-20 text-3xl">Get started on Z</p>
             <form action={AuthActions.signUp}>
                 <FieldGroup>
                     <Field>
@@ -36,7 +36,7 @@ export function SignupForm() {
                             id="name"
                             type="text"
                             name="name"
-                            placeholder="John Doe"
+                            // placeholder="John Doe"
                             required
                             className="bg-white text-black"
                         />
@@ -47,7 +47,7 @@ export function SignupForm() {
                             id="email"
                             type="email"
                             name="email"
-                            placeholder="m@example.com"
+                            // placeholder="john@example.com"
                             required
                             className="bg-white text-black"
                         />
@@ -58,8 +58,9 @@ export function SignupForm() {
                             id="password"
                             type="password"
                             name="password"
+                            // placeholder="Password"
                             required
-                            className="bg-white text-black"
+                            className="mb-5 bg-white text-black"
                         />
                         {/* <FieldDescription>Must be at least 8 characters long.</FieldDescription> */}
                     </Field>
@@ -70,10 +71,11 @@ export function SignupForm() {
                     </Field> */}
                     <FieldGroup>
                         <Field>
-                            <Button type="submit">Create Account</Button>
+                            <Button type="submit">Submit</Button>
 
                             <FieldDescription className="px-6 text-center text-white">
-                                Already have an account? <a href="#">Sign in</a>
+                                Already have an account? <Link href="/signin">Sign in</Link>
+                                {/* <a href="#">Sign in</a> */}
                             </FieldDescription>
                         </Field>
                     </FieldGroup>
