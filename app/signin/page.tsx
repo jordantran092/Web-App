@@ -4,7 +4,6 @@ import Image from 'next/image';
 export default function SignInPage() {
     return (
         <>
-            {/* grid-rows-2 */}
             <div className="grid min-h-svh bg-[#393939] lg:grid-cols-2">
                 <div className="flex flex-col gap-4 p-6 md:p-10">
                     <div className="flex justify-center gap-2 md:justify-start">
@@ -34,8 +33,8 @@ export default function SignInPage() {
                         alt="Sign in image"
                         fill={true}
                         className="absolute inset-0 h-full w-full mask-[linear-gradient(to_left,black_40%,transparent_100%)] object-cover"
-                        // "absolute inset-0 h-full w-full mask-[linear-gradient(to_left,black_40%,transparent_100%)] object-cover"
-                        // For gardient, fading starts right and travels left. 0-40% of image has 'black' meaning visible, and then the rest goes towards fully transparent max 100%
+
+                        // For gradient, fading starts right and travels left. 0-40% of image has 'black' meaning visible, and then the rest goes towards fully transparent max 100%
                     />
                 </div>
             </div>
