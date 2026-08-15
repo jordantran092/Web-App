@@ -1,10 +1,11 @@
 import { createReactBlockSpec } from '@blocknote/react';
-import { defaultProps, Link } from '@blocknote/core';
+import { defaultProps } from '@blocknote/core';
 import { MyStyleSchema } from '../schema/CustomSchema';
 // import { PageInlineContent } from '@/types/blocknote';
 
 import { CustomInlineContentFromConfig } from '@blocknote/core';
-import { createPageInlineContent } from '@/components/editor/inline-content-specs/PageInlineContent';
+import Link from 'next/link';
+// import { createPageInlineContent } from '@/components/editor/inline-content-specs/PageInlineContent';
 // type PageInlineContent = CustomInlineContentFromConfig<
 //     typeof createPageInlineContent.config,
 //     MyStyleSchema
@@ -13,7 +14,6 @@ import { createPageInlineContent } from '@/components/editor/inline-content-spec
 export const createPageBlock = createReactBlockSpec(
     {
         type: 'pageBlock',
-        content: 'inline', // could technically go plain text like used in code blocks type of text, but inline to have more options in case
         propSchema: {
             // textAlignment: defaultProps.textAlignment,
             // textColor: defaultProps.textColor,
@@ -22,29 +22,27 @@ export const createPageBlock = createReactBlockSpec(
             //     values: ['warning', 'error', 'info', 'success'],
             // },
             // empty for now, not sure yet
+            href: {
+                default: 'undefined',
+                type: 'string',
+            },
         },
+        content: 'none',
     },
     {
         render: (props) => {
             // const alertType = alertTypes.find((a) => a.value === props.block.props.type)!;
             // const Icon = alertType.icon;
 
-            /* This shows accessing inline content href works, so prob can make own custom inline object  */
-            // const inlineItem = props.block.content[0]; // only 1 element, so obv idx 0
-
-            // const linkItem = inlineItem as Link<MyStyleSchema>; // doesn't know its a Link, so cast it using your schema's style schema in terms of text styles which is not related to custom block page
-            // console.log(linkItem.href);
-
-            const inlineItem = props.block.content[0]; // only 1 element, so obv idx 0
-
-            // check in case
-            if (inlineItem && inlineItem.type === 'pageInline') {
-                const linkItem = inlineItem as PageInlineContent; // doesn't know its a Link, so cast it using your schema's style schema in terms of text styles which is not related to custom block page
-                console.log(linkItem.props.href);
-            }
+            const href = props.block.props.href;
+            console.log(href);
 
             return (
-                <></>
+                <>
+                    <Link href={href}>
+                        <button className="border-5">New page</button>
+                    </Link>
+                </>
                 // <div className={'alert'} data-alert-type={props.block.props.type}>
                 //     {/*Icon which opens a menu to choose the Alert type*/}
                 //     <Menu withinPortal={false}>

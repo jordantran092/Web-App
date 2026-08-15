@@ -22,7 +22,7 @@
 // import { MyStyleSchema } from '@/components/editor/schema/CustomSchema';
 
 // // Extract the exact type of your custom inline content item
-type PageInlineContent = CustomInlineContentFromConfig<
-    typeof createPageInlineContent.config,
-    MyStyleSchema
->;
+// type PageInlineContent = CustomInlineContentFromConfig<
+//     typeof createPageInlineContent.config,
+//     MyStyleSchema
+// >;

@@ -26,15 +26,9 @@ const pageItem = (editor: MyBlockNoteEditor) => ({
         // }),
         insertOrUpdateBlockForSlashMenu(editor, {
             type: 'pageBlock',
-            content: [
-                {
-                    type: 'pageInline',
-                    content: 'New page',
-                    props: {
-                        href: '/',
-                    },
-                },
-            ],
+            props: {
+                href: '/fafafa',
+            },
         }),
 
     //         insertOrUpdateBlockForSlashMenu(editor, {
