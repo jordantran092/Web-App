@@ -10,18 +10,61 @@ import {
     useCreateBlockNote,
 } from '@blocknote/react';
 import { HiDocumentText } from 'react-icons/hi'; // Heroicons v1
+import { MyBlockNoteEditor, schema } from '../schema/CustomSchema';
 
 // Custom Slash Menu item to insert a block after the current one.
-const pageItem = (editor: BlockNoteEditor) => ({
+const pageItem = (editor: MyBlockNoteEditor) => ({
     title: 'Page',
     onItemClick: () =>
         // If the block containing the text caret is empty, `insertOrUpdateBlock`
         // changes its type to the provided block. Otherwise, it inserts the new
         // block below and moves the text caret to it.
+
+        // insertOrUpdateBlockForSlashMenu(editor, {
+        //     type: 'paragraph',
+        //     content: [{ type: 'text', text: 'Hello World', styles: { bold: true } }],
+        // }),
         insertOrUpdateBlockForSlashMenu(editor, {
-            type: 'paragraph',
-            content: [{ type: 'text', text: 'Hello World', styles: { bold: true } }],
+            type: 'pageBlock',
+            content: [
+                {
+                    type: 'pageInline',
+                    content: 'New page',
+                    props: {
+                        href: '/',
+                    },
+                },
+            ],
         }),
+
+    //         insertOrUpdateBlockForSlashMenu(editor, {
+    //     type: 'page',
+    //     content: [
+    //         {
+    //             type: 'link',
+    //             content: [
+    //                 {
+    //                     type: 'text',
+    //                     text: 'New page',
+    //                     styles: {},
+    //                 },
+    //             ],
+    //             href: '/',
+    //         },
+    //     ],
+    // }),
+
+    //         insertOrUpdateBlockForSlashMenu(editor, {
+    //     type: 'page',
+    //     content: [
+    //         {
+    //             type: 'text',
+    //             text: 'New page',
+    //             styles: {},
+    //         },
+    //     ],
+    // }),
+
     aliases: ['page'], // for user queries, e.g. /page
     group: 'Basic blocks',
     icon: <HiDocumentText size={18} />,
@@ -29,7 +72,9 @@ const pageItem = (editor: BlockNoteEditor) => ({
 });
 
 // List containing all default Slash Menu Items, as well as our custom one.
-export const getCustomSlashMenuItems = (editor: BlockNoteEditor): DefaultReactSuggestionItem[] => {
+export const getCustomSlashMenuItems = (
+    editor: MyBlockNoteEditor
+): DefaultReactSuggestionItem[] => {
     const items = getDefaultReactSlashMenuItems(editor);
     const index = items.findIndex((item) => item.title === 'Quote');
     // Essentially insert at index of Quote and push Quote and the rest to right

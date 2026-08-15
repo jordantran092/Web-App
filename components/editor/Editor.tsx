@@ -7,11 +7,12 @@ import '@blocknote/mantine/style.css';
 // Include the included Inter font
 import '@blocknote/core/fonts/inter.css';
 
-import { Block, createExtension, filterSuggestionItems } from '@blocknote/core';
+import { Block, BlockNoteSchema, createExtension, filterSuggestionItems } from '@blocknote/core';
 import { PageUpdateInput } from '@/types/Page';
 import { updatePage } from '@/actions/PageActions';
 import { useEffect, useRef } from 'react';
 import { getCustomSlashMenuItems } from './slash-menu/customSlashMenuItems';
+import { schema } from './schema/CustomSchema';
 
 type EditorProps = {
     id: string;
@@ -51,6 +52,8 @@ export default function Editor({
 
     // Create a new editor instance
     const editor = useCreateBlockNote({
+        schema,
+
         initialContent,
 
         extensions: [
