@@ -2,7 +2,7 @@
 
 import { Session } from '@/lib/auth';
 import { prisma } from '@/lib/prisma'; // single prisma client generated from the prisma.ts file
-import { PageUpdateInput } from '@/types/Page';
+import { PageCreateInput, PageUpdateInput } from '@/types/Page';
 import { Block } from '@blocknote/core/blocks';
 import * as ERROR from '@/utils/constants';
 import { forbidden } from 'next/navigation';
@@ -60,6 +60,27 @@ export async function getContentOfPage(session: Session, id: string) {
     }
 
     return initialContent;
+}
+
+export async function createPage({ parentPageId, ...data }: PageCreateInput, session: Session) {
+    if (!(await doesUserOwnPage(session, parentPageId))) {
+        return forbidden();
+    }
+
+    await prisma.page.create({
+        data: {
+            favorite: data.favorite,
+            title: data.title,
+            blocks: data.blocks,
+
+            // Need to fill in user. Page has to be connected to the current authorized user's id because they are related in the schema
+            user: {
+                connect: {
+                    id: session.user.id,
+                },
+            },
+        },
+    });
 }
 
 /* Helper Methods */

@@ -1,3 +1,5 @@
+// For inline content, obsolete
+
 // import { createReactInlineContentSpec } from '@blocknote/react';
 
 // export const createPageInlineContent = createReactInlineContentSpec(

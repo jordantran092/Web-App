@@ -1,33 +1,21 @@
 import { createReactBlockSpec } from '@blocknote/react';
 import { defaultProps } from '@blocknote/core';
-import { MyStyleSchema } from '../schema/CustomSchema';
 // import { PageInlineContent } from '@/types/blocknote';
 
 import { CustomInlineContentFromConfig } from '@blocknote/core';
 import Link from 'next/link';
-// import { createPageInlineContent } from '@/components/editor/inline-content-specs/PageInlineContent';
-// type PageInlineContent = CustomInlineContentFromConfig<
-//     typeof createPageInlineContent.config,
-//     MyStyleSchema
-// >;
 
 export const createPageBlock = createReactBlockSpec(
     {
         type: 'pageBlock',
         propSchema: {
-            // textAlignment: defaultProps.textAlignment,
-            // textColor: defaultProps.textColor,
-            // type: {
-            //     default: 'warning',
-            //     values: ['warning', 'error', 'info', 'success'],
-            // },
-            // empty for now, not sure yet
+            // props of a page block when instantiating a page block
             href: {
                 default: 'undefined',
                 type: 'string',
             },
         },
-        content: 'none',
+        content: 'none', // so that there cannot exist any user entered content in the block
     },
     {
         render: (props) => {

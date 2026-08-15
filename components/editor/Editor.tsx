@@ -114,13 +114,13 @@ export default function Editor({
         <BlockNoteView
             editor={editor}
             theme={'dark'}
-            slashMenu={false}
+            slashMenu={false} // Seems like have to have this if want custom slash menu
             className="mt-10 md:mx-32 md:mt-20 xl:mx-70 2xl:mx-132 2xl:mt-36">
             <SuggestionMenuController
-                triggerCharacter={'/'}
+                triggerCharacter={'/'} // to make queries to find item in menu
                 // Replaces the default Slash Menu items with our custom ones.
                 getItems={async (query) =>
-                    filterSuggestionItems(getCustomSlashMenuItems(editor), query)
+                    filterSuggestionItems(getCustomSlashMenuItems(editor, id), query)
                 }
             />
         </BlockNoteView>
