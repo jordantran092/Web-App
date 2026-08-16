@@ -1,22 +1,13 @@
-import { BlockNoteEditor } from '@blocknote/core';
-import { filterSuggestionItems, insertOrUpdateBlockForSlashMenu } from '@blocknote/core/extensions';
+import { insertOrUpdateBlockForSlashMenu } from '@blocknote/core/extensions';
 import '@blocknote/core/fonts/inter.css';
-import { BlockNoteView } from '@blocknote/mantine';
 import '@blocknote/mantine/style.css';
-import {
-    DefaultReactSuggestionItem,
-    getDefaultReactSlashMenuItems,
-    SuggestionMenuController,
-    useCreateBlockNote,
-} from '@blocknote/react';
+import { DefaultReactSuggestionItem, getDefaultReactSlashMenuItems } from '@blocknote/react';
 import { HiDocumentText } from 'react-icons/hi'; // Heroicons v1
-import { MyBlockNoteEditor, schema } from '../schema/CustomSchema';
+import { MyBlockNoteEditor } from '../schema/CustomSchema';
 import * as PageActions from '@/actions/PageActions';
+import * as AuthActions from '@/actions/AuthActions';
 
-import { auth } from '@/lib/auth';
-import { headers } from 'next/headers';
 import { PageCreateInput } from '@/types/Page';
-import { unauthorized } from 'next/navigation';
 
 // Custom Slash Menu item to insert a block after the current one.
 const pageItem = (editor: MyBlockNoteEditor, id: string) => ({
@@ -26,15 +17,11 @@ const pageItem = (editor: MyBlockNoteEditor, id: string) => ({
         // changes its type to the provided block. Otherwise, it inserts the new
         // block below and moves the text caret to it.
 
-        // SADF23493249823 convert to server action?
-        const session = await auth.api.getSession({
-            headers: await headers(),
-        });
-        if (!session) return unauthorized();
+        const userId = await AuthActions.getSessionUserId();
 
         const pageEntity: PageCreateInput = {
             title: 'New page',
-            user: session?.user.id,
+            user: userId,
             parentPageId: id,
         };
 
