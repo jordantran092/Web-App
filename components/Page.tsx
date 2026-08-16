@@ -6,15 +6,22 @@ type PageProps = {
 };
 
 import { Block } from '@blocknote/core/blocks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SavingIndicator from './SavingIndicator';
 import { Editor } from '@/components/editor/DynamicEditor';
+import { useRouter } from 'next/navigation';
 
 // Need Page component to share isSaving stateful variable with navbar and editor
 export default function Page({ id, initialContent }: PageProps) {
     // need state variable here in this parent component so that it can be shared between navbar and editor to handle saving indicator
     const [isSaving, setIsSaving] = useState(false);
     const [isSavingTimerOn, setIsSavingTimerOn] = useState(false);
+    const router = useRouter(); // access to next.js navigation controls
+
+    // Refresh page on mount (e.g. when come back to page) so that new data is loaded, otherwise it will reload the old page data
+    useEffect(() => {
+        router.refresh();
+    }, []);
 
     return (
         <>
