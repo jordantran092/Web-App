@@ -6,6 +6,7 @@ import { BlockNoteView } from '@blocknote/mantine';
 import '@blocknote/mantine/style.css';
 // Include the included Inter font
 import '@blocknote/core/fonts/inter.css';
+// import '@/app/globals.css';
 
 import { Block, BlockNoteSchema, createExtension, filterSuggestionItems } from '@blocknote/core';
 import { PageUpdateInput } from '@/types/Page';
@@ -95,10 +96,10 @@ export default function Editor({
                                 });
 
                             // debug
-                            console.log('saving!');
+                            // console.log('saving!');
                         } else {
                             // debug
-                            console.log('already saving!');
+                            // console.log('already saving!');
                         }
 
                         return true; // tell BlockNote the shortcut was handled, so that browser does not try to handle it with default response
