@@ -6,6 +6,7 @@ import { PageCreateInput, PageUpdateInput } from '@/types/Page';
 import { Block } from '@blocknote/core/blocks';
 import * as ERROR from '@/utils/constants';
 import { forbidden } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 export async function updatePage({ id, ...data }: PageUpdateInput, session: Session) {
     if (!(await doesUserOwnPage(session, id))) {
@@ -67,7 +68,7 @@ export async function createPage({ parentPageId, ...data }: PageCreateInput, ses
         return forbidden();
     }
 
-    await prisma.page.create({
+    const savedPageEntity = await prisma.page.create({
         data: {
             favorite: data.favorite,
             title: data.title,
@@ -81,6 +82,11 @@ export async function createPage({ parentPageId, ...data }: PageCreateInput, ses
             },
         },
     });
+
+    // force re-render page since changed it
+    revalidatePath(`/pages/${savedPageEntity.id}`);
+
+    return savedPageEntity;
 }
 
 /* Helper Methods */

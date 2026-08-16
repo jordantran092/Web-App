@@ -40,5 +40,5 @@ export async function createPage({ parentPageId, ...data }: PageCreateInput) {
     });
     if (!session) return unauthorized();
 
-    PageService.createPage({ parentPageId, ...data }, session);
+    return await PageService.createPage({ parentPageId, ...data }, session);
 }

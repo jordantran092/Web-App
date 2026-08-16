@@ -7,7 +7,7 @@ import { MyBlockNoteEditor } from '../schema/CustomSchema';
 import * as PageActions from '@/actions/PageActions';
 import * as AuthActions from '@/actions/AuthActions';
 
-import { PageCreateInput } from '@/types/Page';
+import { PageCreateInput, PageUpdateInput } from '@/types/Page';
 
 // Custom Slash Menu item to insert a block after the current one.
 const pageItem = (editor: MyBlockNoteEditor, id: string) => ({
@@ -25,14 +25,24 @@ const pageItem = (editor: MyBlockNoteEditor, id: string) => ({
             parentPageId: id,
         };
 
-        PageActions.createPage(pageEntity);
+        const savedPageEntity = await PageActions.createPage(pageEntity);
 
         insertOrUpdateBlockForSlashMenu(editor, {
             type: 'pageBlock',
             props: {
-                href: '/fafafa', // real href will just be a whole new page, with its own unique address, no connection to the parent page url
+                pageId: `${savedPageEntity.id}`,
             },
         });
+
+        // Update parent page since changed content
+        const savedBlocks = JSON.stringify(editor.document);
+
+        const parentPageEntity: PageUpdateInput = {
+            id: id,
+            blocks: savedBlocks,
+        };
+
+        PageActions.updatePage(parentPageEntity);
     },
 
     aliases: ['page'], // for user queries, e.g. /page

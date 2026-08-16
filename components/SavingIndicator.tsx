@@ -12,7 +12,7 @@ export default function SavingIndicator({ setIsSavingTimerOn }: SavingIndicatorP
         // Set a timer for 1 second
         const timer = setTimeout(() => {
             setIsSavingTimerOn(false);
-        }, 5000);
+        }, 500);
 
         // Cleanup function to clear the timer if component unmounts
         // clearTimeout is a closure on timer, so timer will still live on until cleanup function finishes
