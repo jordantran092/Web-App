@@ -31,6 +31,7 @@ const pageItem = (editor: MyBlockNoteEditor, id: string) => ({
             type: 'pageBlock',
             props: {
                 pageId: `${savedPageEntity.id}`,
+                title: `${savedPageEntity.title}`,
             },
         });
 

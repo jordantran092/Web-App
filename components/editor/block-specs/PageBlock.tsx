@@ -16,74 +16,33 @@ export const createPageBlock = createReactBlockSpec(
                 default: 'undefined',
                 type: 'string',
             },
+            title: {
+                default: 'undefined',
+                type: 'string',
+            },
         },
         content: 'none', // so that there cannot exist any user entered content in the block
     },
     {
         // client component
         render: (props) => {
-            // const alertType = alertTypes.find((a) => a.value === props.block.props.type)!;
-            // const Icon = alertType.icon;
-
             // real href will just be a whole new page, with its own unique address, no connection to the parent page url, safer
             const id = props.block.props.pageId;
+            const title = props.block.props.title;
             const href = `/pages/${id}`;
-            const pageEntity = await PageActions.getPage(id);
 
             // debug
             // console.log(href);
 
             return (
                 <>
-                    <div className="flex w-full flex-row">
+                    <div className="flex w-full flex-row rounded p-0.5 transition duration-100 hover:bg-[#bdbdbd38]">
                         <HiDocumentText size={23} />
                         <Link href={href} className="grow">
-                            <button className="w-full border text-left">{pageEntity?.title}</button>
+                            <button className="w-full pl-1 text-left">{title}</button>
                         </Link>
                     </div>
                 </>
-                // <div className={'alert'} data-alert-type={props.block.props.type}>
-                //     {/*Icon which opens a menu to choose the Alert type*/}
-                //     <Menu withinPortal={false}>
-                //         <Menu.Target>
-                //             <div className={'alert-icon-wrapper'} contentEditable={false}>
-                //                 <Icon
-                //                     className={'alert-icon'}
-                //                     data-alert-icon-type={props.block.props.type}
-                //                     size={32}
-                //                 />
-                //             </div>
-                //         </Menu.Target>
-                //         {/*Dropdown to change the Alert type*/}
-                //         <Menu.Dropdown>
-                //             <Menu.Label>Alert Type</Menu.Label>
-                //             <Menu.Divider />
-                //             {alertTypes.map((type) => {
-                //                 const ItemIcon = type.icon;
-                //                 return (
-                //                     <Menu.Item
-                //                         key={type.value}
-                //                         leftSection={
-                //                             <ItemIcon
-                //                                 className={'alert-icon'}
-                //                                 data-alert-icon-type={type.value}
-                //                             />
-                //                         }
-                //                         onClick={() =>
-                //                             props.editor.updateBlock(props.block, {
-                //                                 type: 'alert',
-                //                                 props: { type: type.value },
-                //                             })
-                //                         }>
-                //                         {type.title}
-                //                     </Menu.Item>
-                //                 );
-                //             })}
-                //         </Menu.Dropdown>
-                //     </Menu>
-                //     {/*Rich text field for user to type in*/}
-                //     <div className={'inline-content'} ref={props.contentRef} />
-                // </div>
             );
         },
     }

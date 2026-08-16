@@ -132,3 +132,8 @@
         @apply font-sans;
     }
 }
+
+/* Disable ProseMirror default blue outline on selected block */
+.bn-editor .ProseMirror-selectednode > .bn-block-content > * {
+    outline: none !important;
+}
