@@ -35,7 +35,7 @@ model Page {
   blocks   String  @default("") // must keep default so json parse doesn't run into error 
 
   user   User   @relation(fields: [userId], references: [id])
-  userId String @unique
+  userId String
 }
 
 model Session {

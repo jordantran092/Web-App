@@ -37,3 +37,13 @@ export async function signOut() {
     // If logged in, allow sign out
     await AuthService.signOut();
 }
+
+export async function getSessionUserId() {
+    // Check if any valid session / logged in
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+    if (!session) return unauthorized();
+
+    return session.user.id;
+}

@@ -9,7 +9,7 @@ import '@blocknote/core/fonts/inter.css';
 
 import { Block, BlockNoteSchema, createExtension, filterSuggestionItems } from '@blocknote/core';
 import { PageUpdateInput } from '@/types/Page';
-import { updatePage } from '@/actions/PageActions';
+import * as PageActions from '@/actions/PageActions';
 import { useEffect, useRef } from 'react';
 import { getCustomSlashMenuItems } from './slash-menu/customSlashMenuItems';
 import { schema } from './schema/CustomSchema';
@@ -82,7 +82,7 @@ export default function Editor({
                             setIsSaving(true);
                             setIsSavingTimerOn(true);
 
-                            updatePage(pageEntity)
+                            PageActions.updatePage(pageEntity)
                                 // catch to handle error first so it doesn't propgate further
                                 .catch((error) => {
                                     console.log('Error: Page updated failed. ' + error);
