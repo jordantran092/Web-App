@@ -20,7 +20,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                             placeholder="Email"
                             name="email"
                             required
-                            className="bg-white text-black"
+                            className="bg-white! text-black!"
                         />
                     </Field>
                     <Field>
@@ -30,17 +30,24 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                             name="password"
                             placeholder="Password"
                             required
-                            className="bg-white text-black"
+                            className="bg-white! text-black!"
                         />
                     </Field>
                     <Field className="mt-10">
-                        <Button type="submit">Log in</Button>
+                        <Button
+                            type="submit"
+                            className="bg-neutral-800 text-white hover:bg-neutral-800/80">
+                            Log in
+                        </Button>
                     </Field>
                     <Field>
                         <Link
                             href="/signup"
                             // use the buttonVariants helper to make a link look like a button. variant is the type of the button shadcn
-                            className={buttonVariants({ variant: 'default' })}>
+                            className={cn(
+                                buttonVariants({ variant: 'default' }),
+                                'bg-neutral-800! text-white! hover:bg-neutral-800/80!'
+                            )}>
                             Create new account
                         </Link>
                     </Field>

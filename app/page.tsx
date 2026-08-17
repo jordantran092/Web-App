@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 
 import Image from 'next/image';
+import Command from '@/components/Command';
 
 export default async function Home() {
     const session = await auth.api.getSession({
@@ -22,6 +23,8 @@ export default async function Home() {
                     <button>Log Out</button>
                 </form>
             )}
+
+            <Command></Command>
         </>
     );
 }

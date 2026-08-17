@@ -38,7 +38,7 @@ export function SignupForm() {
                             name="name"
                             // placeholder="John Doe"
                             required
-                            className="bg-white text-black"
+                            className="bg-white! text-black"
                         />
                     </Field>
                     <Field>
@@ -49,7 +49,7 @@ export function SignupForm() {
                             name="email"
                             // placeholder="john@example.com"
                             required
-                            className="bg-white text-black"
+                            className="bg-white! text-black"
                         />
                     </Field>
                     <Field>
@@ -60,7 +60,7 @@ export function SignupForm() {
                             name="password"
                             // placeholder="Password"
                             required
-                            className="mb-5 bg-white text-black"
+                            className="mb-5 bg-white! text-black"
                         />
                         {/* <FieldDescription>Must be at least 8 characters long.</FieldDescription> */}
                     </Field>
@@ -71,7 +71,11 @@ export function SignupForm() {
                     </Field> */}
                     <FieldGroup>
                         <Field>
-                            <Button type="submit">Submit</Button>
+                            <Button
+                                type="submit"
+                                className="bg-neutral-800 text-white hover:bg-neutral-800/80">
+                                Submit
+                            </Button>
 
                             <FieldDescription className="px-6 text-center text-white">
                                 Already have an account? <Link href="/signin">Sign in</Link>
