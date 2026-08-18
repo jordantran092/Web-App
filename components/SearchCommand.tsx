@@ -21,8 +21,12 @@ import { Block } from '@blocknote/core/blocks';
 import { PageUpdateInput } from '@/types/Page';
 import { useBlockNoteEditor } from '@blocknote/react';
 import { schema } from '@/components/editor/schema/CustomSchema';
+import LoadingSpinner from './LoadingSpinner';
 
-export default function SearchCommand() {
+type SearchCommandProps = {
+    id: string;
+};
+export default function SearchCommand({ id }: SearchCommandProps) {
     const context = React.useContext(SearchMenuOpenContext);
     if (!context) {
         throw new Error('useContext not being used under proper provider');
@@ -65,7 +69,11 @@ export default function SearchCommand() {
                 onSelect={() => {
                     // Get current saved blocks and then push the selected block into that, and then update the selected page with these new blocks
 
-                    const blocks = JSON.parse(item.blocks) as Block<any, any, any>[]; // BOOKMARK23849823489234
+                    let blocks: Block<any, any, any>[] = [];
+
+                    if (item.blocks) {
+                        blocks = JSON.parse(item.blocks) as Block<any, any, any>[];
+                    }
 
                     const selectedBlock = context.selectedBlockRef.current;
                     if (selectedBlock) {
@@ -81,13 +89,11 @@ export default function SearchCommand() {
 
                         /* Remove selected block from parent page and update parent page. Use editor instance because it contains the client side blocks which is most up to date compared to DB blocks version */
 
-                        // use editor instance, remove it, and then update parent page by getting its id
-
                         editor?.removeBlocks([selectedBlock]); // can pass in a Block object
 
                         const newBlocksParent = JSON.stringify(editor?.document);
                         const pageEntityParent: PageUpdateInput = {
-                            id: item.id, // the selected page's id
+                            id: id, // the selected page's id
                             blocks: newBlocksParent,
                         };
                         PageActions.updatePage(pageEntityParent);
@@ -114,19 +120,13 @@ export default function SearchCommand() {
                         <CommandEmpty>No results found.</CommandEmpty>
 
                         <CommandGroup heading="Pages">
-                            {/* <CommandItem>
-                                    <InboxIcon />
-                                    <span>Inbox</span>
-                                    <CommandShortcut>⌘I</CommandShortcut>
-                                </CommandItem> */}
-                            {loading && <CommandLoading>Fetching (fix me)…</CommandLoading>}
+                            {loading && (
+                                <CommandLoading className="my-2 pl-2">
+                                    <LoadingSpinner />
+                                </CommandLoading>
+                            )}
 
                             {cmdItemsArr}
-
-                            <CommandItem>
-                                <HiDocumentText size={23} />
-                                <span>Placeholder page</span>
-                            </CommandItem>
                         </CommandGroup>
                     </CommandList>
                 </Command>
