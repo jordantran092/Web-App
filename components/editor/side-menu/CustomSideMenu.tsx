@@ -6,6 +6,7 @@ import {
     SideMenuProps,
 } from '@blocknote/react';
 import { MoveToItem } from './MoveToItem';
+import { DeleteItem } from './DeleteItem';
 
 export const CustomSideMenu = (props: SideMenuProps) => (
     <SideMenu {...props} dragHandleMenu={CustomDragHandleMenu} />
@@ -18,6 +19,7 @@ const CustomDragHandleMenu = () => (
     <DragHandleMenu>
         <BlockColorsItem>Color</BlockColorsItem>
         <MoveToItem>Move To</MoveToItem> {/* Custom Item */}
-        <RemoveBlockItem>Delete</RemoveBlockItem>
+        <DeleteItem>Delete</DeleteItem> {/* Custom Item */}
+        {/* <RemoveBlockItem>Delete</RemoveBlockItem> */}
     </DragHandleMenu>
 );

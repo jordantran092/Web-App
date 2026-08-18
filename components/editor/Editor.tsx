@@ -120,7 +120,6 @@ export default function Editor({
     if (!context) {
         throw new Error('useContext not being used under proper provider');
     }
-
     // context becomes the object of type SearchMenuOpenContextType, with all the proeprties e.g. editorRef. Then access editorRef.
     context.editorRef.current = editor;
 

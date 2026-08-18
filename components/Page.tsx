@@ -13,6 +13,7 @@ type SearchMenuOpenContextType = {
     setisSearchMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
     selectedBlockRef: RefObject<Block<any, any, any> | null>;
     editorRef: RefObject<MyBlockNoteEditor | null>;
+    id: string;
 };
 export const SearchMenuOpenContext = createContext<SearchMenuOpenContextType | undefined>(
     undefined
@@ -45,7 +46,7 @@ export default function Page({ id, initialContent }: PageProps) {
 
             {/* Use context hook to share setter method so that when `move to` is clicked, will display the search dialog */}
             <SearchMenuOpenContext.Provider
-                value={{ isSearchMenuOpen, setisSearchMenuOpen, selectedBlockRef, editorRef }}>
+                value={{ isSearchMenuOpen, setisSearchMenuOpen, selectedBlockRef, editorRef, id }}>
                 {/* 
                 
                 since Page has `use client`, then Editor will be made sure it's client side, thus don't need to put `use client` in Editor or else nextjs will think setIsSaving will be assigned to some server side value from a server component, thus needing it to be serializable. but that's not our case 
