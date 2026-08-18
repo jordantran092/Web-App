@@ -89,6 +89,16 @@ export async function createPage({ parentPageId, ...data }: PageCreateInput, ses
     return savedPageEntity;
 }
 
+export async function findMany(session: Session) {
+    const userId = session.user.id;
+
+    return prisma.page.findMany({
+        where: {
+            userId, // userId matches page and session
+        },
+    });
+}
+
 /* Helper Methods */
 
 async function doesUserOwnPage(session: Session, id: string) {

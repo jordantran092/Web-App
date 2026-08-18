@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import * as PageActions from '@/actions/PageActions';
 
 import {
     Command,
@@ -15,6 +16,8 @@ import { SearchMenuOpenContext } from './Page';
 import { HiDocumentText } from 'react-icons/hi';
 import { useEffect } from 'react';
 import { CommandLoading } from 'cmdk';
+import { Page } from '@/app/generated/prisma/client';
+import { Block } from '@blocknote/core/blocks';
 
 export default function CommandManyItems() {
     const context = React.useContext(SearchMenuOpenContext);
@@ -23,15 +26,15 @@ export default function CommandManyItems() {
     }
 
     const [loading, setLoading] = React.useState(false);
-    const [items, setItems] = React.useState<string[]>([]);
+    const [items, setItems] = React.useState<Page[]>([]);
     const [search, setSearch] = React.useState('');
 
     // Must do client-side data fetching after this component loads because pages have to be dynamically rendered based on user input
     useEffect(() => {
         async function getItems() {
             setLoading(true);
-            // const res = await api.get('/dictionary');
-            // setItems(res);
+            const pageArr = await PageActions.findMany();
+            setItems(pageArr);
 
             //debug
             // const items = ['hello', 'two'];
@@ -47,17 +50,25 @@ export default function CommandManyItems() {
         }
     }, [context.isSearchMenuOpen]);
 
-    const listItemsArr = items.map((item, index) => (
-        <CommandItem
-            key={index}
-            value={item} // Have `value` match the item var content in case it changes
-            onSelect={() => {
-                // items[index].charAt(0);
-            }}>
-            <HiDocumentText size={23} />
-            <span>{item}</span>
-        </CommandItem>
-    ));
+    const listItemsArr = items.map((item, index) => {
+        const title = item.title;
+
+        return (
+            <CommandItem
+                key={index}
+                value={title} // Have `value` match the item var content in case it changes
+                onSelect={() => {
+                    // items[index].charAt(0);
+
+                    // FIXME if blocks is null/undefined, have to deal with that
+                    const blocks = JSON.parse(item.blocks) as Block[];
+                    // blocks.push();
+                }}>
+                <HiDocumentText size={23} />
+                <span>{title}</span>
+            </CommandItem>
+        );
+    });
 
     return (
         <div className="flex flex-col gap-4">
