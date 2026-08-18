@@ -42,3 +42,13 @@ export async function createPage({ parentPageId, ...data }: PageCreateInput) {
 
     return await PageService.createPage({ parentPageId, ...data }, session);
 }
+
+export async function findMany() {
+    // Check if any valid session / logged in
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+    if (!session) return unauthorized();
+
+    return PageService.findMany(session);
+}
