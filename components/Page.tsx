@@ -66,7 +66,7 @@ export default function Page({ id, initialContent }: PageProps) {
                     setIsSavingTimerOn={setIsSavingTimerOn}
                 />
                 {/* Do not need to handle visiblity based on state here, will handle inside */}
-                <SearchCommand />
+                <SearchCommand id={id} />
             </SearchMenuOpenContext.Provider>
         </>
     );

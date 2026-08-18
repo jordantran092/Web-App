@@ -13,11 +13,16 @@ export async function updatePage({ id, ...data }: PageUpdateInput, session: Sess
         return forbidden();
     }
 
-    await prisma.page.update({
+    const pageEntity = await prisma.page.update({
         where: { id },
 
         data, // since data param is same as data property name, use property shorthand as so. will also only comprise of fields entered, optional fields ignored
     });
+
+    // force re-render page since changed it
+    // revalidatePath(`/pages/${id}`);
+
+    return pageEntity;
 }
 
 export async function getPage(id: string, session: Session) {
@@ -84,7 +89,7 @@ export async function createPage({ parentPageId, ...data }: PageCreateInput, ses
     });
 
     // force re-render page since changed it
-    revalidatePath(`/pages/${savedPageEntity.id}`);
+    // revalidatePath(`/pages/${parentPageId}`);
 
     return savedPageEntity;
 }
