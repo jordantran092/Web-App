@@ -16,10 +16,11 @@ import '@blocknote/core/fonts/inter.css';
 import { Block, BlockNoteSchema, createExtension, filterSuggestionItems } from '@blocknote/core';
 import { PageUpdateInput } from '@/types/Page';
 import * as PageActions from '@/actions/PageActions';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { getCustomSlashMenuItems } from './slash-menu/CustomSlashMenuItems';
 import { schema } from './schema/CustomSchema';
 import { CustomSideMenu } from './side-menu/CustomSideMenu';
+import { SearchMenuOpenContext } from '../Page';
 
 type EditorProps = {
     id: string;
@@ -114,6 +115,14 @@ export default function Editor({
             }),
         ],
     });
+
+    const context = useContext(SearchMenuOpenContext);
+    if (!context) {
+        throw new Error('useContext not being used under proper provider');
+    }
+
+    // context becomes the object of type SearchMenuOpenContextType, with all the proeprties e.g. editorRef. Then access editorRef.
+    context.editorRef.current = editor;
 
     // Render the editor
     // For responsiveness, mobile screens take full width hence no breakpoint

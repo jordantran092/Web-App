@@ -1,15 +1,18 @@
 'use client'; // because need stateful variable
 
 import { Block } from '@blocknote/core/blocks';
-import { useEffect, useState, createContext } from 'react';
+import { useEffect, useState, createContext, useRef, RefObject } from 'react';
 import SavingIndicator from './SavingIndicator';
 import { Editor } from '@/components/editor/DynamicEditor';
 import { useRouter } from 'next/navigation';
 import SearchCommand from './SearchCommand';
+import { MyBlockNoteEditor } from './editor/schema/CustomSchema';
 
 type SearchMenuOpenContextType = {
     isSearchMenuOpen: boolean;
     setisSearchMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    selectedBlockRef: RefObject<Block<any, any, any> | null>;
+    editorRef: RefObject<MyBlockNoteEditor | null>;
 };
 export const SearchMenuOpenContext = createContext<SearchMenuOpenContextType | undefined>(
     undefined
@@ -25,6 +28,8 @@ export default function Page({ id, initialContent }: PageProps) {
     const [isSaving, setIsSaving] = useState(false);
     const [isSavingTimerOn, setIsSavingTimerOn] = useState(false);
     const [isSearchMenuOpen, setisSearchMenuOpen] = useState(false);
+    const selectedBlockRef = useRef<Block<any, any, any>>(null);
+    const editorRef = useRef<MyBlockNoteEditor>(null);
     const router = useRouter(); // access to next.js navigation controls
 
     // Refresh page on mount (e.g. when come back to page) so that new data is loaded, otherwise it will reload the old page data
@@ -39,8 +44,13 @@ export default function Page({ id, initialContent }: PageProps) {
             )}
 
             {/* Use context hook to share setter method so that when `move to` is clicked, will display the search dialog */}
-            <SearchMenuOpenContext.Provider value={{ isSearchMenuOpen, setisSearchMenuOpen }}>
-                {/* since Page has `use client`, then Editor will be made sure it's client side, thus don't need to put `use client` in Editor or else nextjs will think setIsSaving will be assigned to some server side value from a server component, thus needing it to be serializable. but that's not our case */}
+            <SearchMenuOpenContext.Provider
+                value={{ isSearchMenuOpen, setisSearchMenuOpen, selectedBlockRef, editorRef }}>
+                {/* 
+                
+                since Page has `use client`, then Editor will be made sure it's client side, thus don't need to put `use client` in Editor or else nextjs will think setIsSaving will be assigned to some server side value from a server component, thus needing it to be serializable. but that's not our case 
+                
+                */}
                 <Editor
                     id={id}
 
@@ -55,7 +65,6 @@ export default function Page({ id, initialContent }: PageProps) {
 
                     setIsSavingTimerOn={setIsSavingTimerOn}
                 />
-
                 {/* Do not need to handle visiblity based on state here, will handle inside */}
                 <SearchCommand />
             </SearchMenuOpenContext.Provider>

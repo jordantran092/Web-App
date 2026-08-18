@@ -28,7 +28,8 @@ export function MoveToItem(props: { children: ReactNode }) {
             <Components.Generic.Menu.Item
                 onClick={() => {
                     context.setisSearchMenuOpen(true);
-                    // console.log(JSON.stringify(block));
+
+                    context.selectedBlockRef.current = block;
                 }}>
                 {props.children}
             </Components.Generic.Menu.Item>

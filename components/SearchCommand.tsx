@@ -14,12 +14,15 @@ import {
 } from '@/components/ui/command';
 import { SearchMenuOpenContext } from './Page';
 import { HiDocumentText } from 'react-icons/hi';
-import { useEffect } from 'react';
+import { RefObject, useEffect } from 'react';
 import { CommandLoading } from 'cmdk';
 import { Page } from '@/app/generated/prisma/client';
 import { Block } from '@blocknote/core/blocks';
+import { PageUpdateInput } from '@/types/Page';
+import { useBlockNoteEditor } from '@blocknote/react';
+import { schema } from '@/components/editor/schema/CustomSchema';
 
-export default function CommandManyItems() {
+export default function SearchCommand() {
     const context = React.useContext(SearchMenuOpenContext);
     if (!context) {
         throw new Error('useContext not being used under proper provider');
@@ -28,6 +31,8 @@ export default function CommandManyItems() {
     const [loading, setLoading] = React.useState(false);
     const [items, setItems] = React.useState<Page[]>([]);
     const [search, setSearch] = React.useState('');
+
+    const editor = context.editorRef.current;
 
     // Must do client-side data fetching after this component loads because pages have to be dynamically rendered based on user input
     useEffect(() => {
@@ -50,19 +55,43 @@ export default function CommandManyItems() {
         }
     }, [context.isSearchMenuOpen]);
 
-    const listItemsArr = items.map((item, index) => {
+    const cmdItemsArr = items.map((item, index) => {
         const title = item.title;
 
         return (
             <CommandItem
                 key={index}
-                value={title} // Have `value` match the item var content in case it changes
+                value={title + index} // Has to be unique values for each CommandItem or else, run into styling conflicts
                 onSelect={() => {
-                    // items[index].charAt(0);
+                    // Get current saved blocks and then push the selected block into that, and then update the selected page with these new blocks
 
-                    // FIXME if blocks is null/undefined, have to deal with that
-                    const blocks = JSON.parse(item.blocks) as Block[];
-                    // blocks.push();
+                    const blocks = JSON.parse(item.blocks) as Block<any, any, any>[]; // BOOKMARK23849823489234
+
+                    const selectedBlock = context.selectedBlockRef.current;
+                    if (selectedBlock) {
+                        blocks.push(selectedBlock);
+                        context.selectedBlockRef.current = null; // reset selected block in case
+
+                        const newBlocks = JSON.stringify(blocks);
+                        const pageEntity: PageUpdateInput = {
+                            id: item.id, // the selected page's id
+                            blocks: newBlocks,
+                        };
+                        PageActions.updatePage(pageEntity);
+
+                        /* Remove selected block from parent page and update parent page. Use editor instance because it contains the client side blocks which is most up to date compared to DB blocks version */
+
+                        // use editor instance, remove it, and then update parent page by getting its id
+
+                        editor?.removeBlocks([selectedBlock]); // can pass in a Block object
+
+                        const newBlocksParent = JSON.stringify(editor?.document);
+                        const pageEntityParent: PageUpdateInput = {
+                            id: item.id, // the selected page's id
+                            blocks: newBlocksParent,
+                        };
+                        PageActions.updatePage(pageEntityParent);
+                    }
                 }}>
                 <HiDocumentText size={23} />
                 <span>{title}</span>
@@ -86,13 +115,13 @@ export default function CommandManyItems() {
 
                         <CommandGroup heading="Pages">
                             {/* <CommandItem>
-                                <InboxIcon />
-                                <span>Inbox</span>
-                                <CommandShortcut>⌘I</CommandShortcut>
-                            </CommandItem> */}
+                                    <InboxIcon />
+                                    <span>Inbox</span>
+                                    <CommandShortcut>⌘I</CommandShortcut>
+                                </CommandItem> */}
                             {loading && <CommandLoading>Fetching (fix me)…</CommandLoading>}
 
-                            {listItemsArr}
+                            {cmdItemsArr}
 
                             <CommandItem>
                                 <HiDocumentText size={23} />
