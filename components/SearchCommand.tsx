@@ -76,9 +76,11 @@ export default function SearchCommand({ id }: SearchCommandProps) {
                     }
 
                     const selectedBlock = context.selectedBlockRef.current;
-                    if (selectedBlock && selectedBlock.type === 'pageBlock') {
+                    // Must check if selectedBlock is non-empty to avoid re-trying action after successful action
+                    if (selectedBlock) {
                         blocks.push(selectedBlock);
-                        context.selectedBlockRef.current = null; // reset selected block in case
+                        context.selectedBlockRef.current = null; // Must reset to avoid re-trying action after successful action
+                        context.setisSearchMenuOpen(false); // close dialog
 
                         const newBlocks = JSON.stringify(blocks);
                         const destinationPageEntity: PageUpdateInput = {
@@ -89,13 +91,14 @@ export default function SearchCommand({ id }: SearchCommandProps) {
                         };
                         PageActions.updatePage(destinationPageEntity);
 
-                        /* Update parent page id of the selected page block */
-
-                        const selectedBlockPageEntity: PageUpdateInput = {
-                            id: selectedBlock.props.pageId,
-                            parentPageId: item.id,
-                        };
-                        PageActions.updatePage(selectedBlockPageEntity);
+                        /* If block is a page block, update parent page id of the selected page block */
+                        if (selectedBlock.type === 'pageBlock') {
+                            const selectedBlockPageEntity: PageUpdateInput = {
+                                id: selectedBlock.props.pageId,
+                                parentId: item.id,
+                            };
+                            PageActions.updatePage(selectedBlockPageEntity);
+                        }
 
                         /* Remove selected block from parent page and update parent page. Use editor instance because it contains the client side blocks which is most up to date compared to DB blocks version */
 

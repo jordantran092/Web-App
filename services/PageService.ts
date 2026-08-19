@@ -68,8 +68,8 @@ export async function getContentOfPage(session: Session, id: string) {
     return initialContent;
 }
 
-export async function createPage({ parentPageId, ...data }: PageCreateInput, session: Session) {
-    if (!(await doesUserOwnPage(session, parentPageId))) {
+export async function createPage({ parentId, ...data }: PageCreateInput, session: Session) {
+    if (!(await doesUserOwnPage(session, parentId))) {
         return forbidden();
     }
 
@@ -78,7 +78,7 @@ export async function createPage({ parentPageId, ...data }: PageCreateInput, ses
             favorite: data.favorite,
             title: data.title,
             blocks: data.blocks,
-            parentId: parentPageId,
+            parentId: parentId,
 
             // Need to fill in user. Page has to be connected to the current authorized user's id because they are related in the schema
             user: {
@@ -90,7 +90,7 @@ export async function createPage({ parentPageId, ...data }: PageCreateInput, ses
     });
 
     // force re-render page since changed it
-    // revalidatePath(`/pages/${parentPageId}`);
+    // revalidatePath(`/pages/${parentId}`);
 
     return savedPageEntity;
 }

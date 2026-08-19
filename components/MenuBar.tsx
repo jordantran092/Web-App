@@ -36,14 +36,15 @@ export function MenuBar({ id, title }: MenuBarProps) {
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            console.log('Enter key pressed!');
-
+            // Update current page
             const pageEntity: PageUpdateInput = {
                 id,
                 title: currentTitle,
             };
 
             PageActions.updatePage(pageEntity);
+
+            PageActions.renameTitleForParentOfThisPage(id, currentTitle);
         }
     };
 
