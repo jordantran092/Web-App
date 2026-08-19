@@ -4,7 +4,8 @@ export type PageUpdateInput = {
     id: string;
     favorite?: boolean;
     title?: string;
-    blocks: string;
+    blocks?: string;
+    parentPageId?: string;
 };
 
 export type PageCreateInput = {

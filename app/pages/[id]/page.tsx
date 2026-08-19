@@ -20,7 +20,7 @@ export default async function Pages({ params }: PagesProps) {
     // Not logged in to any account / no session
     if (!session) return forbidden();
 
-    // Check if page exist as early as possible to avoid going deeper
+    // Check if page exist as early as possible to avoid execution going deeper
     const { id } = await params;
     const page = await PageService.getPage(id, session);
     if (!page) {
@@ -38,7 +38,7 @@ export default async function Pages({ params }: PagesProps) {
 
     return (
         <>
-            <Page id={id} initialContent={initialContent} />
+            <Page id={id} initialContent={initialContent} title={page.title} />
         </>
     );
 }

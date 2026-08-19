@@ -22,4 +22,5 @@ export const schema = BlockNoteSchema.create().extend({
 // Since have custom schema, must have custom type for BlockNoteEditor when use this type directly in code. Or else type errors (https://www.blocknotejs.org/docs/features/custom-schemas#usage-with-typescript). Could override the default types, but that is an experimental feature.
 // If you run into any issues with BlockNoteEditor, Block, PartialBlock when using these types directly, may need to try exporting more of your custom types here
 export type MyBlockNoteEditor = typeof schema.BlockNoteEditor;
+export type MyDefaultBlockSchema = typeof schema.blockSchema;
 // export type MyStyleSchema = typeof schema.styleSchema;

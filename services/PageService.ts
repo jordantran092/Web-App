@@ -78,6 +78,7 @@ export async function createPage({ parentPageId, ...data }: PageCreateInput, ses
             favorite: data.favorite,
             title: data.title,
             blocks: data.blocks,
+            parentId: parentPageId,
 
             // Need to fill in user. Page has to be connected to the current authorized user's id because they are related in the schema
             user: {
