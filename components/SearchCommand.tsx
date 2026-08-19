@@ -20,7 +20,7 @@ import { Page } from '@/app/generated/prisma/client';
 import { Block } from '@blocknote/core/blocks';
 import { PageUpdateInput } from '@/types/Page';
 import { useBlockNoteEditor } from '@blocknote/react';
-import { schema } from '@/components/editor/schema/CustomSchema';
+import { MyDefaultBlockSchema, schema } from '@/components/editor/schema/CustomSchema';
 import LoadingSpinner from './LoadingSpinner';
 
 type SearchCommandProps = {
@@ -67,25 +67,35 @@ export default function SearchCommand({ id }: SearchCommandProps) {
                 key={index}
                 value={title + index} // Has to be unique values for each CommandItem or else, run into styling conflicts
                 onSelect={() => {
-                    // Get current saved blocks and then push the selected block into that, and then update the selected page with these new blocks
+                    // Get current saved blocks of selected page and then push the selected block into that, and then update the selected page with these new blocks
 
-                    let blocks: Block<any, any, any>[] = [];
+                    let blocks: Block<MyDefaultBlockSchema, any, any>[] = []; // current saved blocks of selected page
 
                     if (item.blocks) {
-                        blocks = JSON.parse(item.blocks) as Block<any, any, any>[];
+                        blocks = JSON.parse(item.blocks) as Block<MyDefaultBlockSchema, any, any>[];
                     }
 
                     const selectedBlock = context.selectedBlockRef.current;
-                    if (selectedBlock) {
+                    if (selectedBlock && selectedBlock.type === 'pageBlock') {
                         blocks.push(selectedBlock);
                         context.selectedBlockRef.current = null; // reset selected block in case
 
                         const newBlocks = JSON.stringify(blocks);
-                        const pageEntity: PageUpdateInput = {
+                        const destinationPageEntity: PageUpdateInput = {
+                            // the selected page
+
                             id: item.id, // the selected page's id
                             blocks: newBlocks,
                         };
-                        PageActions.updatePage(pageEntity);
+                        PageActions.updatePage(destinationPageEntity);
+
+                        /* Update parent page id of the selected page block */
+
+                        const selectedBlockPageEntity: PageUpdateInput = {
+                            id: selectedBlock.props.pageId,
+                            parentPageId: item.id,
+                        };
+                        PageActions.updatePage(selectedBlockPageEntity);
 
                         /* Remove selected block from parent page and update parent page. Use editor instance because it contains the client side blocks which is most up to date compared to DB blocks version */
 

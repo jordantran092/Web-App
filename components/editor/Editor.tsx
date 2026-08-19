@@ -18,13 +18,13 @@ import { PageUpdateInput } from '@/types/Page';
 import * as PageActions from '@/actions/PageActions';
 import { useContext, useEffect, useRef } from 'react';
 import { getCustomSlashMenuItems } from './slash-menu/CustomSlashMenuItems';
-import { schema } from './schema/CustomSchema';
+import { MyDefaultBlockSchema, schema } from './schema/CustomSchema';
 import { CustomSideMenu } from './side-menu/CustomSideMenu';
 import { SearchMenuOpenContext } from '../Page';
 
 type EditorProps = {
     id: string;
-    initialContent?: Block<any, any, any>[];
+    initialContent?: Block<MyDefaultBlockSchema, any, any>[];
     setIsSaving: (value: boolean) => void;
     isSaving: boolean;
     isSavingTimerOn: boolean;
