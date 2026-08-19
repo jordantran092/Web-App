@@ -77,13 +77,18 @@ export async function renameTitleForParentOfThisPage(id: string, currentTitle: s
 
         let foundParentBlock = false;
         // We know it's a Block<MyDefaultBlockSchema, any, any>[] and specifically a page block which has no actual typescript type, so use any to make it simpler
-        let parentBlock: any = null;
+        let block: any = null;
         for (let i = 0; !foundParentBlock && i < blocks.length; ++i) {
-            parentBlock = blocks.at(i);
-            foundParentBlock = parentBlock.props.pageId === id;
+            block = blocks.at(i);
+            foundParentBlock = block.props.pageId === id;
         }
 
         // manipulate the parent block ASDF98324982349823984
+        const parentBlock = block as Block<MyDefaultBlockSchema, any, any>;
+
+        if (parentBlock.type === 'pageBlock') {
+            parentBlock.props.title = currentTitle;
+        }
     }
 }
 
