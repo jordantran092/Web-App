@@ -5,7 +5,7 @@ export type PageUpdateInput = {
     favorite?: boolean;
     title?: string;
     blocks?: string;
-    parentPageId?: string;
+    parentId?: string;
 };
 
 export type PageCreateInput = {
@@ -13,5 +13,5 @@ export type PageCreateInput = {
     title?: string;
     blocks?: string;
     user: string;
-    parentPageId: string;
+    parentId: string;
 };

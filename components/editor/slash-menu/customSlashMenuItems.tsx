@@ -22,7 +22,7 @@ const pageItem = (editor: MyBlockNoteEditor, id: string) => ({
         const pageEntity: PageCreateInput = {
             title: 'New page',
             user: userId,
-            parentPageId: id,
+            parentId: id,
         };
 
         const savedPageEntity = await PageActions.createPage(pageEntity);
