@@ -57,39 +57,12 @@ export async function findMany() {
 }
 
 export async function renameTitleForParentOfThisPage(id: string, currentTitle: string) {
-    const page = await getPage(id);
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+    if (!session) return unauthorized();
 
-    if (!page) {
-        throw Error(NOT_FOUND);
-    }
-
-    const parentId = page.parentId;
-
-    // If page has a parent, if not it could be a root page which is fine
-    if (parentId) {
-        const parentPage = await getPage(parentId);
-
-        // Shouldn't happen, but for type safety
-        if (!parentPage || !parentPage.blocks)
-            throw new Error('No parent page found or no parent page blocks found');
-
-        const blocks = JSON.parse(parentPage.blocks) as Block<MyDefaultBlockSchema, any, any>[];
-
-        let foundParentBlock = false;
-        // We know it's a Block<MyDefaultBlockSchema, any, any>[] and specifically a page block which has no actual typescript type, so use any to make it simpler
-        let block: any = null;
-        for (let i = 0; !foundParentBlock && i < blocks.length; ++i) {
-            block = blocks.at(i);
-            foundParentBlock = block.props.pageId === id;
-        }
-
-        // manipulate the parent block ASDF98324982349823984
-        const parentBlock = block as Block<MyDefaultBlockSchema, any, any>;
-
-        if (parentBlock.type === 'pageBlock') {
-            parentBlock.props.title = currentTitle;
-        }
-    }
+    return await PageService.renameTitleForParentOfThisPage(id, currentTitle, session);
 }
 
 /*

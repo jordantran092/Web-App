@@ -7,6 +7,8 @@ import { Block } from '@blocknote/core/blocks';
 import * as ERROR from '@/utils/constants';
 import { forbidden } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { NOT_FOUND } from '@/utils/constants';
+import { MyDefaultBlockSchema } from '@/components/editor/schema/CustomSchema';
 
 export async function updatePage({ id, ...data }: PageUpdateInput, session: Session) {
     if (!(await doesUserOwnPage(session, id))) {
@@ -103,6 +105,70 @@ export async function findMany(session: Session) {
             userId, // userId matches page and session
         },
     });
+}
+
+export async function renameTitleForParentOfThisPage(
+    id: string,
+    currentTitle: string,
+    session: Session
+) {
+    if (!(await doesUserOwnPage(session, id))) {
+        return forbidden();
+    }
+
+    const page = await getPage(id, session);
+
+    if (!page) {
+        throw Error(NOT_FOUND);
+    }
+
+    const parentId = page.parentId;
+
+    // If page has a parent, if not it could be a root page which is fine
+    if (parentId) {
+        const parentPage = await getPage(parentId, session);
+
+        // Shouldn't happen, but for type safety
+        if (!parentPage || !parentPage.blocks)
+            throw new Error('No parent page found or no parent page blocks found');
+
+        // Must type correctly or else won't recognize pageBlock type
+        const blocks = JSON.parse(parentPage.blocks) as Block<MyDefaultBlockSchema, any, any>[];
+
+        let foundParentBlock = false;
+        // We know it's a Block<MyDefaultBlockSchema, any, any>[] and specifically a page block which has no actual typescript type, so use any to make it simpler
+        let block: any = null;
+        let foundIdx = -1;
+        for (let i = 0; !foundParentBlock && i < blocks.length; ++i) {
+            block = blocks.at(i);
+            foundParentBlock = block.props.pageId === id;
+            foundIdx = i;
+        }
+
+        // Replace parentBlock at its index with the new block with new title
+        const parentBlock = block as Block<MyDefaultBlockSchema, any, any>;
+
+        // Must type correctly or else won't recognize pageBlock type
+        const newParentBlock: Block<MyDefaultBlockSchema, any, any> = {
+            id: parentBlock.id,
+            type: 'pageBlock',
+            props: {
+                pageId: id,
+                title: currentTitle,
+            },
+            content: undefined,
+            children: parentBlock.children,
+        };
+
+        blocks[foundIdx] = newParentBlock;
+
+        const pageEntity: PageUpdateInput = {
+            id: parentId,
+            blocks: JSON.stringify(blocks),
+        };
+
+        updatePage(pageEntity, session);
+    }
 }
 
 /* Helper Methods */
