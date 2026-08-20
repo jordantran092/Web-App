@@ -34,8 +34,8 @@ type MenuBarProps = {
 export function MenuBar({ id, title }: MenuBarProps) {
     const [currentTitle, setTitle] = useState(title);
 
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
+    function updatePage() {
+        if (title != currentTitle) {
             // Update current page
             const pageEntity: PageUpdateInput = {
                 id,
@@ -46,6 +46,18 @@ export function MenuBar({ id, title }: MenuBarProps) {
 
             PageActions.renameTitleForParentOfThisPage(id, currentTitle);
         }
+    }
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            updatePage();
+            event.currentTarget.blur();
+        } else if (event.key === 'Escape') {
+            if (title != currentTitle) {
+                setTitle(title);
+            }
+            event.currentTarget.blur();
+        }
     };
 
     return (
@@ -55,7 +67,10 @@ export function MenuBar({ id, title }: MenuBarProps) {
             <Input
                 value={currentTitle}
                 onChange={(e) => setTitle(e.target.value)}
-                className="border-none"
+                // focus-visible:border-0 for the ring when click on input
+                // Border is transparent, but when hover it will turn gray so that border remains even if user moves mouse off of input when focus is on
+                // Need w-auto so that w-full doesn't take over from default classes, allow width to not be forced so field-sizing-content can work. This makes input component re-size based on content
+                className="hover: mt-2 field-sizing-content w-auto border-transparent hover:border-gray-500 focus-visible:border-white focus-visible:ring-0"
                 onKeyDown={handleKeyDown}
             />
 
