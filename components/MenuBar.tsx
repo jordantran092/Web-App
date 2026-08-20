@@ -22,7 +22,7 @@ import {
     HiDotsHorizontal,
 } from 'react-icons/hi';
 import { Input } from './ui/input';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PageUpdateInput } from '@/types/Page';
 import * as PageActions from '@/actions/PageActions';
 
@@ -32,19 +32,61 @@ type MenuBarProps = {
 };
 
 export function MenuBar({ id, title }: MenuBarProps) {
-    const [currentTitle, setTitle] = useState(title);
+    const [tempTitle, setTempTitle] = useState(title); // initial state will be retrieved from server via props
+    const titlesRef = useRef({ title: title, tempTitle: tempTitle });
+    const recentlyBlurRef = useRef(false);
+
+    useEffect(() => {
+        titlesRef.current.tempTitle = tempTitle;
+
+        document.addEventListener('click', handleClick);
+
+        return () => {
+            window.removeEventListener('click', handleClick);
+        };
+    }, [tempTitle]);
+
+    function handleClick(event: MouseEvent) {
+        if (recentlyBlurRef.current) {
+            const target = event.target as HTMLElement;
+
+            // To be safe, check if clicked item was not input element, but may not be entirely necessary because blur usually is when clicked on another ele
+            if (target.id !== 'menu-bar-input') {
+                recentlyBlurRef.current = false; // reset to avoid state conflicts
+
+                updatePage();
+            }
+        }
+    }
+
+    // When only input element is blurred
+    function handleBlur(event: React.FocusEvent<HTMLInputElement>) {
+        recentlyBlurRef.current = true;
+    }
 
     function updatePage() {
-        if (title != currentTitle) {
+        // With function closure, these vars capture the lookup expression, not the result of the lookup expression, so it will retrieve latest values of the ref each time func runs
+        let title = titlesRef.current.title;
+        let tempTitle = titlesRef.current.tempTitle;
+
+        // Only update if there's a change in title on client side, otherwise no point
+        if (title != tempTitle) {
             // Update current page
             const pageEntity: PageUpdateInput = {
                 id,
-                title: currentTitle,
+                title: tempTitle,
             };
 
             PageActions.updatePage(pageEntity);
 
-            PageActions.renameTitleForParentOfThisPage(id, currentTitle);
+            PageActions.renameTitleForParentOfThisPage(id, tempTitle);
+
+            // Make sure local variable title is in sync, not just the DB
+            titlesRef.current.title = tempTitle;
+
+            // console.log(`title: ${titlesRef.current.title}\n
+
+            //     tempTitle: ${titlesRef.current.tempTitle}`);
         }
     }
 
@@ -53,8 +95,13 @@ export function MenuBar({ id, title }: MenuBarProps) {
             updatePage();
             event.currentTarget.blur();
         } else if (event.key === 'Escape') {
-            if (title != currentTitle) {
-                setTitle(title);
+            if (titlesRef.current.title != titlesRef.current.tempTitle) {
+                // Sets back to original title a.k.a discarded changes
+                setTempTitle(titlesRef.current.title);
+
+                // console.log(`title: ${titlesRef.current.title}\n
+
+                //     tempTitle: ${titlesRef.current.tempTitle}`);
             }
             event.currentTarget.blur();
         }
@@ -65,13 +112,15 @@ export function MenuBar({ id, title }: MenuBarProps) {
             <HiOutlineMenu size={23} />
 
             <Input
-                value={currentTitle}
-                onChange={(e) => setTitle(e.target.value)}
+                value={tempTitle}
+                onChange={(e) => setTempTitle(e.target.value)}
                 // focus-visible:border-0 for the ring when click on input
                 // Border is transparent, but when hover it will turn gray so that border remains even if user moves mouse off of input when focus is on
                 // Need w-auto so that w-full doesn't take over from default classes, allow width to not be forced so field-sizing-content can work. This makes input component re-size based on content
                 className="hover: mt-2 field-sizing-content w-auto border-transparent hover:border-gray-500 focus-visible:border-white focus-visible:ring-0"
                 onKeyDown={handleKeyDown}
+                onBlur={handleBlur} // removing event listeners handled by React
+                id="menu-bar-input" // for saving on blur + click
             />
 
             <HiOutlineChevronDown size={23} />
