@@ -123,6 +123,16 @@ export default function Editor({
     // context becomes the object of type SearchMenuOpenContextType, with all the proeprties e.g. editorRef. Then access editorRef.
     context.editorRef.current = editor;
 
+    editor.onBeforeChange(({ getChanges }) => {
+        if (
+            // Cancel deleting a block in editor if there is ANY change type that involves a delete
+            getChanges().some((change) => change.type === 'delete')
+        ) {
+            // By returning `false`, the change will be canceled & not applied to the editor.
+            return false;
+        }
+    });
+
     // Render the editor
     // For responsiveness, mobile screens take full width hence no breakpoint
     return (
