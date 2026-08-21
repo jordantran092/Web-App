@@ -123,14 +123,28 @@ export default function Editor({
     // context becomes the object of type SearchMenuOpenContextType, with all the proeprties e.g. editorRef. Then access editorRef.
     context.editorRef.current = editor;
 
-    editor.onBeforeChange(({ getChanges }) => {
-        if (
-            // Cancel deleting a block in editor if there is ANY change type that involves a delete
-            getChanges().some((change) => change.type === 'delete')
-        ) {
-            // By returning `false`, the change will be canceled & not applied to the editor.
-            return false;
+    editor.onSelectionChange((editor) => {
+        const textCursorPosition = editor.getTextCursorPosition();
+
+        if (textCursorPosition.block.type === 'pageBlock') {
+            let blocks = editor.document;
+
+            blocks = blocks.slice(0, blocks.indexOf(textCursorPosition.block) - 1);
+
+            const nonPageBlock = blocks.find(
+                (element: Block<MyDefaultBlockSchema, any, any>) => element.type !== 'paragraph' // choose paragraph to be safe
+            );
+
+            if (nonPageBlock) {
+                editor.setTextCursorPosition(nonPageBlock, 'end');
+            } else {
+                editor.insertBlocks([{ type: 'paragraph', content: '' }], blocks[0], 'before');
+            }
+
+            // ******** remember edge cases with indices
         }
+
+        // console.log("Text cursor position:", textCursorPosition);
     });
 
     // Render the editor

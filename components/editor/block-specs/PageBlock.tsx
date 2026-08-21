@@ -45,5 +45,8 @@ export const createPageBlock = createReactBlockSpec(
                 </>
             );
         },
+        meta: {
+            selectable: false,
+        },
     }
 );
