@@ -24,9 +24,10 @@ type PageProps = {
     id: string;
     initialContent: Block[];
     title: string;
+    favorite: boolean;
 };
 // Need Page component to share isSaving stateful variable with navbar and editor
-export default function Page({ id, initialContent, title }: PageProps) {
+export default function Page({ id, initialContent, title, favorite }: PageProps) {
     // need state variable here in this parent component so that it can be shared between navbar and editor to handle saving indicator
     const [isSaving, setIsSaving] = useState(false);
     const [isSavingTimerOn, setIsSavingTimerOn] = useState(false);
@@ -42,11 +43,14 @@ export default function Page({ id, initialContent, title }: PageProps) {
 
     return (
         <>
-            <MenuBar id={id} title={title} />
-
-            {(isSaving || isSavingTimerOn) && (
-                <SavingIndicator setIsSavingTimerOn={setIsSavingTimerOn} />
-            )}
+            <MenuBar
+                id={id}
+                title={title}
+                favorite={favorite}
+                isSaving={isSaving}
+                isSavingTimerOn={isSavingTimerOn}
+                setIsSavingTimerOn={setIsSavingTimerOn}
+            />
 
             {/* Use context hook to share setter method so that when `move to` is clicked, will display the search dialog */}
             <SearchMenuOpenContext.Provider

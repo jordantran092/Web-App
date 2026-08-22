@@ -25,16 +25,31 @@ import { Input } from './ui/input';
 import { useEffect, useRef, useState } from 'react';
 import { PageUpdateInput } from '@/types/Page';
 import * as PageActions from '@/actions/PageActions';
+import SavingIndicator from './SavingIndicator';
 
 type MenuBarProps = {
     id: string;
     title: string;
+    favorite: boolean;
+    isSaving: boolean;
+    isSavingTimerOn: boolean;
+    setIsSavingTimerOn: (value: boolean) => void;
 };
 
-export function MenuBar({ id, title }: MenuBarProps) {
+export function MenuBar({
+    id,
+    title,
+    favorite,
+    isSaving,
+    isSavingTimerOn,
+    setIsSavingTimerOn,
+}: MenuBarProps) {
     const [tempTitle, setTempTitle] = useState(title); // initial state will be retrieved from server via props
     const titlesRef = useRef({ title: title, tempTitle: tempTitle });
     const recentlyBlurRef = useRef(false);
+
+    const [isFavorite, setIsFavorite] = useState(favorite); // initial state will be retrieved from server via props
+    const isFavoriteRef = useRef(favorite);
 
     useEffect(() => {
         titlesRef.current.tempTitle = tempTitle;
@@ -45,6 +60,10 @@ export function MenuBar({ id, title }: MenuBarProps) {
             window.removeEventListener('click', handleClick);
         };
     }, [tempTitle]);
+
+    useEffect(() => {
+        isFavoriteRef.current = isFavorite;
+    }, [isFavorite]);
 
     function handleClick(event: MouseEvent) {
         if (recentlyBlurRef.current) {
@@ -125,7 +144,28 @@ export function MenuBar({ id, title }: MenuBarProps) {
 
             <HiOutlineChevronDown size={23} />
 
-            <HiOutlineStar size={18} />
+            {(isSaving || isSavingTimerOn) && (
+                <SavingIndicator setIsSavingTimerOn={setIsSavingTimerOn} />
+            )}
+
+            <button
+                onClick={() => {
+                    // Update current page
+                    const pageEntity: PageUpdateInput = {
+                        id,
+                        favorite: !isFavorite,
+                    };
+
+                    PageActions.updatePage(pageEntity);
+
+                    setIsFavorite(!isFavorite);
+                }}>
+                <HiOutlineStar
+                    size={28}
+                    className="rounded-sm p-1 transition duration-50 hover:bg-[#bdbdbd38]"
+                />
+                {/* ASDF92349234892389482934892349823499999 */}
+            </button>
 
             <MenubarMenu>
                 <MenubarTrigger>
