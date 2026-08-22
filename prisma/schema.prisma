@@ -5,7 +5,8 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../app/generated/prisma" // do not use @, only works for bundler (next.js)
+  output   = "../app/generated/prisma"
+  // do not use @, only works for bundler (next.js)
 }
 
 datasource db {
@@ -71,8 +72,11 @@ model Account {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
+  issuer String
+
   @@index([userId])
   @@map("account")
+  @@unique([issuer, accountId], map: "account_issuer_accountId_uidx")
 }
 
 model Verification {
