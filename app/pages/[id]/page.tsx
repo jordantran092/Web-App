@@ -38,7 +38,12 @@ export default async function Pages({ params }: PagesProps) {
 
     return (
         <>
-            <Page id={id} initialContent={initialContent} title={page.title} />
+            <Page
+                id={id}
+                initialContent={initialContent}
+                title={page.title}
+                favorite={page.favorite}
+            />
         </>
     );
 }
