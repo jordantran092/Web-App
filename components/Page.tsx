@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import SearchCommand from './SearchCommand';
 import { MyBlockNoteEditor, MyDefaultBlockSchema } from './editor/schema/CustomSchema';
 import { MenuBar } from './MenuBar';
+import BreadcrumbCommand from './BreadcrumbCommand';
 
 type SearchMenuOpenContextType = {
     isSearchMenuOpen: boolean;
@@ -32,6 +33,7 @@ export default function Page({ id, initialContent, title, favorite }: PageProps)
     const [isSaving, setIsSaving] = useState(false);
     const [isSavingTimerOn, setIsSavingTimerOn] = useState(false);
     const [isSearchMenuOpen, setisSearchMenuOpen] = useState(false);
+    const [isBreadcrumbMenuOpen, setisBreadcrumbMenuOpen] = useState(false);
     const selectedBlockRef = useRef<Block<MyDefaultBlockSchema, any, any>>(null);
     const editorRef = useRef<MyBlockNoteEditor>(null);
     const router = useRouter(); // access to next.js navigation controls
@@ -50,6 +52,7 @@ export default function Page({ id, initialContent, title, favorite }: PageProps)
                 isSaving={isSaving}
                 isSavingTimerOn={isSavingTimerOn}
                 setIsSavingTimerOn={setIsSavingTimerOn}
+                setisBreadcrumbMenuOpen={setisBreadcrumbMenuOpen}
             />
 
             {/* Use context hook to share setter method so that when `move to` is clicked, will display the search dialog */}
@@ -75,9 +78,15 @@ export default function Page({ id, initialContent, title, favorite }: PageProps)
 
                     setIsSavingTimerOn={setIsSavingTimerOn}
                 />
-                {/* Do not need to handle visiblity based on state here, will handle inside */}
+                {/* Do not need to handle visiblity based on state here, meant to be handled inside via CommandDialog props */}
                 <SearchCommand id={id} />
             </SearchMenuOpenContext.Provider>
+
+            <BreadcrumbCommand
+                isBreadcrumbMenuOpen={isBreadcrumbMenuOpen}
+                setisBreadcrumbMenuOpen={setisBreadcrumbMenuOpen}
+                id={id}
+            />
         </>
     );
 }

@@ -59,6 +59,7 @@ export default function SearchCommand({ id }: SearchCommandProps) {
         }
     }, [context.isSearchMenuOpen]);
 
+    // Map each item in the array data pulled from DB, into command items, to render
     const cmdItemsArr = items.map((item, index) => {
         const title = item.title;
 

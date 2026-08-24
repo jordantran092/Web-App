@@ -34,7 +34,7 @@ model Page {
   favorite Boolean @default(false)
   title    String  @default("")
   blocks   String? // having default "" doesn't prevent it from being undefined when empty content, going to be a falsy value anyway
-  parentId String? // because the root page could have no parent, so could be null in that case
+  parentId String  @default("null") // because the root page could have no parent, so could be undefined but force the parentId to have a defined value to reduce errors because most pages will have a parentId, and in the edge case it doesn't we simply use "null"
 
   user   User   @relation(fields: [userId], references: [id])
   userId String
@@ -74,9 +74,9 @@ model Account {
 
   issuer String
 
+  @@unique([issuer, accountId], map: "account_issuer_accountId_uidx")
   @@index([userId])
   @@map("account")
-  @@unique([issuer, accountId], map: "account_issuer_accountId_uidx")
 }
 
 model Verification {
