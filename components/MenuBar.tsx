@@ -20,6 +20,7 @@ import {
     HiOutlineChevronDown,
     HiOutlineStar,
     HiDotsHorizontal,
+    HiStar,
 } from 'react-icons/hi';
 import { Input } from './ui/input';
 import { useEffect, useRef, useState } from 'react';
@@ -51,6 +52,7 @@ export function MenuBar({
     const [isFavorite, setIsFavorite] = useState(favorite); // initial state will be retrieved from server via props
     const isFavoriteRef = useRef(favorite);
 
+    // Keep current user visible title in sync with its latest ref value
     useEffect(() => {
         titlesRef.current.tempTitle = tempTitle;
 
@@ -61,10 +63,12 @@ export function MenuBar({
         };
     }, [tempTitle]);
 
+    // Keep isFavoriteRef in sync with useState
     useEffect(() => {
         isFavoriteRef.current = isFavorite;
     }, [isFavorite]);
 
+    // To handle when user changed title and clicked outside of input element, and then save
     function handleClick(event: MouseEvent) {
         if (recentlyBlurRef.current) {
             const target = event.target as HTMLElement;
@@ -160,11 +164,22 @@ export function MenuBar({
 
                     setIsFavorite(!isFavorite);
                 }}>
-                <HiOutlineStar
-                    size={28}
-                    className="rounded-sm p-1 transition duration-50 hover:bg-[#bdbdbd38]"
-                />
-                {/* ASDF92349234892389482934892349823499999 */}
+                {/* 
+                
+                Conditionally render star or unstarred based on favorited or not 
+                
+                */}
+                {isFavorite ? (
+                    <HiStar
+                        size={28}
+                        className="rounded-sm p-1 transition duration-50 hover:bg-[#bdbdbd38]"
+                    />
+                ) : (
+                    <HiOutlineStar
+                        size={28}
+                        className="rounded-sm p-1 transition duration-50 hover:bg-[#bdbdbd38]"
+                    />
+                )}
             </button>
 
             <MenubarMenu>
