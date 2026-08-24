@@ -5,10 +5,11 @@ import { prisma } from '@/lib/prisma'; // single prisma client generated from th
 import { PageCreateInput, PageUpdateInput } from '@/types/Page';
 import { Block } from '@blocknote/core/blocks';
 import * as ERROR from '@/utils/constants';
-import { forbidden } from 'next/navigation';
+import { forbidden, notFound } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { NOT_FOUND } from '@/utils/constants';
 import { MyDefaultBlockSchema } from '@/components/editor/schema/CustomSchema';
+import { Page } from '@/app/generated/prisma/client';
 
 export async function updatePage({ id, ...data }: PageUpdateInput, session: Session) {
     if (!(await doesUserOwnPage(session, id))) {
@@ -37,12 +38,6 @@ export async function getPage(id: string, session: Session) {
         where: { id },
     });
 }
-
-// export async function isPageExist(id: string) {
-//     const page = await getPage(id);
-
-//     return page ? true : false;
-// }
 
 export async function getContentOfPage(session: Session, id: string) {
     const page = await getPage(id, session);
@@ -171,7 +166,34 @@ export async function renameTitleForParentOfThisPage(
     }
 }
 
-/* Helper Methods */
+export async function getBreadcrumb(session: Session, id: string) {
+    if (!(await doesUserOwnPage(session, id))) {
+        return forbidden();
+    }
+
+    let currentPage = await getPage(id, session);
+    if (!currentPage) return notFound(); // must make sure PageActions has await for this, to receive the notFound
+
+    const breadcrumbArr: Page[] = [currentPage];
+    let parentId = currentPage.parentId;
+    while (parentId !== 'null') {
+        currentPage = await getPage(parentId, session);
+        if (!currentPage) return notFound(); // must make sure PageActions has await for this, to receive the notFound
+
+        // addFirst so that root page first, ultimately
+        breadcrumbArr.unshift(currentPage);
+
+        parentId = currentPage.parentId;
+    }
+
+    return breadcrumbArr;
+}
+
+/* 
+
+Helper Methods
+
+*/
 
 async function doesUserOwnPage(session: Session, id: string) {
     // Do not re-use getPage or else, self looping

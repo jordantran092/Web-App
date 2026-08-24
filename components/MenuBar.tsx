@@ -35,6 +35,7 @@ type MenuBarProps = {
     isSaving: boolean;
     isSavingTimerOn: boolean;
     setIsSavingTimerOn: (value: boolean) => void;
+    setisBreadcrumbMenuOpen: (value: boolean) => void;
 };
 
 export function MenuBar({
@@ -44,6 +45,7 @@ export function MenuBar({
     isSaving,
     isSavingTimerOn,
     setIsSavingTimerOn,
+    setisBreadcrumbMenuOpen,
 }: MenuBarProps) {
     const [tempTitle, setTempTitle] = useState(title); // initial state will be retrieved from server via props
     const titlesRef = useRef({ title: title, tempTitle: tempTitle });
@@ -146,12 +148,23 @@ export function MenuBar({
                 id="menu-bar-input" // for saving on blur + click
             />
 
-            <HiOutlineChevronDown size={23} />
+            {/* Bread crumb button */}
+            <button
+                onClick={() => {
+                    setisBreadcrumbMenuOpen(true);
+                }}>
+                <HiOutlineChevronDown
+                    size={23}
+                    className="rounded-sm p-1 transition duration-50 hover:bg-[#bdbdbd38]"
+                />
+            </button>
 
+            {/* Saving indicator */}
             {(isSaving || isSavingTimerOn) && (
                 <SavingIndicator setIsSavingTimerOn={setIsSavingTimerOn} />
             )}
 
+            {/* Favorite button */}
             <button
                 onClick={() => {
                     // Update current page

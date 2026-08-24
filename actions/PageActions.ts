@@ -65,27 +65,12 @@ export async function renameTitleForParentOfThisPage(id: string, currentTitle: s
     return await PageService.renameTitleForParentOfThisPage(id, currentTitle, session);
 }
 
-/*
+export async function getBreadcrumb(id: string) {
+    // Check if any valid session / logged in
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+    if (!session) return unauthorized();
 
-let blocks: Block<MyDefaultBlockSchema, any, any>[] = []; // current saved blocks of selected page
-
-                    if (item.blocks) {
-                        blocks = JSON.parse(item.blocks) as Block<MyDefaultBlockSchema, any, any>[];
-                    }
-
-                    const selectedBlock = context.selectedBlockRef.current;
-                    // Must check if selectedBlock is non-empty to avoid re-trying action after successful action
-                    if (selectedBlock) {
-                        blocks.push(selectedBlock);
-                        context.selectedBlockRef.current = null; // Must reset to avoid re-trying action after successful action
-                        context.setisSearchMenuOpen(false); // close dialog
-
-                        const newBlocks = JSON.stringify(blocks);
-                        const destinationPageEntity: PageUpdateInput = {
-                            // the selected page
-
-                            id: item.id, // the selected page's id
-                            blocks: newBlocks,
-                        };
-                        PageActions.updatePage(destinationPageEntity);
-*/
+    return await PageService.getBreadcrumb(session, id);
+}
