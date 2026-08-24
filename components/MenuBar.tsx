@@ -85,7 +85,7 @@ export function MenuBar({
     }
 
     // When only input element is blurred
-    function handleBlur(event: React.FocusEvent<HTMLInputElement>) {
+    function handleBlur() {
         recentlyBlurRef.current = true;
     }
 
