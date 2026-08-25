@@ -46,7 +46,7 @@ export default function Library({ items }: LibraryProps) {
         <>
             <div className="flex justify-between">
                 <p className="text-4xl font-bold">Library</p>
-                <Button className="p-3" onClick={() => PageActions.createNewPageInLibrary()}>
+                <Button className="my-3 p-3" onClick={() => PageActions.createNewPageInLibrary()}>
                     New page
                 </Button>
             </div>
@@ -62,7 +62,7 @@ export default function Library({ items }: LibraryProps) {
                 </button>
             </div> */}
 
-            <div className="mt-10 flex gap-5">
+            <div className="mt-7 flex gap-5">
                 <label>
                     {/* if don't add checked, then will allow multiple to be selected at once */}
                     <input

@@ -39,8 +39,8 @@ export default async function Home() {
                 )}
             </Menubar>
 
-            {/* min-h-svh to stretch it vertically fully & avoid mobile viewport address bar weirdness scrolling */}
-            <div className="mx-22 mt-15 min-h-svh">
+            {/* min-h-svh to stretch it vertically fully & avoid mobile viewport address bar weirdness scrolling. xl for 1920x1080-like screens*/}
+            <div className="mx-4 mt-15 min-h-svh xl:mx-22">
                 <Library items={items}></Library>
             </div>
         </>

@@ -29,8 +29,10 @@ export default function LibraryPages({ items }: LibraryPagesProps) {
                     router.push(`/pages/${item.id}`);
                 }}>
                 <TableCell className="w-full font-medium">
-                    <HiDocumentText size={23} />
-                    {title}
+                    <div className="flex gap-2.5">
+                        <HiDocumentText size={23} />
+                        <p className="mt-0.5">{title}</p>
+                    </div>
                 </TableCell>
             </TableRow>
         );
@@ -40,7 +42,7 @@ export default function LibraryPages({ items }: LibraryPagesProps) {
         <Table>
             <TableHeader>
                 <TableRow>
-                    <TableHead className="w-25">Name</TableHead>
+                    <TableHead className="w-25">Page Name</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>{itemsArr}</TableBody>
