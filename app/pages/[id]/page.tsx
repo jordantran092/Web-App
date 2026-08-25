@@ -1,5 +1,5 @@
 import * as PageService from '@/services/PageService';
-import Page from '@/components/Page';
+import Page from '@/components/pages/Page';
 import { auth } from '@/lib/auth';
 import { Block } from '@blocknote/core/blocks';
 import { headers } from 'next/headers';

@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import LoadingSpinner from './LoadingSpinner';
+import LoadingSpinner from '../LoadingSpinner';
+// import LoadingSpinner from './LoadingSpinner';
 
 type SavingIndicatorProps = {
     setIsSavingTimerOn: (value: boolean) => void;

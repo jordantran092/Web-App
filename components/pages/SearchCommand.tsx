@@ -21,7 +21,7 @@ import { Block } from '@blocknote/core/blocks';
 import { PageUpdateInput } from '@/types/Page';
 import { useBlockNoteEditor } from '@blocknote/react';
 import { MyDefaultBlockSchema, schema } from '@/components/editor/schema/CustomSchema';
-import LoadingSpinner from './LoadingSpinner';
+import LoadingSpinner from '../LoadingSpinner';
 
 type SearchCommandProps = {
     id: string;

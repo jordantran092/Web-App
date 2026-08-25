@@ -22,7 +22,7 @@ import {
     HiDotsHorizontal,
     HiStar,
 } from 'react-icons/hi';
-import { Input } from './ui/input';
+import { Input } from '../ui/input';
 import { useEffect, useRef, useState } from 'react';
 import { PageUpdateInput } from '@/types/Page';
 import * as PageActions from '@/actions/PageActions';

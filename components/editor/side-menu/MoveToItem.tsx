@@ -1,4 +1,5 @@
-import { SearchMenuOpenContext } from '@/components/Page';
+// import { SearchMenuOpenContext } from '@/components/Page';
+import { SearchMenuOpenContext } from '@/components/pages/Page';
 import {} from '@blocknote/core';
 import { SideMenuExtension } from '@blocknote/core/extensions';
 import { useBlockNoteEditor, useComponentsContext, useExtensionState } from '@blocknote/react';

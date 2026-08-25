@@ -2,11 +2,13 @@
 
 import { Block } from '@blocknote/core/blocks';
 import { useEffect, useState, createContext, useRef, RefObject } from 'react';
-import SavingIndicator from './SavingIndicator';
+
 import { Editor } from '@/components/editor/DynamicEditor';
 import { useRouter } from 'next/navigation';
 import SearchCommand from './SearchCommand';
-import { MyBlockNoteEditor, MyDefaultBlockSchema } from './editor/schema/CustomSchema';
+import { MyBlockNoteEditor, MyDefaultBlockSchema } from '../editor/schema/CustomSchema';
+// import { MenuBar } from './pages/MenuBar';
+// import BreadcrumbCommand from './pages/BreadcrumbCommand';
 import { MenuBar } from './MenuBar';
 import BreadcrumbCommand from './BreadcrumbCommand';
 

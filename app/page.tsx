@@ -4,12 +4,12 @@ import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 
 import Image from 'next/image';
-import { HiOutlineMenu } from 'react-icons/hi';
+import { HiOutlineMenu, HiOutlineStar } from 'react-icons/hi';
 import { Menubar } from '@/components/ui/menubar';
 import * as PageService from '@/services/PageService';
 import { Page } from './generated/prisma/client';
 
-import WorkspacePages from '@/components/WorkspacePages';
+import Library from '@/components/library/Library';
 
 export default async function Home() {
     const session = await auth.api.getSession({
@@ -17,6 +17,8 @@ export default async function Home() {
     });
 
     if (!session) redirect('/signin');
+
+    /* Core logic */
 
     let items: Page[] = [];
 
@@ -38,14 +40,8 @@ export default async function Home() {
             </Menubar>
 
             {/* min-h-svh to stretch it vertically fully & avoid mobile viewport address bar weirdness scrolling */}
-            <div className="min-h-svh">
-                <p>Workspace</p>
-                <div className="flex gap-x-16">
-                    <button className="border">Starred</button>
-                    <button className="border">+ New</button>
-                </div>
-                <p>Name</p>
-                <WorkspacePages items={items}></WorkspacePages>
+            <div className="mx-22 mt-15 min-h-svh">
+                <Library items={items}></Library>
             </div>
         </>
     );

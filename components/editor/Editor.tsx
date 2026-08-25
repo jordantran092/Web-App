@@ -20,7 +20,7 @@ import { useContext, useEffect, useRef } from 'react';
 import { getCustomSlashMenuItems } from './slash-menu/CustomSlashMenuItems';
 import { MyDefaultBlockSchema, schema } from './schema/CustomSchema';
 import { CustomSideMenu } from './side-menu/CustomSideMenu';
-import { SearchMenuOpenContext } from '../Page';
+import { SearchMenuOpenContext } from '../pages/Page';
 
 type EditorProps = {
     id: string;

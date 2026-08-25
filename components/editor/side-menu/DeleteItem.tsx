@@ -1,4 +1,4 @@
-import { SearchMenuOpenContext } from '@/components/Page';
+// import { SearchMenuOpenContext } from '@/components/Page';
 import {} from '@blocknote/core';
 import { SideMenuExtension } from '@blocknote/core/extensions';
 import { useBlockNoteEditor, useComponentsContext, useExtensionState } from '@blocknote/react';
@@ -6,6 +6,7 @@ import { ReactNode, useContext } from 'react';
 import { schema } from '../schema/CustomSchema';
 import * as PageActions from '@/actions/PageActions';
 import { PageUpdateInput } from '@/types/Page';
+import { SearchMenuOpenContext } from '@/components/pages/Page';
 
 export function DeleteItem(props: { children: ReactNode }) {
     const editor = useBlockNoteEditor(schema);
