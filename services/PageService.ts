@@ -7,7 +7,7 @@ import { Block } from '@blocknote/core/blocks';
 import * as ERROR from '@/utils/constants';
 import { forbidden, notFound } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { NOT_FOUND } from '@/utils/constants';
+import { EMPTY, NOT_FOUND } from '@/utils/constants';
 import { MyDefaultBlockSchema } from '@/components/editor/schema/CustomSchema';
 import { Page } from '@/app/generated/prisma/client';
 
@@ -66,7 +66,7 @@ export async function getContentOfPage(session: Session, id: string) {
 }
 
 export async function createPage({ parentId, ...data }: PageCreateInput, session: Session) {
-    if (!(await doesUserOwnPage(session, parentId))) {
+    if (parentId !== EMPTY && !(await doesUserOwnPage(session, parentId))) {
         return forbidden();
     }
 
@@ -176,7 +176,7 @@ export async function getBreadcrumb(session: Session, id: string) {
 
     const breadcrumbArr: Page[] = [currentPage];
     let parentId = currentPage.parentId;
-    while (parentId !== 'null') {
+    while (parentId !== EMPTY) {
         currentPage = await getPage(parentId, session);
         if (!currentPage) return notFound(); // must make sure PageActions has await for this, to receive the notFound
 

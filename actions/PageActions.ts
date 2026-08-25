@@ -4,7 +4,7 @@ import { MyDefaultBlockSchema } from '@/components/editor/schema/CustomSchema';
 import { auth } from '@/lib/auth';
 import * as PageService from '@/services/PageService';
 import { PageCreateInput, PageUpdateInput } from '@/types/Page';
-import { NOT_FOUND } from '@/utils/constants';
+import { EMPTY, NOT_FOUND } from '@/utils/constants';
 import { Block } from '@blocknote/core/blocks';
 import { headers } from 'next/headers';
 import { notFound, redirect, unauthorized } from 'next/navigation';
@@ -94,12 +94,12 @@ export async function createNewPageInLibrary() {
 
     const page = await PageService.createPage(
         {
-            parentId: 'null',
+            parentId: EMPTY,
             title: 'New page',
             user: session.user.id,
         },
         session
     );
 
-    redirect(`/pages/${page.id}`);
+    redirect(`/pages/${page.id}`); // Will actually do a router push because client component code is the caller and JS is active
 }
