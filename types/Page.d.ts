@@ -12,6 +12,6 @@ export type PageCreateInput = {
     favorite?: boolean;
     title?: string;
     blocks?: string;
-    user: string;
+    user: string; // user id to connect to
     parentId: string;
 };

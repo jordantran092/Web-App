@@ -7,7 +7,7 @@ import { PageCreateInput, PageUpdateInput } from '@/types/Page';
 import { NOT_FOUND } from '@/utils/constants';
 import { Block } from '@blocknote/core/blocks';
 import { headers } from 'next/headers';
-import { notFound, unauthorized } from 'next/navigation';
+import { notFound, redirect, unauthorized } from 'next/navigation';
 
 /* Controller-like methods */
 
@@ -83,4 +83,23 @@ export async function getStarredPages() {
     if (!session) return unauthorized();
 
     return await PageService.getStarredPages(session);
+}
+
+export async function createNewPageInLibrary() {
+    // Check if any valid session / logged in
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+    if (!session) return unauthorized();
+
+    const page = await PageService.createPage(
+        {
+            parentId: 'null',
+            title: 'New page',
+            user: session.user.id,
+        },
+        session
+    );
+
+    redirect(`/pages/${page.id}`);
 }

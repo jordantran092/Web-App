@@ -77,10 +77,10 @@ export async function createPage({ parentId, ...data }: PageCreateInput, session
             blocks: data.blocks,
             parentId: parentId,
 
-            // Need to fill in user. Page has to be connected to the current authorized user's id because they are related in the schema
+            // Need to fill in user. Page has to be connected to the user's id because they are related in the schema
             user: {
                 connect: {
-                    id: session.user.id,
+                    id: data.user, // id referred to here is the User entity
                 },
             },
         },
