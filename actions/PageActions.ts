@@ -74,3 +74,13 @@ export async function getBreadcrumb(id: string) {
 
     return await PageService.getBreadcrumb(session, id);
 }
+
+export async function getStarredPages() {
+    // Check if any valid session / logged in
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+    if (!session) return unauthorized();
+
+    return await PageService.getStarredPages(session);
+}

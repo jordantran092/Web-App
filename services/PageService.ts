@@ -189,6 +189,17 @@ export async function getBreadcrumb(session: Session, id: string) {
     return breadcrumbArr;
 }
 
+export async function getStarredPages(session: Session) {
+    const userId = session.user.id;
+
+    return prisma.page.findMany({
+        where: {
+            userId, // userId matches page and session
+            favorite: true,
+        },
+    });
+}
+
 /* 
 
 Helper Methods
