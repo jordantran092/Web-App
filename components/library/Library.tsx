@@ -40,6 +40,8 @@ export default function Library({ items }: LibraryProps) {
                 <button
                     className="flex rounded-sm p-1 text-lg transition duration-50 hover:bg-[#bdbdbd38]"
                     onClick={() => setIsStarred(true)}>
+                    {' '}
+                    {/* ASDF2392384923894234 */}
                     <HiOutlineStar size={25} />
                     Starred
                 </button>
