@@ -134,8 +134,6 @@ export function MenuBar({
 
     return (
         <Menubar modal={false} className="border-none">
-            <HiOutlineMenu size={23} />
-
             <Input
                 value={tempTitle}
                 onChange={(e) => setTempTitle(e.target.value)}

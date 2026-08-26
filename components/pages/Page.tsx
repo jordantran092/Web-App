@@ -7,10 +7,13 @@ import { Editor } from '@/components/editor/DynamicEditor';
 import { useRouter } from 'next/navigation';
 import SearchCommand from './SearchCommand';
 import { MyBlockNoteEditor, MyDefaultBlockSchema } from '../editor/schema/CustomSchema';
-// import { MenuBar } from './pages/MenuBar';
-// import BreadcrumbCommand from './pages/BreadcrumbCommand';
 import { MenuBar } from './MenuBar';
 import BreadcrumbCommand from './BreadcrumbCommand';
+
+//---
+
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { AppSidebar } from '../sidebar/app-sidebar';
 
 type SearchMenuOpenContextType = {
     isSearchMenuOpen: boolean;
@@ -47,48 +50,87 @@ export default function Page({ id, initialContent, title, favorite }: PageProps)
 
     return (
         <>
-            <MenuBar
-                id={id}
-                title={title}
-                favorite={favorite}
-                isSaving={isSaving}
-                isSavingTimerOn={isSavingTimerOn}
-                setIsSavingTimerOn={setIsSavingTimerOn}
-                setisBreadcrumbMenuOpen={setisBreadcrumbMenuOpen}
-            />
+            <SidebarProvider>
+                <AppSidebar />
 
-            {/* Use context hook to share setter method so that when `move to` is clicked, will display the search dialog */}
-            <SearchMenuOpenContext.Provider
-                value={{ isSearchMenuOpen, setisSearchMenuOpen, selectedBlockRef, editorRef, id }}>
-                {/* 
+                {/* Everything else besides the sidebar e.g. main content */}
+                <SidebarInset>
+                    {/* <header className=""> */}
+
+                    <div className="flex gap-2">
+                        {/* consider using this icon */}
+                        {/* <HiOutlineMenu size={23} /> */}
+                        <SidebarTrigger />
+
+                        <MenuBar
+                            id={id}
+                            title={title}
+                            favorite={favorite}
+                            isSaving={isSaving}
+                            isSavingTimerOn={isSavingTimerOn}
+                            setIsSavingTimerOn={setIsSavingTimerOn}
+                            setisBreadcrumbMenuOpen={setisBreadcrumbMenuOpen}
+                        />
+
+                        {/* <Separator
+                                orientation="vertical"
+                                className="mr-2 data-[orientation=vertical]:h-4"
+                            /> */}
+                        {/* <Breadcrumb>
+                                <BreadcrumbList>
+                                    <BreadcrumbItem>
+                                        <BreadcrumbPage className="line-clamp-1">
+                                            Project Management & Task Tracking
+                                        </BreadcrumbPage>
+                                    </BreadcrumbItem>
+                                </BreadcrumbList>
+                            </Breadcrumb> */}
+                    </div>
+                    {/* <div className="ml-auto px-3">
+                            <NavActions />
+                        </div> */}
+                    {/* </header> */}
+                    {/* <div className=""> */}
+                    {/* Use context hook to share setter method so that when `move to` is clicked, will display the search dialog */}
+                    <SearchMenuOpenContext.Provider
+                        value={{
+                            isSearchMenuOpen,
+                            setisSearchMenuOpen,
+                            selectedBlockRef,
+                            editorRef,
+                            id,
+                        }}>
+                        {/* 
                 
-                since Page has `use client`, then Editor will be made sure it's client side, thus don't need to put `use client` in Editor or else nextjs will think setIsSaving will be assigned to some server side value from a server component, thus needing it to be serializable. but that's not our case 
-                
-                */}
+                        since Page has `use client`, then Editor will be made sure it's client side, thus don't need to put `use client` in Editor or else nextjs will think setIsSaving will be assigned to some server side value from a server component, thus needing it to be serializable. but that's not our case 
+                        
+                        */}
 
-                <Editor
-                    id={id}
+                        <Editor
+                            id={id}
 
-                    // if initialContent is non empty, will return as an object with initialContent: initialContent , otherwise will return as empty object. the spread operator will spread the object into a prop because in the context of props, if non empty
-                    {...(initialContent.length > 0 ? { initialContent } : {})}
+                            // if initialContent is non empty, will return as an object with initialContent: initialContent , otherwise will return as empty object. the spread operator will spread the object into a prop because in the context of props, if non empty
+                            {...(initialContent.length > 0 ? { initialContent } : {})}
 
-                    setIsSaving={setIsSaving}
+                            setIsSaving={setIsSaving}
 
-                    isSaving={isSaving}
+                            isSaving={isSaving}
 
-                    isSavingTimerOn={isSavingTimerOn}
+                            isSavingTimerOn={isSavingTimerOn}
 
-                    setIsSavingTimerOn={setIsSavingTimerOn}
-                />
-                {/* Do not need to handle visiblity based on state here, meant to be handled inside via CommandDialog props */}
-                <SearchCommand id={id} />
-            </SearchMenuOpenContext.Provider>
+                            setIsSavingTimerOn={setIsSavingTimerOn}
+                        />
+                        {/* Do not need to handle visiblity based on state here, meant to be handled inside via CommandDialog props */}
+                        <SearchCommand id={id} />
+                    </SearchMenuOpenContext.Provider>
 
-            <BreadcrumbCommand
-                isBreadcrumbMenuOpen={isBreadcrumbMenuOpen}
-                setisBreadcrumbMenuOpen={setisBreadcrumbMenuOpen}
-                id={id}
-            />
+                    <BreadcrumbCommand
+                        isBreadcrumbMenuOpen={isBreadcrumbMenuOpen}
+                        setisBreadcrumbMenuOpen={setisBreadcrumbMenuOpen}
+                        id={id}
+                    />
+                </SidebarInset>
+            </SidebarProvider>
         </>
     );
 }
