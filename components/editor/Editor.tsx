@@ -123,6 +123,11 @@ export default function Editor({
     // context becomes the object of type SearchMenuOpenContextType, with all the proeprties e.g. editorRef. Then access editorRef.
     context.editorRef.current = editor;
 
+    // to get just text content, multi spaces removed ASDF234324324234324
+    // const plainText = editor._tiptapEditor.getText();
+    // const a = plainText.replace(/\s+/g, ' ').trim();
+    // console.log(a);
+
     // Render the editor
     // For responsiveness, mobile screens take full width hence no breakpoint
     return (
