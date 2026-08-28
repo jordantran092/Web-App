@@ -38,6 +38,7 @@ export function DeleteItem(props: { children: ReactNode }) {
                     const pageEntity: PageUpdateInput = {
                         id,
                         blocks: JSON.stringify(editor.document),
+                        textContent: editor._tiptapEditor.getText().replace(/\s+/g, ' ').trim(),
                     };
 
                     PageActions.updatePage(pageEntity);

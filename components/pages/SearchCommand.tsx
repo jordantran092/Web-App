@@ -20,8 +20,14 @@ import { Page } from '@/app/generated/prisma/client';
 import { Block } from '@blocknote/core/blocks';
 import { PageUpdateInput } from '@/types/Page';
 import { useBlockNoteEditor } from '@blocknote/react';
-import { MyDefaultBlockSchema, schema } from '@/components/editor/schema/CustomSchema';
+import {
+    MyDefaultBlockSchema,
+    MyInlineContentSchema,
+    MyStyleSchema,
+    schema,
+} from '@/components/editor/schema/CustomSchema';
 import LoadingSpinner from '../LoadingSpinner';
+import { StyledText } from '@blocknote/core';
 
 type SearchCommandProps = {
     id: string;
@@ -83,12 +89,36 @@ export default function SearchCommand({ id }: SearchCommandProps) {
                         context.selectedBlockRef.current = null; // Must reset to avoid re-trying action after successful action
                         context.setisSearchMenuOpen(false); // close dialog
 
+                        // // Get text content of blocks outside of editor instance
+                        // let result = '';
+
+                        // // remember (also children blocks too)
+
+                        // blocks.forEach((block: Block<MyDefaultBlockSchema, any, any>) => {
+                        //     if (block.content && block.content) {
+                        //         // if inlinecontent[], only content type of array
+                        //         if (Array.isArray(block.content)) {
+                        //             block.content.forEach((inlineContentObj) => {
+                        //                 if (inlineContentObj.type === 'text') {
+                        //                     result =
+                        //                         result +
+                        //                         ` ${(inlineContentObj as StyledText<MyStyleSchema>).text}`;
+                        //                 }
+                        //             });
+                        //         }
+                        //     }
+                        // });
+
                         const newBlocks = JSON.stringify(blocks);
                         const destinationPageEntity: PageUpdateInput = {
                             // the selected page
 
                             id: item.id, // the selected page's id
                             blocks: newBlocks,
+                            // textContent: editor._tiptapEditor
+                            //         .getText()
+                            //         .replace(/\s+/g, ' ')
+                            //         .trim()
                         };
                         PageActions.updatePage(destinationPageEntity);
 
@@ -109,6 +139,10 @@ export default function SearchCommand({ id }: SearchCommandProps) {
                         const pageEntityParent: PageUpdateInput = {
                             id: id, // the selected page's id
                             blocks: newBlocksParent,
+                            textContent: editor?._tiptapEditor
+                                .getText()
+                                .replace(/\s+/g, ' ')
+                                .trim(),
                         };
                         PageActions.updatePage(pageEntityParent);
                     }
