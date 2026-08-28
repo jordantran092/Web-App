@@ -4,7 +4,7 @@ import { auth } from '@/lib/auth';
 import { Block } from '@blocknote/core/blocks';
 import { headers } from 'next/headers';
 import { forbidden, notFound } from 'next/navigation';
-import * as ERROR from '@/utils/constants';
+import * as ERROR from '@/utils/app-constants';
 
 type PagesProps = {
     // the params from the browser url, in this case corresponds to the page id
@@ -36,7 +36,7 @@ export default async function Pages({ params }: PagesProps) {
         }
     }
 
-    if (page.textContent !== '') console.log('content:' + page.textContent);
+    // if (page.textContent !== '') console.log('content:' + page.textContent);
 
     return (
         <>

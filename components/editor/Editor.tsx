@@ -27,6 +27,7 @@ import { getCustomSlashMenuItems } from './slash-menu/CustomSlashMenuItems';
 import { MyDefaultBlockSchema, MyStyleSchema, schema } from './schema/CustomSchema';
 import { CustomSideMenu } from './side-menu/CustomSideMenu';
 import { SearchMenuOpenContext } from '../pages/Page';
+import { getText } from '@/utils/block-utils';
 
 type EditorProps = {
     id: string;
@@ -91,26 +92,7 @@ export default function Editor({
 
                             /* test */
                             // Get text content of blocks outside of editor instance
-                            let blocks = editor.document;
-                            let result = '';
-
-                            // remember (also children blocks too)
-
-                            blocks.forEach((block: Block<MyDefaultBlockSchema, any, any>) => {
-                                if (block.content && block.content) {
-                                    // if inlinecontent[] and plaincontent[], only content type of array
-                                    if (Array.isArray(block.content)) {
-                                        block.content.forEach((contentObj) => {
-                                            if (contentObj.type === 'text') {
-                                                result =
-                                                    result +
-                                                    ` ${(contentObj as StyledText<MyStyleSchema>).text}`;
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-
+                            const result = getText(editor.document);
                             console.log(result);
 
                             // update refs immediately so any subsequent fast events see the in-flight save

@@ -4,10 +4,10 @@ import { Session } from '@/lib/auth';
 import { prisma } from '@/lib/prisma'; // single prisma client generated from the prisma.ts file
 import { PageCreateInput, PageUpdateInput } from '@/types/Page';
 import { Block } from '@blocknote/core/blocks';
-import * as ERROR from '@/utils/constants';
+import * as ERROR from '@/utils/app-constants';
 import { forbidden, notFound } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { EMPTY, NOT_FOUND } from '@/utils/constants';
+import { EMPTY, NOT_FOUND } from '@/utils/app-constants';
 import { MyDefaultBlockSchema } from '@/components/editor/schema/CustomSchema';
 import { Page } from '@/app/generated/prisma/client';
 
