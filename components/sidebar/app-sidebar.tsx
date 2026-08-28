@@ -253,12 +253,15 @@ const data = {
     ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
+    setIsFTSMenuOpen: (value: boolean) => void;
+};
+export function AppSidebar({ setIsFTSMenuOpen, ...props }: AppSidebarProps) {
     return (
         <Sidebar className="border-r-0" {...props}>
             <SidebarHeader>
                 <TeamSwitcher teams={data.teams} />
-                <NavMain items={data.navMain} />
+                <NavMain items={data.navMain} setIsFTSMenuOpen={setIsFTSMenuOpen}/>
             </SidebarHeader>
             <SidebarContent>
                 <NavFavorites favorites={data.favorites} />
