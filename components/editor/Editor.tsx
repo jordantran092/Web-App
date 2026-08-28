@@ -13,12 +13,18 @@ import '@blocknote/mantine/style.css';
 import '@blocknote/core/fonts/inter.css';
 // import '@/app/globals.css';
 
-import { Block, BlockNoteSchema, createExtension, filterSuggestionItems } from '@blocknote/core';
+import {
+    Block,
+    BlockNoteSchema,
+    createExtension,
+    filterSuggestionItems,
+    StyledText,
+} from '@blocknote/core';
 import { PageUpdateInput } from '@/types/Page';
 import * as PageActions from '@/actions/PageActions';
 import { useContext, useEffect, useRef } from 'react';
 import { getCustomSlashMenuItems } from './slash-menu/CustomSlashMenuItems';
-import { MyDefaultBlockSchema, schema } from './schema/CustomSchema';
+import { MyDefaultBlockSchema, MyStyleSchema, schema } from './schema/CustomSchema';
 import { CustomSideMenu } from './side-menu/CustomSideMenu';
 import { SearchMenuOpenContext } from '../pages/Page';
 
@@ -74,12 +80,38 @@ export default function Editor({
                     'Mod-s': ({ editor }) => {
                         // do not allow saving if already in process of saving to avoid any desync of values
                         if (!(isSavingRef.current || isSavingTimerOnRef.current)) {
-                            const savedBlocks = JSON.stringify(editor.document);
-
                             const pageEntity: PageUpdateInput = {
                                 id: id,
-                                blocks: savedBlocks,
+                                blocks: JSON.stringify(editor.document),
+                                textContent: editor._tiptapEditor
+                                    .getText()
+                                    .replace(/\s+/g, ' ')
+                                    .trim(), // to get only text content, multi spaces removed so words still stay separate
                             };
+
+                            /* test */
+                            // Get text content of blocks outside of editor instance
+                            let blocks = editor.document;
+                            let result = '';
+
+                            // remember (also children blocks too)
+
+                            blocks.forEach((block: Block<MyDefaultBlockSchema, any, any>) => {
+                                if (block.content && block.content) {
+                                    // if inlinecontent[] and plaincontent[], only content type of array
+                                    if (Array.isArray(block.content)) {
+                                        block.content.forEach((contentObj) => {
+                                            if (contentObj.type === 'text') {
+                                                result =
+                                                    result +
+                                                    ` ${(contentObj as StyledText<MyStyleSchema>).text}`;
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+
+                            console.log(result);
 
                             // update refs immediately so any subsequent fast events see the in-flight save
                             isSavingRef.current = true;
@@ -122,11 +154,6 @@ export default function Editor({
     }
     // context becomes the object of type SearchMenuOpenContextType, with all the proeprties e.g. editorRef. Then access editorRef.
     context.editorRef.current = editor;
-
-    // to get just text content, multi spaces removed ASDF234324324234324
-    // const plainText = editor._tiptapEditor.getText();
-    // const a = plainText.replace(/\s+/g, ' ').trim();
-    // console.log(a);
 
     // Render the editor
     // For responsiveness, mobile screens take full width hence no breakpoint

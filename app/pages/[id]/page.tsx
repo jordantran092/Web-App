@@ -36,6 +36,8 @@ export default async function Pages({ params }: PagesProps) {
         }
     }
 
+    if (page.textContent !== '') console.log('content:' + page.textContent);
+
     return (
         <>
             <Page

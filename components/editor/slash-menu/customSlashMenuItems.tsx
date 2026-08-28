@@ -41,6 +41,7 @@ const pageItem = (editor: MyBlockNoteEditor, id: string) => ({
         const parentPageEntity: PageUpdateInput = {
             id: id,
             blocks: savedBlocks,
+            textContent: editor._tiptapEditor.getText().replace(/\s+/g, ' ').trim(),
         };
 
         PageActions.updatePage(parentPageEntity);
