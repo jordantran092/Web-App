@@ -90,11 +90,6 @@ export default function Editor({
                                     .trim(), // to get only text content, multi spaces removed so words still stay separate
                             };
 
-                            /* test */
-                            // Get text content of blocks outside of editor instance
-                            const result = getText(editor.document);
-                            console.log(result);
-
                             // update refs immediately so any subsequent fast events see the in-flight save
                             isSavingRef.current = true;
                             isSavingTimerOnRef.current = true;

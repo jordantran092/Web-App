@@ -10,6 +10,7 @@ import { revalidatePath } from 'next/cache';
 import { EMPTY, NOT_FOUND } from '@/utils/app-constants';
 import { MyDefaultBlockSchema } from '@/components/editor/schema/CustomSchema';
 import { Page } from '@/app/generated/prisma/client';
+import { getText } from '@/utils/block-utils';
 
 export async function updatePage({ id, ...data }: PageUpdateInput, session: Session) {
     if (!(await doesUserOwnPage(session, id))) {
@@ -160,6 +161,7 @@ export async function renameTitleForParentOfThisPage(
         const pageEntity: PageUpdateInput = {
             id: parentId,
             blocks: JSON.stringify(blocks),
+            textContent: getText(blocks),
         };
 
         updatePage(pageEntity, session);

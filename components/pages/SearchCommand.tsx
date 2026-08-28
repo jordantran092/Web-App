@@ -28,6 +28,7 @@ import {
 } from '@/components/editor/schema/CustomSchema';
 import LoadingSpinner from '../LoadingSpinner';
 import { StyledText } from '@blocknote/core';
+import { getText } from '@/utils/block-utils';
 
 type SearchCommandProps = {
     id: string;
@@ -89,25 +90,8 @@ export default function SearchCommand({ id }: SearchCommandProps) {
                         context.selectedBlockRef.current = null; // Must reset to avoid re-trying action after successful action
                         context.setisSearchMenuOpen(false); // close dialog
 
-                        // // Get text content of blocks outside of editor instance
-                        // let result = '';
-
-                        // // remember (also children blocks too)
-
-                        // blocks.forEach((block: Block<MyDefaultBlockSchema, any, any>) => {
-                        //     if (block.content && block.content) {
-                        //         // if inlinecontent[], only content type of array
-                        //         if (Array.isArray(block.content)) {
-                        //             block.content.forEach((inlineContentObj) => {
-                        //                 if (inlineContentObj.type === 'text') {
-                        //                     result =
-                        //                         result +
-                        //                         ` ${(inlineContentObj as StyledText<MyStyleSchema>).text}`;
-                        //                 }
-                        //             });
-                        //         }
-                        //     }
-                        // });
+                        // Get text content of blocks outside of editor instance
+                        const result = getText(blocks);
 
                         const newBlocks = JSON.stringify(blocks);
                         const destinationPageEntity: PageUpdateInput = {
@@ -115,10 +99,7 @@ export default function SearchCommand({ id }: SearchCommandProps) {
 
                             id: item.id, // the selected page's id
                             blocks: newBlocks,
-                            // textContent: editor._tiptapEditor
-                            //         .getText()
-                            //         .replace(/\s+/g, ' ')
-                            //         .trim()
+                            textContent: result,
                         };
                         PageActions.updatePage(destinationPageEntity);
 
