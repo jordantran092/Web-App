@@ -23,4 +23,5 @@ export const schema = BlockNoteSchema.create().extend({
 // If you run into any issues with BlockNoteEditor, Block, PartialBlock when using these types directly, may need to try exporting more of your custom types here
 export type MyBlockNoteEditor = typeof schema.BlockNoteEditor;
 export type MyDefaultBlockSchema = typeof schema.blockSchema;
-// export type MyStyleSchema = typeof schema.styleSchema;
+export type MyStyleSchema = typeof schema.styleSchema;
+export type MyInlineContentSchema = typeof schema.inlineContentSchema;
