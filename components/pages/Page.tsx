@@ -39,6 +39,8 @@ export default function Page({ id, initialContent, title, favorite }: PageProps)
     const [isSavingTimerOn, setIsSavingTimerOn] = useState(false);
     const [isSearchMenuOpen, setisSearchMenuOpen] = useState(false);
     const [isBreadcrumbMenuOpen, setisBreadcrumbMenuOpen] = useState(false);
+    const [isFTSMenuOpen, setIsFTSMenuOpen] = useState(false);
+
     const selectedBlockRef = useRef<Block<MyDefaultBlockSchema, any, any>>(null);
     const editorRef = useRef<MyBlockNoteEditor>(null);
     const router = useRouter(); // access to next.js navigation controls
@@ -51,7 +53,7 @@ export default function Page({ id, initialContent, title, favorite }: PageProps)
     return (
         <>
             <SidebarProvider>
-                <AppSidebar />
+                <AppSidebar setIsFTSMenuOpen={setIsFTSMenuOpen} />
 
                 {/* Everything else besides the sidebar e.g. main content */}
                 <SidebarInset>
