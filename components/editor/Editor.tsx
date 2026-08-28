@@ -23,11 +23,12 @@ import {
 import { PageUpdateInput } from '@/types/Page';
 import * as PageActions from '@/actions/PageActions';
 import { useContext, useEffect, useRef } from 'react';
-import { getCustomSlashMenuItems } from './slash-menu/CustomSlashMenuItems';
+
 import { MyDefaultBlockSchema, MyStyleSchema, schema } from './schema/CustomSchema';
 import { CustomSideMenu } from './side-menu/CustomSideMenu';
 import { SearchMenuOpenContext } from '../pages/Page';
 import { getText } from '@/utils/block-utils';
+import { getCustomSlashMenuItems } from './slash-menu/CustomSlashMenuItems';
 
 type EditorProps = {
     id: string;

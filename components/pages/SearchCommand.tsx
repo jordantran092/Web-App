@@ -90,16 +90,13 @@ export default function SearchCommand({ id }: SearchCommandProps) {
                         context.selectedBlockRef.current = null; // Must reset to avoid re-trying action after successful action
                         context.setisSearchMenuOpen(false); // close dialog
 
-                        // Get text content of blocks outside of editor instance
-                        const result = getText(blocks);
-
                         const newBlocks = JSON.stringify(blocks);
                         const destinationPageEntity: PageUpdateInput = {
                             // the selected page
 
                             id: item.id, // the selected page's id
                             blocks: newBlocks,
-                            textContent: result,
+                            textContent: getText(blocks), // Get text content of blocks outside of editor instance
                         };
                         PageActions.updatePage(destinationPageEntity);
 
