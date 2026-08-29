@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/command';
 import { SearchMenuOpenContext } from '../pages/Page';
 import { HiDocumentText } from 'react-icons/hi';
-import { RefObject, useEffect } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
 import { CommandLoading } from 'cmdk';
 import { Page } from '@/app/generated/prisma/client';
 import { Block } from '@blocknote/core/blocks';
@@ -29,22 +29,18 @@ import { StyledText } from '@blocknote/core';
 import { getText } from '@/utils/block-utils';
 import { Input } from '../ui/input';
 import { SearchIcon } from 'lucide-react';
+import Link from 'next/link';
 
 type FTSMenuProps = {
     isFTSMenuOpen: boolean;
     setIsFTSMenuOpen: (value: boolean) => void;
 };
 export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProps) {
-    // const context = React.useContext(SearchMenuOpenContext);
-    // if (!context) {
-    //     throw new Error('useContext not being used under proper provider');
-    // }
-
-    const [loading, setLoading] = React.useState(false);
-    const [items, setItems] = React.useState<Page[]>([]);
-    const [search, setSearch] = React.useState('');
-
-    // const editor = context.editorRef.current;
+    const [loading, setLoading] = useState(false);
+    const [items, setItems] = useState<Page[]>([]);
+    const [search, setSearch] = useState('');
+    const confirmSearchTimerRef = useRef<NodeJS.Timeout>(null);
+    const confirmSearchTimerDone = useRef(true);
 
     // Must do client-side data fetching after this component loads because pages have to be dynamically rendered based on user input
     useEffect(() => {
@@ -56,9 +52,36 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
             setLoading(false);
         }
 
-        // Only pull pages when search input changes, and do not fetch when ''
+        // Only pull pages when search input is non empty
         if (search !== '') {
-            getItems();
+            /*
+
+            If timer is not done, then clear old timer and set a new timer
+
+            If timer is done/not running, then still set a new timer as if everything is fresh
+
+            Once timer done, then actually make DB query for FTS search
+
+            All to avoid querying every single search input change, better to query once user has finished typing for some time
+
+            */
+
+            if (!confirmSearchTimerDone.current) {
+                if (confirmSearchTimerRef.current) clearTimeout(confirmSearchTimerRef.current);
+            }
+
+            // Set a timer
+            confirmSearchTimerDone.current = false;
+            confirmSearchTimerRef.current = setTimeout(() => {
+                getItems();
+                confirmSearchTimerDone.current = true;
+            }, 500);
+
+            // Cleanup function to clear the timer if component unmounts
+            // clearTimeout is a closure on timer, so timer will still live on until cleanup function finishes
+            return () => {
+                if (confirmSearchTimerRef.current) clearTimeout(confirmSearchTimerRef.current);
+            };
         } else {
             setItems([]);
         }
@@ -69,21 +92,19 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
         const title = item.title;
 
         return (
-            <CommandItem
-                key={index}
-                value={title + index} // Has to be unique values for each CommandItem or else, run into styling conflicts
-                // onSelect={() => {
-                //     //router push new tab
-                // }}
-            >
-                <HiDocumentText size={23} />
-                <span>{title}</span>
-            </CommandItem>
+            <Link href={`/pages/${item.id}`} target="_blank" key={index}>
+                <CommandItem
+                    value={title + index} // Has to be unique values for each CommandItem or else, run into styling conflicts
+                    // onSelect={() => {
+                    //     //router push new tab
+                    // }}
+                >
+                    <HiDocumentText size={23} />
+                    <span>{title}</span>
+                </CommandItem>
+            </Link>
         );
     });
-
-    // console.log(items);
-    console.log(cmdItemsArr);
 
     return (
         <div className="flex flex-col gap-4">
