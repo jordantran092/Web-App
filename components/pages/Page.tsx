@@ -14,6 +14,7 @@ import BreadcrumbCommand from './BreadcrumbCommand';
 
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from '../sidebar/app-sidebar';
+import FTSMenu from '../sidebar/FTSMenu';
 
 type SearchMenuOpenContextType = {
     isSearchMenuOpen: boolean;
@@ -131,6 +132,8 @@ export default function Page({ id, initialContent, title, favorite }: PageProps)
                         setisBreadcrumbMenuOpen={setisBreadcrumbMenuOpen}
                         id={id}
                     />
+
+                    <FTSMenu isFTSMenuOpen={isFTSMenuOpen} setIsFTSMenuOpen={setIsFTSMenuOpen} />
                 </SidebarInset>
             </SidebarProvider>
         </>
