@@ -202,6 +202,10 @@ export async function getStarredPages(session: Session) {
     });
 }
 
+export async function getPagesFromFullTextSearch(session: Session, search: string) {
+    const pages = await prisma.$queryRaw`SELECT * FROM "User" WHERE age > ${minAge}`;
+}
+
 /* 
 
 Helper Methods

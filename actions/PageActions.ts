@@ -103,3 +103,13 @@ export async function createNewPageInLibrary() {
 
     redirect(`/pages/${page.id}`); // Will actually do a router push because client component code is the caller and JS is active
 }
+
+export async function getPagesFromFullTextSearch(search: string) {
+    // Check if any valid session / logged in
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+    if (!session) return unauthorized();
+
+    return PageService.getPagesFromFullTextSearch(session, search);
+}
