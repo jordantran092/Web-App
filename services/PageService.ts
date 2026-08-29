@@ -203,7 +203,14 @@ export async function getStarredPages(session: Session) {
 }
 
 export async function getPagesFromFullTextSearch(session: Session, search: string) {
-    const pages = await prisma.$queryRaw`SELECT * FROM "User" WHERE age > ${minAge}`;
+    const userId = session.user.id;
+
+    return (await prisma.$queryRaw`
+        SELECT "id", "favorite", "title", "blocks", "textContent", "parentId", "userId" 
+        FROM "Page"
+        WHERE "userId" = ${userId}
+            AND "searchVector" @@ websearch_to_tsquery(${search})
+        `) as Page[];
 }
 
 /* 
