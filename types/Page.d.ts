@@ -17,3 +17,7 @@ export type PageCreateInput = {
     user: string; // user id to connect to
     parentId: string;
 };
+
+export type Headline = {
+    ts_headline: string;
+};
