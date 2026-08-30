@@ -38,6 +38,7 @@ type FTSMenuProps = {
 export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProps) {
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState<Page[]>([]);
+    const [itemsHeadline, setItemsHeadline] = useState<string[]>([]);
     const [search, setSearch] = useState('');
     const confirmSearchTimerRef = useRef<NodeJS.Timeout>(null);
     const confirmSearchTimerDone = useRef(true);
@@ -48,6 +49,12 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
             setLoading(true);
             const pageArr = await PageActions.getPagesFromFullTextSearch(search);
             setItems(pageArr);
+
+            const itemsHeadlineArr = await PageActions.getHeadlinesFromFullTextSearchPages(
+                pageArr,
+                search
+            );
+            setItemsHeadline(itemsHeadlineArr);
 
             setLoading(false);
         }
@@ -91,6 +98,12 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
     const cmdItemsArr = items.map((item, index) => {
         const title = item.title;
 
+        // Only use if defined
+        let headline = itemsHeadline.at(index);
+        if (!headline) headline = '';
+
+        console.log(headline);
+
         return (
             <Link href={`/pages/${item.id}`} target="_blank" key={index}>
                 <CommandItem
@@ -99,8 +112,13 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
                     //     //router push new tab
                     // }}
                 >
-                    <HiDocumentText size={23} />
-                    <span>{title}</span>
+                    <div className="flex flex-col">
+                        <div className="flex gap-2">
+                            <HiDocumentText size={23} />
+                            <span>{title}</span>
+                        </div>
+                        <p dangerouslySetInnerHTML={{ __html: headline }}></p>
+                    </div>
                 </CommandItem>
             </Link>
         );
