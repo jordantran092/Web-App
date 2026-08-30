@@ -102,7 +102,7 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
         let headline = itemsHeadline.at(index);
         if (!headline) headline = '';
 
-        console.log(headline);
+        // console.log('headline:' + headline.ts_headline);
 
         return (
             <Link href={`/pages/${item.id}`} target="_blank" key={index}>
@@ -114,10 +114,12 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
                 >
                     <div className="flex flex-col">
                         <div className="flex gap-2">
-                            <HiDocumentText size={23} />
-                            <span>{title}</span>
+                            <HiDocumentText className="size-5" />
+                            <span className="text-[0.9rem]">{title}</span>
                         </div>
-                        <p dangerouslySetInnerHTML={{ __html: headline }}></p>
+                        <p
+                            className="mt-3 text-xs text-gray-300 [&_b]:text-blue-500" // since the highlighted words use <b> tags, target them to style
+                            dangerouslySetInnerHTML={{ __html: headline }}></p>
                     </div>
                 </CommandItem>
             </Link>

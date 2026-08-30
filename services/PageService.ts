@@ -2,7 +2,7 @@
 
 import { Session } from '@/lib/auth';
 import { prisma } from '@/lib/prisma'; // single prisma client generated from the prisma.ts file
-import { PageCreateInput, PageUpdateInput } from '@/types/Page';
+import { Headline, PageCreateInput, PageUpdateInput } from '@/types/Page';
 import { Block } from '@blocknote/core/blocks';
 import * as ERROR from '@/utils/app-constants';
 import { forbidden, notFound } from 'next/navigation';
@@ -216,22 +216,25 @@ export async function getPagesFromFullTextSearch(session: Session, search: strin
 export async function getHeadlinesFromFullTextSearchPages(pages: Page[], search: string) {
     const itemsHeadlineArr: string[] = [];
 
-    pages.forEach(async (e) => {
+    for (const e of pages) {
         const textContent = e.textContent;
 
-        const headline = (await prisma.$queryRaw`
+        const result = (await prisma.$queryRaw`
         SELECT ts_headline('english',
         ${textContent},
         websearch_to_tsquery('english', ${search}));
-        `) as string;
+        `) as Headline[]; // must type as array because prisma returns an array of Headline objects even though technically result is one value
 
-        // console.log('headline' + headline);
-
-        itemsHeadlineArr.push(headline);
-    });
+        // result should only be one value since non-fragment based headline generation
+        itemsHeadlineArr.push(result[0].ts_headline);
+    }
 
     return itemsHeadlineArr;
 }
+
+/*
+
+*/
 
 /* 
 
