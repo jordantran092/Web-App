@@ -128,7 +128,12 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
 
     return (
         <div className="flex flex-col gap-4">
-            <CommandDialog open={isFTSMenuOpen} onOpenChange={setIsFTSMenuOpen}>
+            <CommandDialog
+                open={isFTSMenuOpen}
+                onOpenChange={setIsFTSMenuOpen}
+                // This affects dialog content which affects sizing of whole menu itself
+                // Set min height and resizes it content grows. Max width so that on smaller viewports, it doesn't overflow, max is 90% of vw
+                className="min-h-125! w-175! max-w-[90vw]!">
                 <Command>
                     <div className="mx-1 mt-1 flex h-8 min-w-0 gap-2 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40">
                         <SearchIcon className="mt-0.5 size-4 shrink-0 opacity-50" />
@@ -145,16 +150,18 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
                     </div>
 
                     <CommandList>
-                        <CommandEmpty>No results found. </CommandEmpty>
+                        <CommandEmpty className="pt-6 pb-4">No results found. </CommandEmpty>
 
-                        <CommandGroup heading="Pages">
-                            {loading && (
+                        {loading && (
+                            // flex to center the spinner vert and horizontally, respectively
+                            <div className="flex items-center justify-center">
                                 <CommandLoading className="my-2 pl-2">
                                     <LoadingSpinner />
                                 </CommandLoading>
-                            )}
-                            {cmdItemsArr}
-                        </CommandGroup>
+                            </div>
+                        )}
+
+                        <CommandGroup heading="Pages">{cmdItemsArr}</CommandGroup>
                     </CommandList>
                 </Command>
             </CommandDialog>
