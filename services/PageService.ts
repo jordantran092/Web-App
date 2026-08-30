@@ -213,6 +213,26 @@ export async function getPagesFromFullTextSearch(session: Session, search: strin
         `) as Page[];
 }
 
+export async function getHeadlinesFromFullTextSearchPages(pages: Page[], search: string) {
+    const itemsHeadlineArr: string[] = [];
+
+    pages.forEach(async (e) => {
+        const textContent = e.textContent;
+
+        const headline = (await prisma.$queryRaw`
+        SELECT ts_headline('english',
+        ${textContent},
+        websearch_to_tsquery('english', ${search}));
+        `) as string;
+
+        // console.log('headline' + headline);
+
+        itemsHeadlineArr.push(headline);
+    });
+
+    return itemsHeadlineArr;
+}
+
 /* 
 
 Helper Methods

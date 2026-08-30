@@ -1,5 +1,6 @@
 'use server';
 
+import { Page } from '@/app/generated/prisma/client';
 import { MyDefaultBlockSchema } from '@/components/editor/schema/CustomSchema';
 import { auth } from '@/lib/auth';
 import * as PageService from '@/services/PageService';
@@ -112,4 +113,14 @@ export async function getPagesFromFullTextSearch(search: string) {
     if (!session) return unauthorized();
 
     return PageService.getPagesFromFullTextSearch(session, search);
+}
+
+export async function getHeadlinesFromFullTextSearchPages(pages: Page[], search: string) {
+    // Check if any valid session / logged in
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+    if (!session) return unauthorized();
+
+    return PageService.getHeadlinesFromFullTextSearchPages(pages, search);
 }
