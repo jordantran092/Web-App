@@ -105,14 +105,14 @@ export async function createNewPageInLibrary() {
     redirect(`/pages/${page.id}`); // Will actually do a router push because client component code is the caller and JS is active
 }
 
-export async function getPagesFromFullTextSearch(search: string) {
+export async function getPagesFromFullTextSearch(search: string, currentPageNum: number) {
     // Check if any valid session / logged in
     const session = await auth.api.getSession({
         headers: await headers(),
     });
     if (!session) return unauthorized();
 
-    return PageService.getPagesFromFullTextSearch(session, search);
+    return PageService.getPagesFromFullTextSearch(session, search, currentPageNum);
 }
 
 export async function getHeadlinesFromFullTextSearchPages(pages: Page[], search: string) {
@@ -123,4 +123,14 @@ export async function getHeadlinesFromFullTextSearchPages(pages: Page[], search:
     if (!session) return unauthorized();
 
     return PageService.getHeadlinesFromFullTextSearchPages(pages, search);
+}
+
+export async function count() {
+    // Check if any valid session / logged in
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+    if (!session) return unauthorized();
+
+    return PageService.count();
 }
