@@ -209,7 +209,7 @@ export async function getPagesFromFullTextSearch(
 ) {
     const userId = session.user.id;
 
-    const PAGE_SIZE = 8; // 20 is ideal for now
+    const PAGE_SIZE = 8;
     const skip = (currentPageNum - 1) * PAGE_SIZE;
     const take = PAGE_SIZE;
 
@@ -221,7 +221,7 @@ export async function getPagesFromFullTextSearch(
         WHERE "userId" = ${userId}
             AND "searchVector" @@ query -- fts query using search var input, on searchVector column
         ORDER BY rank DESC -- higher rank rows first
-        LIMIT ${take} OFFSET ${skip};
+        LIMIT ${take} OFFSET ${skip}; -- skip some rows with given offset value, then only return the next 'take' amount of rows
         
         `) as Page[];
 
