@@ -143,7 +143,7 @@ export default function SearchCommand({ id }: SearchCommandProps) {
                         onValueChange={setSearch}
                     />
                     <CommandList>
-                        <CommandEmpty>No results found.</CommandEmpty>
+                        <CommandEmpty>No results found</CommandEmpty>
 
                         <CommandGroup heading="Pages">
                             {loading && (
