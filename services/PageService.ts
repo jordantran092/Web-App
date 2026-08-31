@@ -214,6 +214,13 @@ export async function getPagesFromFullTextSearch(session: Session, search: strin
 }
 
 export async function getHeadlinesFromFullTextSearchPages(pages: Page[], search: string) {
+    /*
+
+    Given textContent of each page, and search input, want to retrieve the highlighted excerpt for each FTS page given. Will use this as the
+    excerpt in the search menu
+
+    */
+
     const itemsHeadlineArr: string[] = [];
 
     for (const e of pages) {
