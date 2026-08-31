@@ -38,16 +38,27 @@ type FTSMenuProps = {
 export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProps) {
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState<Page[]>([]);
+    const itemsRef = useRef<Page[]>([]);
     const [itemsHeadline, setItemsHeadline] = useState<string[]>([]);
+    const itemsHeadlineRef = useRef<string[]>([]);
     const [search, setSearch] = useState('');
     const confirmSearchTimerRef = useRef<NodeJS.Timeout>(null);
     const confirmSearchTimerDone = useRef(true);
+    const [isAtBottomOfMenu, setIsAtBottomOfMenu] = useState(false);
+    const isAtBottomOfMenuRef = useRef(false);
+    const currentPageNumRef = useRef(1);
+    const totalPagesInDBRef = useRef(-1);
 
     // Must do client-side data fetching after this component loads because pages have to be dynamically rendered based on user input
     useEffect(() => {
         async function getItems() {
             setLoading(true);
-            const pageArr = await PageActions.getPagesFromFullTextSearch(search);
+
+            currentPageNumRef.current = 1; // reset current page num because new search/query
+            const pageArr = await PageActions.getPagesFromFullTextSearch(
+                search,
+                currentPageNumRef.current
+            );
             setItems(pageArr);
 
             const itemsHeadlineArr = await PageActions.getHeadlinesFromFullTextSearchPages(
@@ -94,6 +105,57 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
         }
     }, [search]);
 
+    useEffect(() => {
+        async function getNewItems() {
+            setLoading(true);
+            const newPageArr = await PageActions.getPagesFromFullTextSearch(
+                search,
+                ++currentPageNumRef.current // increment value, THEN use result as argument
+            );
+
+            const prevPageArr = itemsRef.current;
+            const finalPageArr = [...prevPageArr, ...newPageArr]; // Append to current items
+            setItems(finalPageArr);
+            itemsRef.current = finalPageArr; // immediately keep in sync to be safer instead of wait for use effect which can be useful if source of change is outside of function
+
+            // Get headlines of only the new pages
+            const itemsHeadlineArr = await PageActions.getHeadlinesFromFullTextSearchPages(
+                newPageArr,
+                search
+            );
+            setItemsHeadline([...itemsHeadlineRef.current, ...itemsHeadlineArr]);
+            itemsHeadlineRef.current = itemsHeadlineArr;
+
+            setLoading(false);
+        }
+
+        // Only get new items if switched from false to true, and there are more pages to load
+        if (isAtBottomOfMenuRef.current && itemsRef.current.length < totalPagesInDBRef.current) {
+            getNewItems();
+        }
+    }, [isAtBottomOfMenu]); // cannot use ref for dependency because this dependency is only checked during re-render, ref change doesn't trigger re-render
+
+    // Keep items useState var in sync with ref
+    useEffect(() => {
+        itemsRef.current = items;
+    }, [items]);
+
+    // Keep items useState var in sync with ref
+    useEffect(() => {
+        itemsHeadlineRef.current = itemsHeadline;
+    }, [itemsHeadline]);
+
+    // Get num of pages only when open menu, that seems like a point to get accurate count
+    useEffect(() => {
+        async function count() {
+            totalPagesInDBRef.current = await PageActions.count();
+        }
+
+        if (isFTSMenuOpen) {
+            count();
+        }
+    }, [isFTSMenuOpen]);
+
     // Map each item in the array data pulled from DB, into command items, to render
     const cmdItemsArr = items.map((item, index) => {
         const title = item.title;
@@ -121,6 +183,21 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
         );
     });
 
+    const handleScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+        const target = e.currentTarget;
+
+        const threshold = 0.25; // Threshold to be more lenient instead of 0
+        const isAtBottom =
+            target.scrollHeight - target.clientHeight - target.scrollTop <= threshold;
+
+        if (isAtBottom) {
+            isAtBottomOfMenuRef.current = true;
+        } else {
+            isAtBottomOfMenuRef.current = false;
+        }
+        setIsAtBottomOfMenu(isAtBottomOfMenuRef.current);
+    };
+
     return (
         <div className="flex flex-col gap-4">
             <CommandDialog
@@ -145,7 +222,7 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
                     </div>
 
                     {/* Make the height of command list of pages align with the whole menu properly with h-full, override max-h default with none */}
-                    <CommandList className="h-full max-h-none">
+                    <CommandList className="h-full max-h-none" onScroll={handleScroll}>
                         <CommandEmpty className="pt-6 pb-4">No results found</CommandEmpty>
 
                         {loading && (

@@ -202,15 +202,30 @@ export async function getStarredPages(session: Session) {
     });
 }
 
-export async function getPagesFromFullTextSearch(session: Session, search: string) {
+export async function getPagesFromFullTextSearch(
+    session: Session,
+    search: string,
+    currentPageNum: number
+) {
     const userId = session.user.id;
 
-    return (await prisma.$queryRaw`
-        SELECT "id", "favorite", "title", "blocks", "textContent", "parentId", "userId" 
-        FROM "Page"
+    const PAGE_SIZE = 8; // 20 is ideal for now
+    const skip = (currentPageNum - 1) * PAGE_SIZE;
+    const take = PAGE_SIZE;
+
+    // Include an ORDER BY to ensure consistent pagination results
+    // ts_rank_cd for higher prio if search words closer together instead of ts_rank which favors word frequency
+    const result = (await prisma.$queryRaw`
+        SELECT "id", "favorite", "title", "blocks", "textContent", "parentId", "userId", ts_rank_cd("searchVector", query) AS rank
+        FROM "Page", websearch_to_tsquery(${search}) query
         WHERE "userId" = ${userId}
-            AND "searchVector" @@ websearch_to_tsquery(${search})
+            AND "searchVector" @@ query -- fts query using search var input, on searchVector column
+        ORDER BY rank DESC -- higher rank rows first
+        LIMIT ${take} OFFSET ${skip};
+        
         `) as Page[];
+
+    return result;
 }
 
 export async function getHeadlinesFromFullTextSearchPages(pages: Page[], search: string) {
@@ -239,9 +254,9 @@ export async function getHeadlinesFromFullTextSearchPages(pages: Page[], search:
     return itemsHeadlineArr;
 }
 
-/*
-
-*/
+export async function count() {
+    return await prisma.page.count();
+}
 
 /* 
 
