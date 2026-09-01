@@ -44,9 +44,9 @@ export function NavFavorites({ favoritePages }: FavoritesProps) {
                 <SidebarMenu>
                     <Collapsible>
                         <SidebarMenuItem>
-                            <SidebarMenuButton //#7d7a75
+                            <SidebarMenuButton //#8f8b85
                                 render={<CollapsibleTrigger />}
-                                className="left-2 text-[#8f8b85] hover:text-white/70 data-open:rotate-90">
+                                className="left-2 text-[#9e9a94] hover:text-white/80 data-open:rotate-90">
                                 <ChevronRightIcon className="" />
                                 <span className="">Favorites</span>
                             </SidebarMenuButton>

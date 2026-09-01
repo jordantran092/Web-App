@@ -15,7 +15,7 @@ type NavMainProps = {
 
 export function NavMain({ setIsFTSMenuOpen, items }: NavMainProps) {
     return (
-        <SidebarMenu>
+        <SidebarMenu className="mt-6">
             {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton

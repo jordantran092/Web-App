@@ -46,6 +46,7 @@ export default async function Pages({ params }: PagesProps) {
                 title={page.title}
                 favorite={page.favorite}
                 favoritePages={favoritePages}
+                userName={session.user.name}
             />
         </>
     );
