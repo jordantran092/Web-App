@@ -70,30 +70,32 @@ export default function Page({
                     userName={userName}
                 />
 
-                {/* Everything else besides the sidebar e.g. main content */}
-                <SidebarInset>
+                {/* 
+                
+                This represents everything else besides the sidebar e.g. main content 
+
+                Min-w-0 allows sidebar inset to not be restrained by width of children and can become smaller than them, leading to children
+                becoming smaller. Else horizontal overflow
+                
+                */}
+                <SidebarInset className="min-w-0">
                     {/* <header className=""> */}
 
-                    <div className="flex">
-                        {/* consider using this icon */}
-                        {/* <HiOutlineMenu size={23} /> */}
-                        <SidebarTrigger className="m-2 ml-2.5 hover:bg-[#bdbdbd38]!" />
+                    <MenuBar
+                        id={id}
+                        title={title}
+                        favorite={favorite}
+                        isSaving={isSaving}
+                        isSavingTimerOn={isSavingTimerOn}
+                        setIsSavingTimerOn={setIsSavingTimerOn}
+                        setisBreadcrumbMenuOpen={setisBreadcrumbMenuOpen}
+                    />
 
-                        <MenuBar
-                            id={id}
-                            title={title}
-                            favorite={favorite}
-                            isSaving={isSaving}
-                            isSavingTimerOn={isSavingTimerOn}
-                            setIsSavingTimerOn={setIsSavingTimerOn}
-                            setisBreadcrumbMenuOpen={setisBreadcrumbMenuOpen}
-                        />
-
-                        {/* <Separator
+                    {/* <Separator
                                 orientation="vertical"
                                 className="mr-2 data-[orientation=vertical]:h-4"
                             /> */}
-                        {/* <Breadcrumb>
+                    {/* <Breadcrumb>
                                 <BreadcrumbList>
                                     <BreadcrumbItem>
                                         <BreadcrumbPage className="line-clamp-1">
@@ -102,7 +104,7 @@ export default function Page({
                                     </BreadcrumbItem>
                                 </BreadcrumbList>
                             </Breadcrumb> */}
-                    </div>
+
                     {/* <div className="ml-auto px-3">
                             <NavActions />
                         </div> */}
