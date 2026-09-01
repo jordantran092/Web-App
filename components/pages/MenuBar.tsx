@@ -133,14 +133,14 @@ export function MenuBar({
     };
 
     return (
-        <Menubar modal={false} className="border-none">
+        <Menubar modal={false} className="mt-1 flex w-full gap-2 border-none">
             <Input
                 value={tempTitle}
                 onChange={(e) => setTempTitle(e.target.value)}
                 // focus-visible:border-0 for the ring when click on input
                 // Border is transparent, but when hover it will turn gray so that border remains even if user moves mouse off of input when focus is on
                 // Need w-auto so that w-full doesn't take over from default classes, allow width to not be forced so field-sizing-content can work. This makes input component re-size based on content
-                className="hover: mt-2 field-sizing-content w-auto border-transparent hover:border-gray-500 focus-visible:border-white focus-visible:ring-0"
+                className="mt-2 field-sizing-content w-auto border-transparent hover:border-gray-500 focus-visible:border-white focus-visible:ring-0"
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur} // removing event listeners handled by React
                 id="menu-bar-input" // for saving on blur + click
@@ -153,7 +153,7 @@ export function MenuBar({
                 }}>
                 <HiOutlineChevronDown
                     size={23}
-                    className="rounded-sm p-1 transition duration-50 hover:bg-[#bdbdbd38]"
+                    className="mt-1.5 rounded-sm p-1 transition duration-50 hover:bg-[#bdbdbd38]"
                 />
             </button>
 
@@ -164,6 +164,8 @@ export function MenuBar({
 
             {/* Favorite button */}
             <button
+                className="ml-auto!"
+
                 onClick={() => {
                     // Update current page
                     const pageEntity: PageUpdateInput = {
@@ -194,7 +196,7 @@ export function MenuBar({
             </button>
 
             <MenubarMenu>
-                <MenubarTrigger>
+                <MenubarTrigger className="mr-2 hover:bg-[#bdbdbd38]">
                     <HiDotsHorizontal size={18} />
                 </MenubarTrigger>
                 <MenubarContent>
@@ -202,11 +204,11 @@ export function MenuBar({
                         <MenubarItem>
                             Undo <MenubarShortcut>⌘Z</MenubarShortcut>
                         </MenubarItem>
-                        <MenubarItem>
+                        {/* <MenubarItem>
                             Redo <MenubarShortcut>⇧⌘Z</MenubarShortcut>
-                        </MenubarItem>
+                        </MenubarItem> */}
                     </MenubarGroup>
-                    <MenubarSeparator />
+                    {/* <MenubarSeparator />
                     <MenubarGroup>
                         <MenubarSub>
                             <MenubarSubTrigger>Find</MenubarSubTrigger>
@@ -228,7 +230,7 @@ export function MenuBar({
                         <MenubarItem>Cut</MenubarItem>
                         <MenubarItem>Copy</MenubarItem>
                         <MenubarItem>Paste</MenubarItem>
-                    </MenubarGroup>
+                    </MenubarGroup> */}
                 </MenubarContent>
             </MenubarMenu>
         </Menubar>

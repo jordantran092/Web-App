@@ -85,9 +85,12 @@ export default function BreadcrumbCommand({
                             heading="Breadcrumb"
                             className="mt-1 text-center **:[[cmdk-group-heading]]:text-base!">
                             {loading && (
-                                <CommandLoading className="my-2 pl-2">
-                                    <LoadingSpinner />
-                                </CommandLoading>
+                                // flex to center the spinner vert and horizontally, respectively
+                                <div className="flex items-center justify-center">
+                                    <CommandLoading className="my-2 pl-2">
+                                        <LoadingSpinner />
+                                    </CommandLoading>
+                                </div>
                             )}
                             <div className="mt-4">{cmdItemsArr}</div>
                         </CommandGroup>
