@@ -74,10 +74,10 @@ export default function Page({
                 <SidebarInset>
                     {/* <header className=""> */}
 
-                    <div className="flex gap-2">
+                    <div className="flex">
                         {/* consider using this icon */}
                         {/* <HiOutlineMenu size={23} /> */}
-                        <SidebarTrigger className="hover:bg-[#bdbdbd38]!" />
+                        <SidebarTrigger className="m-2 ml-2.5 hover:bg-[#bdbdbd38]!" />
 
                         <MenuBar
                             id={id}

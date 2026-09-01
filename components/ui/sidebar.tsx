@@ -20,6 +20,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { PanelLeftIcon } from 'lucide-react';
+import { HiOutlineMenu } from 'react-icons/hi';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -50,7 +51,7 @@ function useSidebar() {
 }
 
 function SidebarProvider({
-    defaultOpen = true,
+    defaultOpen = false,
     open: openProp,
     onOpenChange: setOpenProp,
     className,
@@ -246,14 +247,14 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
             data-sidebar="trigger"
             data-slot="sidebar-trigger"
             variant="ghost"
-            size="icon-lg"
+            size="icon-sm"
             className={cn(className)}
             onClick={(event) => {
                 onClick?.(event);
                 toggleSidebar();
             }}
             {...props}>
-            <PanelLeftIcon />
+            <HiOutlineMenu className="size-5" />
             <span className="sr-only">Toggle Sidebar</span>
         </Button>
     );
