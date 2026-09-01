@@ -191,10 +191,11 @@ export async function getBreadcrumb(session: Session, id: string) {
     return breadcrumbArr;
 }
 
-export async function getStarredPages(session: Session) {
+export async function getStarredPages(session: Session, take?: number) {
     const userId = session.user.id;
 
     return prisma.page.findMany({
+        take, // if take not provided, will be undefined, meaning take all pages
         where: {
             userId, // userId matches page and session
             favorite: true,
@@ -256,6 +257,18 @@ export async function getHeadlinesFromFullTextSearchPages(pages: Page[], search:
 
 export async function count() {
     return await prisma.page.count();
+}
+
+export async function getSidebarStarredPages(session: Session) {
+    const userId = session.user.id;
+
+    return prisma.page.findMany({
+        take: 5,
+        where: {
+            userId, // userId matches page and session
+            favorite: true,
+        },
+    });
 }
 
 /* 

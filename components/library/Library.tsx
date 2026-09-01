@@ -113,7 +113,7 @@ export default function Library({ items }: LibraryProps) {
                             buttonVariants({ variant: 'ghost' }),
                             'peer-checked:bg-[#bdbdbd33] hover:bg-[#bdbdbd4d]!'
                         )}>
-                        <HiStar size={25} /> Starred
+                        <HiStar size={25} /> Favorites
                     </span>
                 </label>
 

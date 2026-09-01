@@ -2,10 +2,10 @@
 
 import * as React from 'react';
 
-import { NavFavorites } from '@/components/sidebar/nav-favorites';
+// import { NavFavorites } from '@/components/sidebar/nav-favorites-old';
 import { NavMain } from '@/components/sidebar/nav-main';
 import { NavSecondary } from '@/components/sidebar/nav-secondary';
-import { NavWorkspaces } from '@/components/sidebar/nav-workspaces';
+import { NavFavorites } from '@/components/sidebar/nav-favorites';
 import { TeamSwitcher } from '@/components/sidebar/team-switcher';
 import { Sidebar, SidebarContent, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
 import {
@@ -21,6 +21,8 @@ import {
     Trash2Icon,
     MessageCircleQuestionIcon,
 } from 'lucide-react';
+import { Page } from '@/app/generated/prisma/client';
+import { LuLibraryBig } from 'react-icons/lu';
 
 // This is sample data.
 const data = {
@@ -67,30 +69,30 @@ const data = {
     ],
     navSecondary: [
         {
-            title: 'Calendar',
-            url: '#',
-            icon: <CalendarIcon />,
+            title: 'Library',
+            url: '/',
+            icon: <LuLibraryBig />,
         },
-        {
-            title: 'Settings',
-            url: '#',
-            icon: <Settings2Icon />,
-        },
-        {
-            title: 'Templates',
-            url: '#',
-            icon: <BlocksIcon />,
-        },
-        {
-            title: 'Trash',
-            url: '#',
-            icon: <Trash2Icon />,
-        },
-        {
-            title: 'Help',
-            url: '#',
-            icon: <MessageCircleQuestionIcon />,
-        },
+        // {
+        //     title: 'Settings',
+        //     url: '#',
+        //     icon: <Settings2Icon />,
+        // },
+        // {
+        //     title: 'Templates',
+        //     url: '#',
+        //     icon: <BlocksIcon />,
+        // },
+        // {
+        //     title: 'Trash',
+        //     url: '#',
+        //     icon: <Trash2Icon />,
+        // },
+        // {
+        //     title: 'Help',
+        //     url: '#',
+        //     icon: <MessageCircleQuestionIcon />,
+        // },
     ],
     favorites: [
         {
@@ -146,127 +148,128 @@ const data = {
     ],
     workspaces: [
         {
-            name: 'Personal Life Management',
+            name: 'Favorites',
             emoji: '🏠',
             pages: [
-                {
-                    name: 'Daily Journal & Reflection',
-                    url: '#',
-                    emoji: '📔',
-                },
-                {
-                    name: 'Health & Wellness Tracker',
-                    url: '#',
-                    emoji: '🍏',
-                },
-                {
-                    name: 'Personal Growth & Learning Goals',
-                    url: '#',
-                    emoji: '🌟',
-                },
+                // {
+                //     name: 'Daily Journal & Reflection',
+                //     url: '#',
+                //     emoji: '📔',
+                // },
+                // {
+                //     name: 'Health & Wellness Tracker',
+                //     url: '#',
+                //     emoji: '🍏',
+                // },
+                // {
+                //     name: 'Personal Growth & Learning Goals',
+                //     url: '#',
+                //     emoji: '🌟',
+                // },
             ],
         },
-        {
-            name: 'Professional Development',
-            emoji: '💼',
-            pages: [
-                {
-                    name: 'Career Objectives & Milestones',
-                    url: '#',
-                    emoji: '🎯',
-                },
-                {
-                    name: 'Skill Acquisition & Training Log',
-                    url: '#',
-                    emoji: '🧠',
-                },
-                {
-                    name: 'Networking Contacts & Events',
-                    url: '#',
-                    emoji: '🤝',
-                },
-            ],
-        },
-        {
-            name: 'Creative Projects',
-            emoji: '🎨',
-            pages: [
-                {
-                    name: 'Writing Ideas & Story Outlines',
-                    url: '#',
-                    emoji: '✍️',
-                },
-                {
-                    name: 'Art & Design Portfolio',
-                    url: '#',
-                    emoji: '🖼️',
-                },
-                {
-                    name: 'Music Composition & Practice Log',
-                    url: '#',
-                    emoji: '🎵',
-                },
-            ],
-        },
-        {
-            name: 'Home Management',
-            emoji: '🏡',
-            pages: [
-                {
-                    name: 'Household Budget & Expense Tracking',
-                    url: '#',
-                    emoji: '💰',
-                },
-                {
-                    name: 'Home Maintenance Schedule & Tasks',
-                    url: '#',
-                    emoji: '🔧',
-                },
-                {
-                    name: 'Family Calendar & Event Planning',
-                    url: '#',
-                    emoji: '📅',
-                },
-            ],
-        },
-        {
-            name: 'Travel & Adventure',
-            emoji: '🧳',
-            pages: [
-                {
-                    name: 'Trip Planning & Itineraries',
-                    url: '#',
-                    emoji: '🗺️',
-                },
-                {
-                    name: 'Travel Bucket List & Inspiration',
-                    url: '#',
-                    emoji: '🌎',
-                },
-                {
-                    name: 'Travel Journal & Photo Gallery',
-                    url: '#',
-                    emoji: '📸',
-                },
-            ],
-        },
+        // {
+        //     name: 'Professional Development',
+        //     emoji: '💼',
+        //     pages: [
+        //         {
+        //             name: 'Career Objectives & Milestones',
+        //             url: '#',
+        //             emoji: '🎯',
+        //         },
+        //         {
+        //             name: 'Skill Acquisition & Training Log',
+        //             url: '#',
+        //             emoji: '🧠',
+        //         },
+        //         {
+        //             name: 'Networking Contacts & Events',
+        //             url: '#',
+        //             emoji: '🤝',
+        //         },
+        //     ],
+        // },
+        // {
+        //     name: 'Creative Projects',
+        //     emoji: '🎨',
+        //     pages: [
+        //         {
+        //             name: 'Writing Ideas & Story Outlines',
+        //             url: '#',
+        //             emoji: '✍️',
+        //         },
+        //         {
+        //             name: 'Art & Design Portfolio',
+        //             url: '#',
+        //             emoji: '🖼️',
+        //         },
+        //         {
+        //             name: 'Music Composition & Practice Log',
+        //             url: '#',
+        //             emoji: '🎵',
+        //         },
+        //     ],
+        // },
+        // {
+        //     name: 'Home Management',
+        //     emoji: '🏡',
+        //     pages: [
+        //         {
+        //             name: 'Household Budget & Expense Tracking',
+        //             url: '#',
+        //             emoji: '💰',
+        //         },
+        //         {
+        //             name: 'Home Maintenance Schedule & Tasks',
+        //             url: '#',
+        //             emoji: '🔧',
+        //         },
+        //         {
+        //             name: 'Family Calendar & Event Planning',
+        //             url: '#',
+        //             emoji: '📅',
+        //         },
+        //     ],
+        // },
+        // {
+        //     name: 'Travel & Adventure',
+        //     emoji: '🧳',
+        //     pages: [
+        //         {
+        //             name: 'Trip Planning & Itineraries',
+        //             url: '#',
+        //             emoji: '🗺️',
+        //         },
+        //         {
+        //             name: 'Travel Bucket List & Inspiration',
+        //             url: '#',
+        //             emoji: '🌎',
+        //         },
+        //         {
+        //             name: 'Travel Journal & Photo Gallery',
+        //             url: '#',
+        //             emoji: '📸',
+        //         },
+        //     ],
+        // },
     ],
 };
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
     setIsFTSMenuOpen: (value: boolean) => void;
+    favoritePages: Page[];
 };
-export function AppSidebar({ setIsFTSMenuOpen, ...props }: AppSidebarProps) {
+export function AppSidebar({ setIsFTSMenuOpen, favoritePages, ...props }: AppSidebarProps) {
     return (
         <Sidebar className="border-r-0" {...props}>
             <SidebarHeader>
                 <TeamSwitcher teams={data.teams} />
-                <NavMain items={data.navMain} setIsFTSMenuOpen={setIsFTSMenuOpen}/>
+                <NavMain items={data.navMain} setIsFTSMenuOpen={setIsFTSMenuOpen} />
             </SidebarHeader>
             <SidebarContent>
-                <NavFavorites favorites={data.favorites} />
-                <NavWorkspaces workspaces={data.workspaces} />
-                <NavSecondary items={data.navSecondary} className="mt-auto" />
+                {/* <NavFavorites favorites={data.favorites} /> */}
+                <NavFavorites favoritePages={favoritePages} />
+                <NavSecondary items={data.navSecondary} className="" />
             </SidebarContent>
             <SidebarRail />
         </Sidebar>

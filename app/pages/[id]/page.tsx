@@ -36,7 +36,7 @@ export default async function Pages({ params }: PagesProps) {
         }
     }
 
-    // if (page.textContent !== '') console.log('content:' + page.textContent);
+    const favoritePages = await PageService.getStarredPages(session, 10);
 
     return (
         <>
@@ -45,6 +45,7 @@ export default async function Pages({ params }: PagesProps) {
                 initialContent={initialContent}
                 title={page.title}
                 favorite={page.favorite}
+                favoritePages={favoritePages}
             />
         </>
     );
