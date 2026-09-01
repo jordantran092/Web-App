@@ -15,6 +15,7 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { ChevronDownIcon, User } from 'lucide-react';
 import * as AuthActions from '@/actions/AuthActions';
+import { HiLogout } from 'react-icons/hi';
 
 type AccountTabProps = {
     userName: string;
@@ -43,7 +44,10 @@ export function AccountTab({ userName }: AccountTabProps) {
                                 {/* <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                                     <PlusIcon className="size-4" />
                                 </div> */}
-                                <div className="font-medium text-muted-foreground">Log out</div>
+                                <div className="flex gap-2 font-medium text-muted-foreground">
+                                    <HiLogout className="mt-0.5"></HiLogout>
+                                    Log out
+                                </div>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                     </DropdownMenuContent>
