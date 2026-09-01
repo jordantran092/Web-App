@@ -9,6 +9,7 @@ import SearchCommand from './SearchCommand';
 import { MyBlockNoteEditor, MyDefaultBlockSchema } from '../editor/schema/CustomSchema';
 import { MenuBar } from './MenuBar';
 import BreadcrumbCommand from './BreadcrumbCommand';
+import type { Page } from '@/app/generated/prisma/client';
 
 //---
 
@@ -32,9 +33,10 @@ type PageProps = {
     initialContent: Block[];
     title: string;
     favorite: boolean;
+    favoritePages: Page[];
 };
 // Need Page component to share isSaving stateful variable with navbar and editor
-export default function Page({ id, initialContent, title, favorite }: PageProps) {
+export default function Page({ id, initialContent, title, favorite, favoritePages }: PageProps) {
     // need state variable here in this parent component so that it can be shared between navbar and editor to handle saving indicator
     const [isSaving, setIsSaving] = useState(false);
     const [isSavingTimerOn, setIsSavingTimerOn] = useState(false);
@@ -54,7 +56,7 @@ export default function Page({ id, initialContent, title, favorite }: PageProps)
     return (
         <>
             <SidebarProvider>
-                <AppSidebar setIsFTSMenuOpen={setIsFTSMenuOpen} />
+                <AppSidebar setIsFTSMenuOpen={setIsFTSMenuOpen} favoritePages={favoritePages} />
 
                 {/* Everything else besides the sidebar e.g. main content */}
                 <SidebarInset>
