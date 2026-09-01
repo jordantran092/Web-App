@@ -34,9 +34,17 @@ type PageProps = {
     title: string;
     favorite: boolean;
     favoritePages: Page[];
+    userName: string;
 };
 // Need Page component to share isSaving stateful variable with navbar and editor
-export default function Page({ id, initialContent, title, favorite, favoritePages }: PageProps) {
+export default function Page({
+    id,
+    initialContent,
+    title,
+    favorite,
+    favoritePages,
+    userName,
+}: PageProps) {
     // need state variable here in this parent component so that it can be shared between navbar and editor to handle saving indicator
     const [isSaving, setIsSaving] = useState(false);
     const [isSavingTimerOn, setIsSavingTimerOn] = useState(false);
@@ -56,7 +64,11 @@ export default function Page({ id, initialContent, title, favorite, favoritePage
     return (
         <>
             <SidebarProvider>
-                <AppSidebar setIsFTSMenuOpen={setIsFTSMenuOpen} favoritePages={favoritePages} />
+                <AppSidebar
+                    setIsFTSMenuOpen={setIsFTSMenuOpen}
+                    favoritePages={favoritePages}
+                    userName={userName}
+                />
 
                 {/* Everything else besides the sidebar e.g. main content */}
                 <SidebarInset>
@@ -65,7 +77,7 @@ export default function Page({ id, initialContent, title, favorite, favoritePage
                     <div className="flex gap-2">
                         {/* consider using this icon */}
                         {/* <HiOutlineMenu size={23} /> */}
-                        <SidebarTrigger />
+                        <SidebarTrigger className="hover:bg-[#bdbdbd38]!" />
 
                         <MenuBar
                             id={id}
