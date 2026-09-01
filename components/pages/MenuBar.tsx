@@ -27,6 +27,7 @@ import { useEffect, useRef, useState } from 'react';
 import { PageUpdateInput } from '@/types/Page';
 import * as PageActions from '@/actions/PageActions';
 import SavingIndicator from './SavingIndicator';
+import { SidebarTrigger } from '../ui/sidebar';
 
 type MenuBarProps = {
     id: string;
@@ -133,7 +134,24 @@ export function MenuBar({
     };
 
     return (
-        <Menubar modal={false} className="mt-1 flex w-full gap-2 border-none">
+        /* 
+        
+        Sticky to allow menubar to still stay within normal layout unlike fixed
+         
+        top-2 to keep the margins the same when menubar is stuck to top 
+
+        z-50 to give menubar higher priority to stay on top of everything
+
+        min-w-0 to allow menubar to shrink smaller than children width in case constrained space
+
+        */
+
+        <Menubar
+            className="sticky top-2 z-50 mt-2 flex w-full min-w-0 gap-2 border-none"
+            modal={false}>
+            {/* sidebar menu */}
+            <SidebarTrigger className="m-2 mt-4 ml-2.5 hover:bg-[#bdbdbd38]!" />
+
             <Input
                 value={tempTitle}
                 onChange={(e) => setTempTitle(e.target.value)}
@@ -163,8 +181,9 @@ export function MenuBar({
             )}
 
             {/* Favorite button */}
+            {/* Shrink-0 to avoid shrinking if menu bar shrinks */}
             <button
-                className="ml-auto!"
+                className="ml-auto shrink-0"
 
                 onClick={() => {
                     // Update current page
@@ -196,7 +215,8 @@ export function MenuBar({
             </button>
 
             <MenubarMenu>
-                <MenubarTrigger className="mr-2 hover:bg-[#bdbdbd38]">
+                {/* Shrink-0 to avoid dot menu from shrinking if menu bar shrinks */}
+                <MenubarTrigger className="mr-2 shrink-0 hover:bg-[#bdbdbd38]">
                     <HiDotsHorizontal size={18} />
                 </MenubarTrigger>
                 <MenubarContent>
