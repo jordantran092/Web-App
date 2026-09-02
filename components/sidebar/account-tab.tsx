@@ -44,7 +44,7 @@ export function AccountTab({ userName }: AccountTabProps) {
                                 {/* <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                                     <PlusIcon className="size-4" />
                                 </div> */}
-                                <div className="flex gap-2 font-medium text-muted-foreground">
+                                <div className="flex gap-2 font-medium">
                                     <HiLogout className="mt-0.5"></HiLogout>
                                     Log out
                                 </div>

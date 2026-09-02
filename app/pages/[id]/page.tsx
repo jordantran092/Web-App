@@ -5,6 +5,7 @@ import { Block } from '@blocknote/core/blocks';
 import { headers } from 'next/headers';
 import { forbidden, notFound } from 'next/navigation';
 import * as ERROR from '@/utils/app-constants';
+import { MAX_FAVORITE_PAGES_SIDEBAR } from '@/utils/app-constants';
 
 type PagesProps = {
     // the params from the browser url, in this case corresponds to the page id
@@ -36,7 +37,7 @@ export default async function Pages({ params }: PagesProps) {
         }
     }
 
-    const favoritePages = await PageService.getStarredPages(session, 10);
+    const favoritePages = await PageService.getStarredPages(session, MAX_FAVORITE_PAGES_SIDEBAR);
 
     return (
         <>
