@@ -91,7 +91,6 @@ export default function Editor({
                     confirmSearchTimerDoneRef.current = true;
 
                     console.log('saved');
-                    //
                 }, 2000);
             }
         });
@@ -103,10 +102,8 @@ export default function Editor({
             // clearTimeout is a closure on timer, so timer will still live on until cleanup function finishes
             if (confirmSearchTimerRef.current) {
                 clearTimeout(confirmSearchTimerRef.current);
-                confirmSearchTimerRef.current = null;
             }
 
-            confirmSearchTimerDoneRef.current = true;
             cleanupOnChange();
         };
     }, []);
