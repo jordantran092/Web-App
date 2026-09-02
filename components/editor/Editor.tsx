@@ -60,56 +60,6 @@ export default function Editor({
     const confirmSearchTimerDoneRef = useRef(true);
     const autosaveSetupDoneRef = useRef(false);
 
-    // Keep refs in sync with incoming prop state even though handler does too in a diff way (in case for other external updates when parent component passes in new props e.g. maybe autosave)
-    useEffect(() => {
-        isSavingRef.current = isSaving;
-    }, [isSaving]);
-
-    useEffect(() => {
-        isSavingTimerOnRef.current = isSavingTimerOn;
-    }, [isSavingTimerOn]);
-
-    useEffect(() => {
-        const cleanupOnChange = editor.onChange((editor) => {
-            // autosaveSetupDoneRef: To only save after the onchange listener is created, basically to avoid auto saving when component mounts/page is opened for first time
-            console.log('onchange');
-            if (autosaveSetupDoneRef.current) {
-                console.log('true');
-                if (!confirmSearchTimerDoneRef.current) {
-                    if (confirmSearchTimerRef.current) clearTimeout(confirmSearchTimerRef.current);
-                }
-
-                // Set a timer
-                confirmSearchTimerDoneRef.current = false;
-                confirmSearchTimerRef.current = setTimeout(() => {
-                    // Save page
-                    const pageEntity: PageUpdateInput = {
-                        id: id,
-                        blocks: JSON.stringify(editor.document),
-                        textContent: editor._tiptapEditor.getText().replace(/\s+/g, ' ').trim(), // to get only text content, multi spaces removed so words still stay separate
-                    };
-                    PageActions.updatePage(pageEntity);
-
-                    confirmSearchTimerDoneRef.current = true;
-
-                    console.log('saved');
-                }, 2000);
-            }
-        });
-
-        autosaveSetupDoneRef.current = true;
-
-        return () => {
-            // Cleanup function to clear the timer if component unmounts
-            // clearTimeout is a closure on timer, so timer will still live on until cleanup function finishes
-            if (confirmSearchTimerRef.current) {
-                clearTimeout(confirmSearchTimerRef.current);
-            }
-
-            cleanupOnChange();
-        };
-    }, []);
-
     // Create a new editor instance
     const editor = useCreateBlockNote({
         schema,
@@ -169,6 +119,53 @@ export default function Editor({
             }),
         ],
     });
+
+    // Keep refs in sync with incoming prop state even though handler does too in a diff way (in case for other external updates when parent component passes in new props e.g. maybe autosave)
+    useEffect(() => {
+        isSavingRef.current = isSaving;
+    }, [isSaving]);
+
+    useEffect(() => {
+        isSavingTimerOnRef.current = isSavingTimerOn;
+    }, [isSavingTimerOn]);
+
+    useEffect(() => {
+        const cleanupOnChange = editor.onChange((editor) => {
+            // autosaveSetupDoneRef: To only save after the onchange listener is created, basically to avoid auto saving when component mounts/page is opened for first time
+
+            if (autosaveSetupDoneRef.current) {
+                if (!confirmSearchTimerDoneRef.current) {
+                    if (confirmSearchTimerRef.current) clearTimeout(confirmSearchTimerRef.current);
+                }
+
+                // Set a timer
+                confirmSearchTimerDoneRef.current = false;
+                confirmSearchTimerRef.current = setTimeout(() => {
+                    // Save page
+                    const pageEntity: PageUpdateInput = {
+                        id: id,
+                        blocks: JSON.stringify(editor.document),
+                        textContent: editor._tiptapEditor.getText().replace(/\s+/g, ' ').trim(), // to get only text content, multi spaces removed so words still stay separate
+                    };
+                    PageActions.updatePage(pageEntity);
+
+                    confirmSearchTimerDoneRef.current = true;
+                }, 2000);
+            }
+        });
+
+        autosaveSetupDoneRef.current = true;
+
+        return () => {
+            // Cleanup function to clear the timer if component unmounts
+            // clearTimeout is a closure on timer, so timer will still live on until cleanup function finishes
+            if (confirmSearchTimerRef.current) {
+                clearTimeout(confirmSearchTimerRef.current);
+            }
+
+            cleanupOnChange();
+        };
+    }, [editor]); // When editor changes, after a fast refresh during dev. Avoids stale listener on old editor during development only.
 
     const context = useContext(SearchMenuOpenContext);
     if (!context) {
