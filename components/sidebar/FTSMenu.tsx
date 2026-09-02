@@ -43,7 +43,7 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
     const itemsHeadlineRef = useRef<string[]>([]);
     const [search, setSearch] = useState('');
     const confirmSearchTimerRef = useRef<NodeJS.Timeout>(null);
-    const confirmSearchTimerDone = useRef(true);
+    const confirmSearchTimerDoneRef = useRef(true);
     const [isAtBottomOfMenu, setIsAtBottomOfMenu] = useState(false);
     const isAtBottomOfMenuRef = useRef(false);
     const currentPageNumRef = useRef(1);
@@ -84,25 +84,25 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
 
             */
 
-            if (!confirmSearchTimerDone.current) {
+            if (!confirmSearchTimerDoneRef.current) {
                 if (confirmSearchTimerRef.current) clearTimeout(confirmSearchTimerRef.current);
             }
 
             // Set a timer
-            confirmSearchTimerDone.current = false;
+            confirmSearchTimerDoneRef.current = false;
             confirmSearchTimerRef.current = setTimeout(() => {
                 getItems();
-                confirmSearchTimerDone.current = true;
+                confirmSearchTimerDoneRef.current = true;
             }, 500);
-
-            // Cleanup function to clear the timer if component unmounts
-            // clearTimeout is a closure on timer, so timer will still live on until cleanup function finishes
-            return () => {
-                if (confirmSearchTimerRef.current) clearTimeout(confirmSearchTimerRef.current);
-            };
         } else {
             setItems([]);
         }
+
+        // Cleanup function to clear the timer if component unmounts
+        // clearTimeout is a closure on timer, so timer will still live on until cleanup function finishes
+        return () => {
+            if (confirmSearchTimerRef.current) clearTimeout(confirmSearchTimerRef.current);
+        };
     }, [search]);
 
     useEffect(() => {
