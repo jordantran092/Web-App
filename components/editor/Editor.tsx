@@ -72,7 +72,9 @@ export default function Editor({
     useEffect(() => {
         const cleanupOnChange = editor.onChange((editor) => {
             // autosaveSetupDoneRef: To only save after the onchange listener is created, basically to avoid auto saving when component mounts/page is opened for first time
+            console.log('onchange');
             if (autosaveSetupDoneRef.current) {
+                console.log('true');
                 if (!confirmSearchTimerDoneRef.current) {
                     if (confirmSearchTimerRef.current) clearTimeout(confirmSearchTimerRef.current);
                 }
