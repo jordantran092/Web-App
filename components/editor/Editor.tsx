@@ -90,7 +90,8 @@ export default function Editor({
 
                     confirmSearchTimerDoneRef.current = true;
 
-                    // console.log('saved');
+                    console.log('saved');
+                    //
                 }, 2000);
             }
         });
@@ -100,8 +101,12 @@ export default function Editor({
         return () => {
             // Cleanup function to clear the timer if component unmounts
             // clearTimeout is a closure on timer, so timer will still live on until cleanup function finishes
-            if (confirmSearchTimerRef.current) clearTimeout(confirmSearchTimerRef.current);
+            if (confirmSearchTimerRef.current) {
+                clearTimeout(confirmSearchTimerRef.current);
+                confirmSearchTimerRef.current = null;
+            }
 
+            confirmSearchTimerDoneRef.current = true;
             cleanupOnChange();
         };
     }, []);
