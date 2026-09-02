@@ -6,3 +6,5 @@ export const NOT_FOUND = 'NOT_FOUND';
 export const EMPTY = 'null';
 
 export const MAX_FAVORITE_PAGES_SIDEBAR = 10;
+
+export const APP_NAME = 'Minto';

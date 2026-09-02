@@ -1,4 +1,5 @@
 import { LoginForm } from '@/components/LoginForm';
+import { APP_NAME } from '@/utils/app-constants';
 import Image from 'next/image';
 
 export default function SignInPage() {
@@ -8,7 +9,7 @@ export default function SignInPage() {
                 <div className="flex flex-col gap-4 p-6 md:p-10">
                     <div className="flex justify-center gap-2 md:justify-start">
                         <a href="/" className="flex items-center gap-2 font-medium">
-                            X
+                            {APP_NAME}
                         </a>
                     </div>
                     <div className="flex flex-1 flex-col justify-center sm:pl-30 xl:pl-20">

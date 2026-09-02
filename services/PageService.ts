@@ -293,6 +293,8 @@ export async function deletePage(session: Session, id: string) {
         return forbidden();
     }
 
+    const parentId = (await getPage(id, session))?.parentId;
+
     await prisma.page.delete({
         where: { id },
     });

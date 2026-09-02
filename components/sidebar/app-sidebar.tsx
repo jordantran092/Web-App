@@ -25,13 +25,6 @@ import { Page } from '@/app/generated/prisma/client';
 import { LuLibraryBig } from 'react-icons/lu';
 
 const data = {
-    teams: [
-        {
-            name: 'Acme Inc',
-            logo: <TerminalIcon />,
-            plan: 'Enterprise',
-        },
-    ],
     navMain: [
         {
             title: 'Search',
