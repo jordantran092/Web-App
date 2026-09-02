@@ -150,7 +150,8 @@ export function MenuBar({
             className="sticky top-2 z-50 mt-2 flex w-full min-w-0 gap-2 border-none"
             modal={false}>
             {/* sidebar menu */}
-            <SidebarTrigger className="m-2 mt-4 ml-2.5 hover:bg-[#bdbdbd38]!" />
+            {/* Margins are not the same with every page with sidebar, must be custom */}
+            <SidebarTrigger className="m-2 mt-4 ml-2.25" />
 
             <Input
                 value={tempTitle}

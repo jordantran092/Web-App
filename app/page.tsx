@@ -10,6 +10,8 @@ import * as PageService from '@/services/PageService';
 import { Page } from './generated/prisma/client';
 
 import Library from '@/components/library/Library';
+import { MAX_FAVORITE_PAGES_SIDEBAR } from '@/utils/app-constants';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 
 export default async function Home() {
     const session = await auth.api.getSession({
@@ -22,27 +24,29 @@ export default async function Home() {
 
     let items: Page[] = [];
 
-    // Call service because on server side
+    // Can call service layer because on server side
     items = await PageService.findMany(session);
+
+    const favoritePages = await PageService.getStarredPages(session, MAX_FAVORITE_PAGES_SIDEBAR);
 
     return (
         <>
             {/* placeholder for now, sidebar impl could change this */}
-            <Menubar modal={false} className="border-none">
+            {/* <Menubar modal={false} className="border-none">
                 <HiOutlineMenu size={23} />
 
-                {/* temp logout */}
+      
                 {session && (
                     <form action={AuthActions.signOut}>
                         <button>Log Out</button>
                     </form>
                 )}
-            </Menubar>
+            </Menubar> */}
 
-            {/* min-h-svh to stretch it vertically fully & avoid mobile viewport address bar weirdness scrolling. xl for 1920x1080-like screens*/}
-            <div className="mx-4 mt-15 min-h-svh xl:mx-22">
-                <Library items={items}></Library>
-            </div>
+            <Library
+                items={items}
+                favoritePages={favoritePages}
+                userName={session.user.name}></Library>
         </>
     );
 }
