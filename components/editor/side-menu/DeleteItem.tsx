@@ -1,9 +1,9 @@
 // import { SearchMenuOpenContext } from '@/components/Page';
-import {} from '@blocknote/core';
+import { Block } from '@blocknote/core';
 import { SideMenuExtension } from '@blocknote/core/extensions';
 import { useBlockNoteEditor, useComponentsContext, useExtensionState } from '@blocknote/react';
 import { ReactNode, useContext } from 'react';
-import { schema } from '../schema/CustomSchema';
+import { MyDefaultBlockSchema, schema } from '../schema/CustomSchema';
 import * as PageActions from '@/actions/PageActions';
 import { PageUpdateInput } from '@/types/Page';
 import { SearchMenuOpenContext } from '@/components/pages/Page';
@@ -16,7 +16,7 @@ export function DeleteItem(props: { children: ReactNode }) {
     // Get blocked selected
     const block = useExtensionState(SideMenuExtension, {
         selector: (state) => state?.block,
-    });
+    }) as Block<MyDefaultBlockSchema, any, any>;
 
     if (!block) {
         return null;
@@ -34,6 +34,10 @@ export function DeleteItem(props: { children: ReactNode }) {
             <Components.Generic.Menu.Item
                 onClick={() => {
                     editor.removeBlocks([block]);
+
+                    if (block.type === 'pageBlock') {
+                        PageActions.deletePage(block.props.pageId);
+                    }
 
                     const pageEntity: PageUpdateInput = {
                         id,

@@ -134,3 +134,13 @@ export async function count() {
 
     return PageService.count();
 }
+
+export async function deletePage(id: string) {
+    // Check if any valid session / logged in
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+    if (!session) return unauthorized();
+
+    PageService.deletePage(session, id);
+}

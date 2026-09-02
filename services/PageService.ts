@@ -287,3 +287,13 @@ async function doesUserOwnPage(session: Session, id: string) {
 
     return page?.userId == userId ? true : false;
 }
+
+export async function deletePage(session: Session, id: string) {
+    if (!(await doesUserOwnPage(session, id))) {
+        return forbidden();
+    }
+
+    await prisma.page.delete({
+        where: { id },
+    });
+}
