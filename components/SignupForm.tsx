@@ -4,6 +4,7 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui
 import { Input } from '@/components/ui/input';
 import * as AuthActions from '@/actions/AuthActions';
 import Link from 'next/link';
+import { APP_NAME } from '@/utils/app-constants';
 
 export function SignupForm() {
     return (
@@ -27,7 +28,7 @@ export function SignupForm() {
                     />
                 </svg>
             </Link>
-            <p className="mb-20 text-3xl">Get started on Z</p>
+            <p className="mb-20 text-3xl">Get started on {APP_NAME}</p>
             <form action={AuthActions.signUp}>
                 <FieldGroup>
                     <Field>
@@ -77,10 +78,10 @@ export function SignupForm() {
                                 Submit
                             </Button>
 
-                            <FieldDescription className="px-6 text-center text-white">
+                            {/* <FieldDescription className="px-6 text-center text-white">
                                 Already have an account? <Link href="/signin">Sign in</Link>
-                                {/* <a href="#">Sign in</a> */}
-                            </FieldDescription>
+                            
+                            </FieldDescription> */}
                         </Field>
                     </FieldGroup>
                 </FieldGroup>

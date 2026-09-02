@@ -16,6 +16,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui
 import { ChevronDownIcon, User } from 'lucide-react';
 import * as AuthActions from '@/actions/AuthActions';
 import { HiLogout } from 'react-icons/hi';
+import { APP_NAME } from '@/utils/app-constants';
 
 type AccountTabProps = {
     userName: string;
@@ -30,7 +31,9 @@ export function AccountTab({ userName }: AccountTabProps) {
                         <div className="flex aspect-square size-5 items-center justify-center rounded-md">
                             <User />
                         </div>
-                        <span className="ml-2 truncate font-medium">{userName}'s X</span>
+                        <span className="ml-2 truncate font-medium">
+                            {userName}'s {APP_NAME}
+                        </span>
                         <ChevronDownIcon className="opacity-50" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
