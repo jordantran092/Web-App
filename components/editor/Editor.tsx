@@ -22,7 +22,7 @@ import {
 } from '@blocknote/core';
 import { PageUpdateInput } from '@/types/Page';
 import * as PageActions from '@/actions/PageActions';
-import { useContext, useEffect, useRef } from 'react';
+import { RefObject, useContext, useEffect, useRef } from 'react';
 
 import { MyDefaultBlockSchema, MyStyleSchema, schema } from './schema/CustomSchema';
 import { CustomSideMenu } from './side-menu/CustomSideMenu';
@@ -37,6 +37,7 @@ type EditorProps = {
     isSaving: boolean;
     isSavingTimerOn: boolean;
     setIsSavingTimerOn: (value: boolean) => void;
+    unsavedChangesRef: RefObject<boolean>;
 };
 
 export default function Editor({
@@ -46,6 +47,7 @@ export default function Editor({
     isSaving,
     isSavingTimerOn,
     setIsSavingTimerOn,
+    unsavedChangesRef,
 }: EditorProps) {
     /*
 
@@ -147,6 +149,9 @@ export default function Editor({
 
             // autosaveSetupDoneRef: To only save after the onchange listener is created, basically to avoid auto saving when component mounts/page is opened for first time
             if (autosaveSetupDoneRef.current) {
+                /* Any change since initial page load will trigger unsaved changes. In this scope to avoid unsavedChangesRef changing on mount */
+                unsavedChangesRef.current = true;
+
                 if (!confirmSearchTimerDoneRef.current) {
                     if (confirmSearchTimerRef.current) clearTimeout(confirmSearchTimerRef.current);
                 }
@@ -164,6 +169,9 @@ export default function Editor({
 
                     confirmSearchTimerDoneRef.current = true;
 
+                    unsavedChangesRef.current = false;
+
+                    // debug
                     console.log('saved');
                 }, 2000);
             }
