@@ -172,9 +172,6 @@ export default function Editor({
                     confirmSearchTimerDoneRef.current = true;
 
                     unsavedChangesRef.current = false;
-
-                    // debug
-                    console.log('saved');
                 }, 2000);
             }
         });
