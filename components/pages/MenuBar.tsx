@@ -242,39 +242,16 @@ export function MenuBar({
                 <MenubarTrigger className="mr-2 shrink-0 hover:bg-[#bdbdbd38]">
                     <HiDotsHorizontal size={18} />
                 </MenubarTrigger>
-                <MenubarContent>
+                {/* <MenubarContent>
                     <MenubarGroup>
                         <MenubarItem>
                             Undo <MenubarShortcut>⌘Z</MenubarShortcut>
                         </MenubarItem>
-                        {/* <MenubarItem>
+                        <MenubarItem>
                             Redo <MenubarShortcut>⇧⌘Z</MenubarShortcut>
-                        </MenubarItem> */}
+                        </MenubarItem>
                     </MenubarGroup>
-                    {/* <MenubarSeparator />
-                    <MenubarGroup>
-                        <MenubarSub>
-                            <MenubarSubTrigger>Find</MenubarSubTrigger>
-                            <MenubarSubContent>
-                                <MenubarGroup>
-                                    <MenubarItem>Search the web</MenubarItem>
-                                </MenubarGroup>
-                                <MenubarSeparator />
-                                <MenubarGroup>
-                                    <MenubarItem>Find...</MenubarItem>
-                                    <MenubarItem>Find Next</MenubarItem>
-                                    <MenubarItem>Find Previous</MenubarItem>
-                                </MenubarGroup>
-                            </MenubarSubContent>
-                        </MenubarSub>
-                    </MenubarGroup>
-                    <MenubarSeparator />
-                    <MenubarGroup>
-                        <MenubarItem>Cut</MenubarItem>
-                        <MenubarItem>Copy</MenubarItem>
-                        <MenubarItem>Paste</MenubarItem>
-                    </MenubarGroup> */}
-                </MenubarContent>
+                </MenubarContent> */}
             </MenubarMenu>
         </Menubar>
     );
