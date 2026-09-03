@@ -49,21 +49,23 @@ export function MenuBar({
     setisBreadcrumbMenuOpen,
 }: MenuBarProps) {
     const [tempTitle, setTempTitle] = useState(title); // initial state will be retrieved from server via props
-    const titlesRef = useRef({ title: title, tempTitle: tempTitle });
+    const titlesRef = useRef({ title: title, tempTitle: tempTitle }); // most up to date state of titles
     const recentlyBlurRef = useRef(false);
 
     const [isFavorite, setIsFavorite] = useState(favorite); // initial state will be retrieved from server via props
     const isFavoriteRef = useRef(favorite);
 
-    // Keep current user visible title in sync with its latest ref value
     useEffect(() => {
-        titlesRef.current.tempTitle = tempTitle;
-
         document.addEventListener('click', handleClick);
 
         return () => {
-            window.removeEventListener('click', handleClick);
+            document.removeEventListener('click', handleClick);
         };
+    }, []);
+
+    // Keep current user visible title in sync with its latest ref value
+    useEffect(() => {
+        titlesRef.current.tempTitle = tempTitle;
     }, [tempTitle]);
 
     // Keep isFavoriteRef in sync with useState
@@ -97,6 +99,7 @@ export function MenuBar({
 
         // Only update if there's a change in title on client side, otherwise no point
         if (title != tempTitle) {
+            // Not related to autosave
             // Update current page
             const pageEntity: PageUpdateInput = {
                 id,

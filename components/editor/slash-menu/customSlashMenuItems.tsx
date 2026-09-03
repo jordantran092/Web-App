@@ -27,6 +27,7 @@ const pageItem = (editor: MyBlockNoteEditor, id: string) => ({
 
         const savedPageEntity = await PageActions.createPage(pageEntity);
 
+        // Auto save will activate
         insertOrUpdateBlockForSlashMenu(editor, {
             type: 'pageBlock',
             props: {

@@ -108,6 +108,8 @@ export default function Editor({
                                     setIsSaving(false);
                                 });
 
+                            unsavedChangesRef.current = false;
+
                             // debug
                             // console.log('saving!');
                         } else {
