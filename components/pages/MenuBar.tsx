@@ -23,7 +23,7 @@ import {
     HiStar,
 } from 'react-icons/hi';
 import { Input } from '../ui/input';
-import { useEffect, useRef, useState } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
 import { PageUpdateInput } from '@/types/Page';
 import * as PageActions from '@/actions/PageActions';
 import SavingIndicator from './SavingIndicator';
@@ -37,7 +37,14 @@ type MenuBarProps = {
     isSavingTimerOn: boolean;
     setIsSavingTimerOn: (value: boolean) => void;
     setisBreadcrumbMenuOpen: (value: boolean) => void;
+    unsavedChangesRef: RefObject<boolean>;
 };
+
+/*
+
+NOTE: Escape, click off input, and enter are ways to interact with the title input
+
+*/
 
 export function MenuBar({
     id,
@@ -47,6 +54,7 @@ export function MenuBar({
     isSavingTimerOn,
     setIsSavingTimerOn,
     setisBreadcrumbMenuOpen,
+    unsavedChangesRef,
 }: MenuBarProps) {
     const [tempTitle, setTempTitle] = useState(title); // initial state will be retrieved from server via props
     const titlesRef = useRef({ title: title, tempTitle: tempTitle }); // most up to date state of titles
@@ -66,6 +74,10 @@ export function MenuBar({
     // Keep current user visible title in sync with its latest ref value
     useEffect(() => {
         titlesRef.current.tempTitle = tempTitle;
+
+        if (titlesRef.current.title != titlesRef.current.tempTitle) {
+            unsavedChangesRef.current = true;
+        }
     }, [tempTitle]);
 
     // Keep isFavoriteRef in sync with useState
@@ -113,6 +125,8 @@ export function MenuBar({
             // Make sure local variable title is in sync, not just the DB
             titlesRef.current.title = tempTitle;
 
+            unsavedChangesRef.current = false;
+
             // console.log(`title: ${titlesRef.current.title}\n
 
             //     tempTitle: ${titlesRef.current.tempTitle}`);
@@ -124,6 +138,7 @@ export function MenuBar({
             updatePage();
             event.currentTarget.blur();
         } else if (event.key === 'Escape') {
+            // If there any changes to title at all, to avoid re-render
             if (titlesRef.current.title != titlesRef.current.tempTitle) {
                 // Sets back to original title a.k.a discarded changes
                 setTempTitle(titlesRef.current.title);
@@ -133,6 +148,8 @@ export function MenuBar({
                 //     tempTitle: ${titlesRef.current.tempTitle}`);
             }
             event.currentTarget.blur();
+
+            unsavedChangesRef.current = false;
         }
     };
 
@@ -179,9 +196,11 @@ export function MenuBar({
                 />
             </button>
 
-            {/* Saving indicator */}
+            {/* Saving indicator  */}
             {(isSaving || isSavingTimerOn) && (
-                <SavingIndicator setIsSavingTimerOn={setIsSavingTimerOn} />
+                <span className="mt-2 ml-5">
+                    <SavingIndicator setIsSavingTimerOn={setIsSavingTimerOn} />
+                </span>
             )}
 
             {/* Favorite button */}

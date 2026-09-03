@@ -106,6 +106,7 @@ export default function Page({
                         isSavingTimerOn={isSavingTimerOn}
                         setIsSavingTimerOn={setIsSavingTimerOn}
                         setisBreadcrumbMenuOpen={setisBreadcrumbMenuOpen}
+                        unsavedChangesRef={unsavedChangesRef}
                     />
 
                     {/* <Separator
