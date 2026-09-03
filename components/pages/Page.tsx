@@ -54,11 +54,28 @@ export default function Page({
 
     const selectedBlockRef = useRef<Block<MyDefaultBlockSchema, any, any>>(null);
     const editorRef = useRef<MyBlockNoteEditor>(null);
+    const unsavedChangesRef = useRef(false);
     const router = useRouter(); // access to next.js navigation controls
 
-    // Refresh page on mount (e.g. when come back to page) so that new data is loaded, otherwise it will reload the old page data
+    // Refresh page on mount (e.g. when come back to page) so that new data is loaded, otherwise it could reload stale page data
     useEffect(() => {
         router.refresh();
+    }, []);
+
+    function handleBeforeUnload(event: BeforeUnloadEvent) {
+        if (unsavedChangesRef.current) {
+            event.preventDefault(); // signal browser that confirmation dialog is needed
+            event.returnValue = ''; // to be more compatible with browsers in case
+        }
+    }
+
+    // confirmation dialog
+    useEffect(() => {
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
     }, []);
 
     return (
@@ -138,6 +155,8 @@ export default function Page({
                             isSavingTimerOn={isSavingTimerOn}
 
                             setIsSavingTimerOn={setIsSavingTimerOn}
+
+                            unsavedChangesRef={unsavedChangesRef}
                         />
                         {/* Do not need to handle visiblity based on state here, meant to be handled inside via CommandDialog props */}
                         <SearchCommand id={id} />
