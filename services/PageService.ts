@@ -121,7 +121,7 @@ export async function renameTitleForParentOfThisPage(
     const parentId = page.parentId;
 
     // If page has a parent, if not it could be a root page which is fine
-    if (parentId) {
+    if (parentId !== EMPTY) {
         const parentPage = await getPage(parentId, session);
 
         // Shouldn't happen, but for type safety
@@ -158,6 +158,7 @@ export async function renameTitleForParentOfThisPage(
 
         blocks[foundIdx] = newParentBlock;
 
+        // Not related to autosave
         const pageEntity: PageUpdateInput = {
             id: parentId,
             blocks: JSON.stringify(blocks),

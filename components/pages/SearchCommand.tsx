@@ -90,6 +90,7 @@ export default function SearchCommand({ id }: SearchCommandProps) {
                         context.selectedBlockRef.current = null; // Must reset to avoid re-trying action after successful action
                         context.setisSearchMenuOpen(false); // close dialog
 
+                        // Not related to autosave
                         const newBlocks = JSON.stringify(blocks);
                         const destinationPageEntity: PageUpdateInput = {
                             // the selected page
@@ -101,6 +102,7 @@ export default function SearchCommand({ id }: SearchCommandProps) {
                         PageActions.updatePage(destinationPageEntity);
 
                         /* If selected block is a page block, also have to update the page that this block is pertaining to. This page's parent id has to be updated to the id of the page that was selected in the menu */
+                        // Not related to autosave
                         if (selectedBlock.type === 'pageBlock') {
                             const selectedBlockPageEntity: PageUpdateInput = {
                                 id: selectedBlock.props.pageId,
