@@ -77,7 +77,7 @@ export default function SearchCommand({ id }: SearchCommandProps) {
                 onSelect={() => {
                     // Get current saved blocks of selected page and then push the selected block into that, and then update the selected page with these new blocks
 
-                    let blocks: Block<MyDefaultBlockSchema, any, any>[] = []; // current saved blocks of selected page
+                    let blocks: Block<MyDefaultBlockSchema, any, any>[] = []; // current saved blocks of selected page in menu
 
                     if (item.blocks) {
                         blocks = JSON.parse(item.blocks) as Block<MyDefaultBlockSchema, any, any>[];
@@ -100,7 +100,7 @@ export default function SearchCommand({ id }: SearchCommandProps) {
                         };
                         PageActions.updatePage(destinationPageEntity);
 
-                        /* If block is a page block, update parent page id of the selected page block */
+                        /* If selected block is a page block, also have to update the page that this block is pertaining to. This page's parent id has to be updated to the id of the page that was selected in the menu */
                         if (selectedBlock.type === 'pageBlock') {
                             const selectedBlockPageEntity: PageUpdateInput = {
                                 id: selectedBlock.props.pageId,
@@ -113,16 +113,17 @@ export default function SearchCommand({ id }: SearchCommandProps) {
 
                         editor?.removeBlocks([selectedBlock]); // can pass in a Block object
 
-                        const newBlocksParent = JSON.stringify(editor?.document);
-                        const pageEntityParent: PageUpdateInput = {
-                            id: id, // the selected page's id
-                            blocks: newBlocksParent,
-                            textContent: editor?._tiptapEditor
-                                .getText()
-                                .replace(/\s+/g, ' ')
-                                .trim(),
-                        };
-                        PageActions.updatePage(pageEntityParent);
+                        /* Autosave will handle this */
+                        // const newBlocksParent = JSON.stringify(editor?.document);
+                        // const pageEntityParent: PageUpdateInput = {
+                        //     id: id,
+                        //     blocks: newBlocksParent,
+                        //     textContent: editor?._tiptapEditor
+                        //         .getText()
+                        //         .replace(/\s+/g, ' ')
+                        //         .trim(),
+                        // };
+                        // PageActions.updatePage(pageEntityParent);
                     }
                 }}>
                 <HiDocumentText size={23} />

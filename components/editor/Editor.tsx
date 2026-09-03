@@ -131,8 +131,21 @@ export default function Editor({
 
     useEffect(() => {
         const cleanupOnChange = editor.onChange((editor) => {
-            // autosaveSetupDoneRef: To only save after the onchange listener is created, basically to avoid auto saving when component mounts/page is opened for first time
+            /*
 
+            If timer is not done, then clear old timer and set a new timer
+
+            If timer is done/not running, then still set a new timer as if everything is fresh
+
+            Once timer done, then actually make DB query to save
+
+            All to avoid DB querying every single letter typed, better to query once user has finished typing for some time
+
+            Handles any editor document changes e.g. delete block, new block, new text input, etc.
+
+            */
+
+            // autosaveSetupDoneRef: To only save after the onchange listener is created, basically to avoid auto saving when component mounts/page is opened for first time
             if (autosaveSetupDoneRef.current) {
                 if (!confirmSearchTimerDoneRef.current) {
                     if (confirmSearchTimerRef.current) clearTimeout(confirmSearchTimerRef.current);
@@ -150,6 +163,8 @@ export default function Editor({
                     PageActions.updatePage(pageEntity);
 
                     confirmSearchTimerDoneRef.current = true;
+
+                    console.log('saved');
                 }, 2000);
             }
         });

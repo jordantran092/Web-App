@@ -27,6 +27,7 @@ export function DeleteItem(props: { children: ReactNode }) {
         throw new Error('useContext not being used under proper provider');
     }
 
+    // Page id that editor instance is with
     const id = context.id;
 
     return (
@@ -39,13 +40,14 @@ export function DeleteItem(props: { children: ReactNode }) {
                         PageActions.deletePage(block.props.pageId);
                     }
 
-                    const pageEntity: PageUpdateInput = {
-                        id,
-                        blocks: JSON.stringify(editor.document),
-                        textContent: editor._tiptapEditor.getText().replace(/\s+/g, ' ').trim(),
-                    };
+                    /* Autosave will handle this */
+                    // const pageEntity: PageUpdateInput = {
+                    //     id,
+                    //     blocks: JSON.stringify(editor.document),
+                    //     textContent: editor._tiptapEditor.getText().replace(/\s+/g, ' ').trim(),
+                    // };
 
-                    PageActions.updatePage(pageEntity);
+                    // PageActions.updatePage(pageEntity);
                 }}>
                 {props.children}
             </Components.Generic.Menu.Item>

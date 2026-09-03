@@ -35,16 +35,17 @@ const pageItem = (editor: MyBlockNoteEditor, id: string) => ({
             },
         });
 
+        /* Autosave will handle this */
         // Update parent page since changed content
-        const savedBlocks = JSON.stringify(editor.document);
+        // const savedBlocks = JSON.stringify(editor.document);
 
-        const parentPageEntity: PageUpdateInput = {
-            id: id,
-            blocks: savedBlocks,
-            textContent: editor._tiptapEditor.getText().replace(/\s+/g, ' ').trim(),
-        };
+        // const parentPageEntity: PageUpdateInput = {
+        //     id: id,
+        //     blocks: savedBlocks,
+        //     textContent: editor._tiptapEditor.getText().replace(/\s+/g, ' ').trim(),
+        // };
 
-        PageActions.updatePage(parentPageEntity);
+        // PageActions.updatePage(parentPageEntity);
     },
 
     aliases: ['page'], // for user queries, e.g. /page
