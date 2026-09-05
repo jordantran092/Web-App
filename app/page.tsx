@@ -12,6 +12,7 @@ import { Page } from './generated/prisma/client';
 import Library from '@/components/library/Library';
 import { MAX_FAVORITE_PAGES_SIDEBAR } from '@/utils/app-constants';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import * as PageActions from '@/actions/PageActions';
 
 export default async function Home() {
     const session = await auth.api.getSession({
@@ -28,6 +29,14 @@ export default async function Home() {
     items = await PageService.findMany(session);
 
     const favoritePages = await PageService.getStarredPages(session, MAX_FAVORITE_PAGES_SIDEBAR);
+
+    // debug
+    // return PageActions.getPage({
+    //     id: 'aevkbwjzuficy1q6m5cfqw8basdasdasdasdasd',
+    //     favorite: true,
+    // });
+
+    // return PageActions.deletePage('aevkbwjzuficy1q6m5cfqw8basdasdasdasdasd');
 
     return (
         <>

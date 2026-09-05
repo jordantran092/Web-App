@@ -11,22 +11,32 @@ import { EMPTY, NOT_FOUND } from '@/utils/app-constants';
 import { MyDefaultBlockSchema } from '@/components/editor/schema/CustomSchema';
 import { Page } from '@/app/generated/prisma/client';
 import { getText } from '@/utils/block-utils';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
 
 export async function updatePage({ id, ...data }: PageUpdateInput, session: Session) {
     if (!(await doesUserOwnPage(session, id))) {
         return forbidden();
     }
 
-    const pageEntity = await prisma.page.update({
-        where: { id },
+    // Good to still error handle here in case
+    try {
+        const pageEntity = await prisma.page.update({
+            where: { id },
 
-        data, // since data param is same as data property name, use property shorthand as so. will also only comprise of fields entered, optional fields ignored
-    });
+            data, // since data param is same as data property name, use property shorthand as so. will also only comprise of fields entered, optional fields ignored
+        });
+
+        return pageEntity;
+    } catch (error) {
+        if (error instanceof PrismaClientKnownRequestError) {
+            if (error.code === 'P2025') {
+                return notFound();
+            }
+        }
+    }
 
     // force re-render page since changed it
     // revalidatePath(`/pages/${id}`);
-
-    return pageEntity;
 }
 
 export async function getPage(id: string, session: Session) {
@@ -35,9 +45,11 @@ export async function getPage(id: string, session: Session) {
     }
 
     // async function will wrap return in a promise again, so await here will be useless
-    return prisma.page.findUnique({
+    const page = await prisma.page.findUnique({
         where: { id },
     });
+
+    return page ? page : notFound();
 }
 
 export async function getContentOfPage(session: Session, id: string) {
@@ -96,7 +108,7 @@ export async function createPage({ parentId, ...data }: PageCreateInput, session
 export async function findMany(session: Session) {
     const userId = session.user.id;
 
-    return prisma.page.findMany({
+    return await prisma.page.findMany({
         where: {
             userId, // userId matches page and session
         },
@@ -114,19 +126,14 @@ export async function renameTitleForParentOfThisPage(
 
     const page = await getPage(id, session);
 
-    if (!page) {
-        throw Error(NOT_FOUND);
-    }
-
     const parentId = page.parentId;
 
     // If page has a parent, if not it could be a root page which is fine
     if (parentId !== EMPTY) {
         const parentPage = await getPage(parentId, session);
 
-        // Shouldn't happen, but for type safety
-        if (!parentPage || !parentPage.blocks)
-            throw new Error('No parent page found or no parent page blocks found');
+        // Shouldn't happen, but in case
+        if (!parentPage.blocks) throw new Error('No parent page blocks found');
 
         // Must type correctly or else won't recognize pageBlock type
         const blocks = JSON.parse(parentPage.blocks) as Block<MyDefaultBlockSchema, any, any>[];
@@ -175,7 +182,6 @@ export async function getBreadcrumb(session: Session, id: string) {
     }
 
     let currentPage = await getPage(id, session);
-    if (!currentPage) return notFound(); // must make sure PageActions has await for this, to receive the notFound
 
     const breadcrumbArr: Page[] = [currentPage];
     let parentId = currentPage.parentId;
@@ -284,6 +290,8 @@ async function doesUserOwnPage(session: Session, id: string) {
         where: { id },
     });
 
+    if (!page) return notFound();
+
     const userId = session.user.id;
 
     return page?.userId == userId ? true : false;
@@ -293,8 +301,6 @@ export async function deletePage(session: Session, id: string) {
     if (!(await doesUserOwnPage(session, id))) {
         return forbidden();
     }
-
-    const parentId = (await getPage(id, session))?.parentId;
 
     await prisma.page.delete({
         where: { id },
