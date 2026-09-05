@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field';
@@ -5,8 +7,22 @@ import { Input } from '@/components/ui/input';
 import * as AuthActions from '@/actions/AuthActions';
 import Link from 'next/link';
 import { APP_NAME } from '@/utils/app-constants';
+import { useActionState } from 'react';
+import { AlertError } from './AlertError';
 
 export function SignupForm() {
+    const [state, formAction] = useActionState(AuthActions.signUp, {
+        statusCode: -1,
+    });
+
+    let errorStr = '';
+
+    if (state?.statusCode === 422) {
+        errorStr = 'Email already exists';
+    } else if (state?.statusCode === 400) {
+        errorStr = 'Invalid email/password (min. 8 chars password)';
+    }
+
     return (
         <>
             <Link
@@ -29,7 +45,7 @@ export function SignupForm() {
                 </svg>
             </Link>
             <p className="mb-20 text-3xl">Get started on {APP_NAME}</p>
-            <form action={AuthActions.signUp}>
+            <form action={formAction}>
                 <FieldGroup>
                     <Field>
                         <FieldLabel htmlFor="name">Full Name</FieldLabel>
@@ -86,6 +102,13 @@ export function SignupForm() {
                     </FieldGroup>
                 </FieldGroup>
             </form>
+
+            {/* UI updates dynamically based on the returned server state */}
+            {(state?.statusCode === 400 || state?.statusCode === 422) && (
+                <div className="mt-10">
+                    <AlertError errorStr={errorStr} />
+                </div>
+            )}
         </>
     );
 }

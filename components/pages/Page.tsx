@@ -30,7 +30,7 @@ export const SearchMenuOpenContext = createContext<SearchMenuOpenContextType | u
 
 type PageProps = {
     id: string;
-    initialContent: Block[];
+    initialContent: Block<MyDefaultBlockSchema, any, any>[];
     title: string;
     favorite: boolean;
     favoritePages: Page[];

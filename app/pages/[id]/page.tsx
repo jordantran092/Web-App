@@ -6,6 +6,7 @@ import { headers } from 'next/headers';
 import { forbidden, notFound } from 'next/navigation';
 import * as ERROR from '@/utils/app-constants';
 import { MAX_FAVORITE_PAGES_SIDEBAR } from '@/utils/app-constants';
+import { MyDefaultBlockSchema } from '@/components/editor/schema/CustomSchema';
 
 type PagesProps = {
     // the params from the browser url, in this case corresponds to the page id
@@ -28,7 +29,7 @@ export default async function Pages({ params }: PagesProps) {
         return notFound();
     }
 
-    let initialContent: Block[] = [];
+    let initialContent: Block<MyDefaultBlockSchema, any, any>[] = [];
     try {
         initialContent = await PageService.getContentOfPage(session, id);
     } catch (error: any) {
