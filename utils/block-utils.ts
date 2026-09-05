@@ -32,11 +32,11 @@ function addBlockTextToResult(
     result: { value: string }
 ) {
     if (block.content) {
-        // if inlinecontent[] and plaincontent[], only content type of array
+        // if inlinecontent[] and plaincontent[], the only content types of array, so we just need to check if array
         if (Array.isArray(block.content)) {
             block.content.forEach((contentObj) => {
                 if (contentObj.type === 'text') {
-                    result.value += `${(contentObj as any).text} `;
+                    result.value += `${(contentObj as any).text} `; // add block's text to result
                 }
             });
         }

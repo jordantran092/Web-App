@@ -159,7 +159,7 @@ export async function renameTitleForParentOfThisPage(
                 pageId: id,
                 title: currentTitle,
             },
-            content: undefined,
+            content: undefined, // because page block has no typical content
             children: parentBlock.children,
         };
 
@@ -187,11 +187,11 @@ export async function getBreadcrumb(session: Session, id: string) {
     let parentId = currentPage.parentId;
     while (parentId !== EMPTY) {
         currentPage = await getPage(parentId, session);
-        if (!currentPage) return notFound(); // must make sure PageActions has await for this, to receive the notFound
 
-        // addFirst so that root page first, ultimately
+        // addFirst so that root page is first, ultimately
         breadcrumbArr.unshift(currentPage);
 
+        // Get next parent id
         parentId = currentPage.parentId;
     }
 
@@ -227,7 +227,7 @@ export async function getPagesFromFullTextSearch(
         SELECT "id", "favorite", "title", "blocks", "textContent", "parentId", "userId", ts_rank_cd("searchVector", query) AS rank
         FROM "Page", websearch_to_tsquery(${search}) query
         WHERE "userId" = ${userId}
-            AND "searchVector" @@ query -- fts query using search var input, on searchVector column
+            AND "searchVector" @@ query -- fts query using search var input with alias 'query', on searchVector column
         ORDER BY rank DESC -- higher rank rows first
         LIMIT ${take} OFFSET ${skip}; -- skip some rows with given offset value, then only return the next 'take' amount of rows
         

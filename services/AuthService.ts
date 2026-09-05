@@ -23,6 +23,8 @@ export async function signUp(prevState: any, formData: FormData) {
     } catch (error) {
         if (isAPIError(error)) {
             // console.log('code: ' + error.statusCode);
+
+            // Return state info with status code
             return { statusCode: error.statusCode };
         }
     }
@@ -55,4 +57,5 @@ export async function signOut() {
 
     redirect('/');
 }
+
 /* Helper Methods */
