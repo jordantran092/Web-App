@@ -19,12 +19,7 @@ export async function updatePage({ id, ...data }: PageUpdateInput) {
     });
     if (!session) return unauthorized(); // next.js treats this as unauthenticated / not logged in
 
-    const page = await PageService.getPage(id, session);
-    if (!page) {
-        return notFound();
-    }
-
-    PageService.updatePage({ id, ...data }, session);
+    return await PageService.updatePage({ id, ...data }, session);
 }
 
 export async function getPage(id: string) {
@@ -34,7 +29,7 @@ export async function getPage(id: string) {
     });
     if (!session) return unauthorized();
 
-    return PageService.getPage(id, session);
+    return await PageService.getPage(id, session);
 }
 
 export async function createPage({ parentId, ...data }: PageCreateInput) {
@@ -54,7 +49,7 @@ export async function findMany() {
     });
     if (!session) return unauthorized();
 
-    return PageService.findMany(session);
+    return await PageService.findMany(session);
 }
 
 export async function renameTitleForParentOfThisPage(id: string, currentTitle: string) {
@@ -112,7 +107,7 @@ export async function getPagesFromFullTextSearch(search: string, currentPageNum:
     });
     if (!session) return unauthorized();
 
-    return PageService.getPagesFromFullTextSearch(session, search, currentPageNum);
+    return await PageService.getPagesFromFullTextSearch(session, search, currentPageNum);
 }
 
 export async function getHeadlinesFromFullTextSearchPages(pages: Page[], search: string) {
@@ -122,7 +117,7 @@ export async function getHeadlinesFromFullTextSearchPages(pages: Page[], search:
     });
     if (!session) return unauthorized();
 
-    return PageService.getHeadlinesFromFullTextSearchPages(pages, search);
+    return await PageService.getHeadlinesFromFullTextSearchPages(pages, search);
 }
 
 export async function count() {
@@ -132,7 +127,7 @@ export async function count() {
     });
     if (!session) return unauthorized();
 
-    return PageService.count();
+    return await PageService.count();
 }
 
 export async function deletePage(id: string) {
@@ -142,5 +137,5 @@ export async function deletePage(id: string) {
     });
     if (!session) return unauthorized();
 
-    PageService.deletePage(session, id);
+    await PageService.deletePage(session, id);
 }

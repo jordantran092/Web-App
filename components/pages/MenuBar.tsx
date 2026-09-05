@@ -21,6 +21,7 @@ import {
     HiOutlineStar,
     HiDotsHorizontal,
     HiStar,
+    HiOutlineTrash,
 } from 'react-icons/hi';
 import { Input } from '../ui/input';
 import { RefObject, useEffect, useRef, useState } from 'react';
@@ -28,6 +29,7 @@ import { PageUpdateInput } from '@/types/Page';
 import * as PageActions from '@/actions/PageActions';
 import SavingIndicator from './SavingIndicator';
 import { SidebarTrigger } from '../ui/sidebar';
+import { useRouter } from 'next/navigation';
 
 type MenuBarProps = {
     id: string;
@@ -62,6 +64,8 @@ export function MenuBar({
 
     const [isFavorite, setIsFavorite] = useState(favorite); // initial state will be retrieved from server via props
     const isFavoriteRef = useRef(favorite);
+
+    const router = useRouter(); // access to next.js navigation controls
 
     useEffect(() => {
         document.addEventListener('click', handleClick);
@@ -242,16 +246,18 @@ export function MenuBar({
                 <MenubarTrigger className="mr-2 shrink-0 hover:bg-[#bdbdbd38]">
                     <HiDotsHorizontal size={18} />
                 </MenubarTrigger>
-                {/* <MenubarContent>
+                <MenubarContent>
                     <MenubarGroup>
-                        <MenubarItem>
-                            Undo <MenubarShortcut>⌘Z</MenubarShortcut>
-                        </MenubarItem>
-                        <MenubarItem>
-                            Redo <MenubarShortcut>⇧⌘Z</MenubarShortcut>
+                        <MenubarItem
+                            onClick={() => {
+                                PageActions.deletePage(id);
+
+                                router.push('/');
+                            }}>
+                            <HiOutlineTrash className="mr-1" /> Move to Trash
                         </MenubarItem>
                     </MenubarGroup>
-                </MenubarContent> */}
+                </MenubarContent>
             </MenubarMenu>
         </Menubar>
     );
