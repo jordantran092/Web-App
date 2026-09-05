@@ -46,6 +46,7 @@ export const createPageBlock = createReactBlockSpec(
             );
         },
         meta: {
+            // text cursor not allowed on this
             selectable: false,
         },
     }

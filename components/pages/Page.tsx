@@ -109,25 +109,6 @@ export default function Page({
                         unsavedChangesRef={unsavedChangesRef}
                     />
 
-                    {/* <Separator
-                                orientation="vertical"
-                                className="mr-2 data-[orientation=vertical]:h-4"
-                            /> */}
-                    {/* <Breadcrumb>
-                                <BreadcrumbList>
-                                    <BreadcrumbItem>
-                                        <BreadcrumbPage className="line-clamp-1">
-                                            Project Management & Task Tracking
-                                        </BreadcrumbPage>
-                                    </BreadcrumbItem>
-                                </BreadcrumbList>
-                            </Breadcrumb> */}
-
-                    {/* <div className="ml-auto px-3">
-                            <NavActions />
-                        </div> */}
-                    {/* </header> */}
-                    {/* <div className=""> */}
                     {/* Use context hook to share setter method so that when `move to` is clicked, will display the search dialog */}
                     <SearchMenuOpenContext.Provider
                         value={{

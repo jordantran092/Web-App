@@ -30,28 +30,8 @@ export default async function Home() {
 
     const favoritePages = await PageService.getStarredPages(session, MAX_FAVORITE_PAGES_SIDEBAR);
 
-    // debug
-    // return PageActions.getPage({
-    //     id: 'aevkbwjzuficy1q6m5cfqw8basdasdasdasdasd',
-    //     favorite: true,
-    // });
-
-    // return PageActions.deletePage('aevkbwjzuficy1q6m5cfqw8basdasdasdasdasd');
-
     return (
         <>
-            {/* placeholder for now, sidebar impl could change this */}
-            {/* <Menubar modal={false} className="border-none">
-                <HiOutlineMenu size={23} />
-
-      
-                {session && (
-                    <form action={AuthActions.signOut}>
-                        <button>Log Out</button>
-                    </form>
-                )}
-            </Menubar> */}
-
             <Library
                 items={items}
                 favoritePages={favoritePages}

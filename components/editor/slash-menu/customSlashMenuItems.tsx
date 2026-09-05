@@ -62,7 +62,7 @@ export const getCustomSlashMenuItems = (
 ): DefaultReactSuggestionItem[] => {
     const items = getDefaultReactSlashMenuItems(editor);
     const index = items.findIndex((item) => item.title === 'Quote');
-    // Essentially insert at index of Quote and push Quote and the rest to right
+    // Essentially insert at index of Quote item and push Quote and the rest to right
     items.splice(index, 0, pageItem(editor, id));
 
     return items;

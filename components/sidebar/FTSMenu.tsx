@@ -145,7 +145,7 @@ export default function FTSMenu({ isFTSMenuOpen, setIsFTSMenuOpen }: FTSMenuProp
         itemsHeadlineRef.current = itemsHeadline;
     }, [itemsHeadline]);
 
-    // Get num of pages only when open menu, that seems like a point to get accurate count
+    // Get num of pages only when open menu, which seems like a point to get accurate count
     useEffect(() => {
         async function count() {
             totalPagesInDBRef.current = await PageActions.count();

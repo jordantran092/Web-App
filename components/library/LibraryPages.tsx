@@ -18,7 +18,7 @@ type LibraryPagesProps = {
 export default function LibraryPages({ items }: LibraryPagesProps) {
     const router = useRouter(); // access to next.js navigation controls
 
-    // Map each item in the array data pulled from DB, into command items, to render
+    // Map each item in the array data pulled from DB, into items, to render
     const itemsArr = items.map((item, index) => {
         const title = item.title;
 

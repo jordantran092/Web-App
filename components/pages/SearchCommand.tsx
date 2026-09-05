@@ -52,11 +52,6 @@ export default function SearchCommand({ id }: SearchCommandProps) {
             const pageArr = await PageActions.findMany();
             setItems(pageArr);
 
-            //debug
-            // const items = ['hello', 'two'];
-            // setItems(items);
-            // console.log('get pages');
-
             setLoading(false);
         }
 
@@ -68,6 +63,11 @@ export default function SearchCommand({ id }: SearchCommandProps) {
 
     // Map each item in the array data pulled from DB, into command items, to render
     const cmdItemsArr = items.map((item, index) => {
+        // Skip rendering current page, unnecessary to do so
+        if (item.id === id) {
+            return;
+        }
+
         const title = item.title;
 
         return (

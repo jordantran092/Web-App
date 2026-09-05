@@ -67,6 +67,7 @@ export function MenuBar({
 
     const router = useRouter(); // access to next.js navigation controls
 
+    // Track click for seeing if user clicks outside of title input later
     useEffect(() => {
         document.addEventListener('click', handleClick);
 

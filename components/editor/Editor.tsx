@@ -112,10 +112,11 @@ export default function Editor({
 
                             // debug
                             // console.log('saving!');
-                        } else {
-                            // debug
-                            // console.log('already saving!');
                         }
+                        // else {
+                        //     // debug
+                        //     // console.log('already saving!');
+                        // }
 
                         return true; // tell BlockNote the shortcut was handled, so that browser does not try to handle it with default response
                     },

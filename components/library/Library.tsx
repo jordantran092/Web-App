@@ -79,17 +79,6 @@ export default function Library({ items, favoritePages, userName }: LibraryProps
                             </Button>
                         </div>
 
-                        {/* Tabs */}
-                        {/* <div className="mt-10">
-                    <button
-                        className="flex rounded-sm p-1 text-lg transition duration-50 hover:bg-[#bdbdbd38]"
-                        onClick={() => setIsFavorite(true)}>
-                    
-                        <HiOutlineStar size={25} />
-                        Favorite
-                    </button>
-                </div> */}
-
                         <div className="mt-7 flex gap-5">
                             <label>
                                 {/* if don't add checked, then will allow multiple to be selected at once */}
@@ -100,11 +89,11 @@ export default function Library({ items, favoritePages, userName }: LibraryProps
                                     }}
                                     value={TABS.ALL}
                                     /*
-                            Sr-only hides an element visually while keeping it fully accessible to screen readers
+                                    Sr-only hides an element visually while keeping it fully accessible to screen readers
 
-                            peer used to style the immediately following span button sibling based on this checked state
+                                    peer used to style the immediately following span button sibling based on this checked state
 
-                            */
+                                    */
                                     className="peer sr-only"
                                     checked={currentTab === TABS.ALL}></input>
 
@@ -116,7 +105,6 @@ export default function Library({ items, favoritePages, userName }: LibraryProps
                                     )}>
                                     All
                                 </span>
-                                {/* block cursor-pointer rounded-lg border px-4 py-2 peer-checked:bg-blue-500 peer-checked:text-white */}
                             </label>
 
                             <label>
@@ -127,12 +115,7 @@ export default function Library({ items, favoritePages, userName }: LibraryProps
                                         setCurrentTab(e.currentTarget.value);
                                     }}
                                     value={TABS.FAVORITE}
-                                    /*
-                            Sr-only hides an element visually while keeping it fully accessible to screen readers
 
-                            peer used to style the immediately following span button sibling based on this checked state
-
-                            */
                                     className="peer sr-only"
                                     checked={currentTab === TABS.FAVORITE}></input>
 
@@ -144,23 +127,6 @@ export default function Library({ items, favoritePages, userName }: LibraryProps
                                     <HiStar size={25} /> Favorites
                                 </span>
                             </label>
-
-                            {/* <label
-                        className={cn(
-                            buttonVariants({ variant: 'default' }),
-                            'bg-neutral-800! text-white! hover:bg-neutral-800/80!'
-                        )}>
-                        
-                        <input
-                            type="radio"
-                            onChange={(e) => {
-                                setCurrentTab(e.currentTarget.value);
-                            }}
-                            value={TABS.RECENT}
-                            className=""
-                            checked={currentTab === TABS.RECENT}></input>
-                        Recent
-                    </label> */}
                         </div>
 
                         <div className="mt-10">
