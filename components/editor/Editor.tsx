@@ -172,7 +172,7 @@ export default function Editor({
                     confirmSearchTimerDoneRef.current = true;
 
                     unsavedChangesRef.current = false;
-                }, 2000);
+                }, 500);
             }
         });
 

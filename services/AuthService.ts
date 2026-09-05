@@ -3,35 +3,49 @@
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
+import { APIError, isAPIError } from 'better-auth/api';
 
-export async function signUp(formData: FormData) {
+export async function signUp(prevState: any, formData: FormData) {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
     const name = formData.get('name') as string;
 
-    await auth.api.signUpEmail({
-        body: {
-            email,
-            password,
-            name,
-        },
-    });
+    try {
+        await auth.api.signUpEmail({
+            body: {
+                email,
+                password,
+                name,
+            },
+        });
 
-    redirect('/');
+        return { statusCode: 200 };
+    } catch (error) {
+        if (isAPIError(error)) {
+            // console.log('code: ' + error.statusCode);
+            return { statusCode: error.statusCode };
+        }
+    }
 }
 
-export async function signIn(formData: FormData) {
+export async function signIn(prevState: any, formData: FormData) {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
-    await auth.api.signInEmail({
-        body: {
-            email,
-            password,
-        },
-    });
+    try {
+        await auth.api.signInEmail({
+            body: {
+                email,
+                password,
+            },
+        });
 
-    redirect('/');
+        return { statusCode: 200 };
+    } catch (error) {
+        if (isAPIError(error)) {
+            return { statusCode: error.statusCode };
+        }
+    }
 }
 
 export async function signOut() {

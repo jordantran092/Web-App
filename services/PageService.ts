@@ -59,7 +59,7 @@ export async function getContentOfPage(session: Session, id: string) {
         throw new Error(ERROR.NOT_FOUND);
     }
 
-    let initialContent: Block[] = [];
+    let initialContent: Block<MyDefaultBlockSchema, any, any>[] = [];
 
     /* Business level authorization check to see if user owns this page */
     if (await doesUserOwnPage(session, id)) {
@@ -70,7 +70,7 @@ export async function getContentOfPage(session: Session, id: string) {
         const blocks = page.blocks;
 
         // need initialContent prop as a Block[]. Null checking to avoid JSON parse gives error
-        if (blocks) initialContent = JSON.parse(blocks) as Block[];
+        if (blocks) initialContent = JSON.parse(blocks) as Block<MyDefaultBlockSchema, any, any>[];
     } else {
         throw new Error(ERROR.UNAUTHORIZED);
     }

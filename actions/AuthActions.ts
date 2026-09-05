@@ -2,10 +2,10 @@
 
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
-import { forbidden, unauthorized } from 'next/navigation';
+import { forbidden, redirect, unauthorized } from 'next/navigation';
 import * as AuthService from '@/services/AuthService';
 
-export async function signUp(formData: FormData) {
+export async function signUp(prevState: any, formData: FormData) {
     // Check if any valid session / logged in
     const session = await auth.api.getSession({
         headers: await headers(),
@@ -13,10 +13,14 @@ export async function signUp(formData: FormData) {
     if (session) return forbidden();
 
     // If not logged in, allow sign up
-    await AuthService.signUp(formData); // must have await or else next.js won't be able to receive the redirect exception within the promise
+    const state = await AuthService.signUp(prevState, formData);
+
+    if (state?.statusCode === 200) redirect('/'); // If don't check state now, then it will be returned into the state for the useActionState of the form which won't trigger redirect
+
+    return state;
 }
 
-export async function signIn(formData: FormData) {
+export async function signIn(prevState: any, formData: FormData) {
     // Check if any valid session / logged in
     const session = await auth.api.getSession({
         headers: await headers(),
@@ -24,7 +28,11 @@ export async function signIn(formData: FormData) {
     if (session) return forbidden();
 
     // If not logged in, allow sign in
-    await AuthService.signIn(formData);
+    const state = await AuthService.signIn(prevState, formData);
+
+    if (state?.statusCode === 200) redirect('/');
+
+    return state;
 }
 
 export async function signOut() {
