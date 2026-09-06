@@ -28,6 +28,7 @@ import { MyDefaultBlockSchema, MyStyleSchema, schema } from './schema/CustomSche
 import { CustomSideMenu } from './side-menu/CustomSideMenu';
 import { SearchMenuOpenContext } from '../pages/Page';
 import { getText } from '@/utils/block-utils';
+import { getCustomSlashMenuItems } from './slash-menu/CustomSlashMenuItems';
 
 type EditorProps = {
     id: string;
