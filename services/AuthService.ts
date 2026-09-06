@@ -4,8 +4,9 @@ import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 import { APIError, isAPIError } from 'better-auth/api';
+import { ReadonlyHeaders } from 'next/dist/server/web/spec-extension/adapters/headers';
 
-export async function signUp(prevState: any, formData: FormData) {
+export async function signUp(prevState: any, formData: FormData, currentHeaders: ReadonlyHeaders) {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
     const name = formData.get('name') as string;
@@ -17,6 +18,7 @@ export async function signUp(prevState: any, formData: FormData) {
                 password,
                 name,
             },
+            headers: currentHeaders, // Guarantees nextCookies() works on Vercel
         });
 
         return { statusCode: 200, redirectTo: '/' };

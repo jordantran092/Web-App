@@ -13,8 +13,6 @@ export const auth = betterAuth({
         enabled: true,
     },
 
-    plugins: [nextCookies()], // this makes sure cookies are being updated properly when doing auth. also make sure this is the last plugin in the array
-
     // Ensure this relies precisely on the environment variable we added
     baseURL: process.env.BETTER_AUTH_URL,
 
@@ -29,6 +27,8 @@ export const auth = betterAuth({
             enabled: false, // Disable the local cache temporarily to ensure clean hits
         },
     },
+
+    plugins: [nextCookies()], // this makes sure cookies are being updated properly when doing auth. also make sure this is the last plugin in the array
 });
 
 export type Session = typeof auth.$Infer.Session;

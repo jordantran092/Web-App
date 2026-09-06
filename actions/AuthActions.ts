@@ -6,16 +6,16 @@ import { forbidden, redirect, unauthorized } from 'next/navigation';
 import * as AuthService from '@/services/AuthService';
 
 export async function signUp(prevState: any, formData: FormData) {
+    const currentHeaders = await headers(); // Extract headers safely up top
+
     // Check if any valid session / logged in
     const session = await auth.api.getSession({
-        headers: await headers(),
+        headers: currentHeaders,
     });
     if (session) return forbidden();
 
     // If not logged in, allow sign up
-    const state = await AuthService.signUp(prevState, formData);
-
-    // if (state?.statusCode === 200) redirect('/');
+    const state = await AuthService.signUp(prevState, formData, currentHeaders);
 
     return state;
 }
