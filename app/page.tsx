@@ -12,7 +12,6 @@ import { Page } from './generated/prisma/client';
 import Library from '@/components/library/Library';
 import { MAX_FAVORITE_PAGES_SIDEBAR } from '@/utils/app-constants';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import * as PageActions from '@/actions/PageActions';
 
 export default async function Home() {
     const session = await auth.api.getSession({
