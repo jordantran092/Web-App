@@ -2,9 +2,6 @@ import { LoginForm } from '@/components/LoginForm';
 import { APP_NAME } from '@/utils/app-constants';
 import Image from 'next/image';
 
-// export const dynamic = 'force-dynamic'; // forces Next.js/Vercel to never cache this page
-// export const revalidate = 0; // tells the Vercel CDN that the age is immediately stale
-
 export default function SignInPage() {
     return (
         <>

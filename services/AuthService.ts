@@ -18,7 +18,7 @@ export async function signUp(prevState: any, formData: FormData, currentHeaders:
                 password,
                 name,
             },
-            headers: currentHeaders, // Makes sure nextCookies() works on Vercel
+            // headers: currentHeaders, // Makes sure nextCookies() works on Vercel
         });
 
         return { statusCode: 200, redirectTo: '/' };
