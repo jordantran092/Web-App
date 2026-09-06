@@ -57,7 +57,7 @@ export function SignupForm() {
             <form action={formAction}>
                 <FieldGroup>
                     <Field>
-                        <FieldLabel htmlFor="name">Full Name</FieldLabel>
+                        <FieldLabel htmlFor="name">Name</FieldLabel>
                         <Input
                             id="name"
                             type="text"

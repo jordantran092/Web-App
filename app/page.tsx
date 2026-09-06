@@ -14,10 +14,6 @@ import { MAX_FAVORITE_PAGES_SIDEBAR } from '@/utils/app-constants';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 
 export default async function Home() {
-    console.log('DATABASE HOST:', new URL(process.env.DATABASE_URL!).hostname);
-    console.log('DATABASE USER:', new URL(process.env.DATABASE_URL!).username);
-    console.log('DATABASE NAME:', new URL(process.env.DATABASE_URL!).pathname);
-
     const session = await auth.api.getSession({
         headers: await headers(),
     });

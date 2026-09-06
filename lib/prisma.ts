@@ -12,6 +12,8 @@ if (!databaseUrl) {
 
 const adapter = new PrismaPg({
     connectionString: databaseUrl,
+
+    // Prisma 7, SSL certificate behavior. tells the PostgreSQL client to use SSL encryption, but not to verify that the server's SSL certificate is trusted. Lightsail requires SSL. Or else will get denied access to database error
     ssl: {
         rejectUnauthorized: false,
     },
