@@ -16,17 +16,7 @@ export const auth = betterAuth({
     // Ensure this relies precisely on the environment variable we added
     baseURL: process.env.BETTER_AUTH_URL,
 
-    // Allow cookies to handle Vercel deployment subdomains properly
-    advanced: {
-        useSecureCookies: true, // Forces production HTTPS cookies
-        trustedProxyHeaders: true, // Crucial for Vercel edge networks
-    },
-
-    session: {
-        cookieCache: {
-            enabled: false, // Disable the local cache temporarily to ensure clean hits
-        },
-    },
+    trustedOrigins: ['https://minto-jt.vercel.app', 'http://localhost:3000'],
 
     plugins: [nextCookies()], // this makes sure cookies are being updated properly when doing auth. also make sure this is the last plugin in the array
 });

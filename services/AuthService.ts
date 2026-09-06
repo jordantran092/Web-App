@@ -12,7 +12,7 @@ export async function signUp(prevState: any, formData: FormData, currentHeaders:
     const name = formData.get('name') as string;
 
     try {
-        await auth.api.signUpEmail({
+        const result = await auth.api.signUpEmail({
             body: {
                 email,
                 password,
@@ -20,6 +20,8 @@ export async function signUp(prevState: any, formData: FormData, currentHeaders:
             },
             headers: currentHeaders, // Guarantees nextCookies() works on Vercel
         });
+
+        console.log('SIGNUP RESULT:', result);
 
         return { statusCode: 200, redirectTo: '/' };
     } catch (error) {
@@ -47,6 +49,8 @@ export async function signIn(prevState: any, formData: FormData) {
         return { statusCode: 200, redirectTo: '/' };
     } catch (error) {
         if (isAPIError(error)) {
+            console.error('SIGNUP ERROR:', error);
+
             return { statusCode: error.statusCode };
         }
     }
