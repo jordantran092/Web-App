@@ -7,13 +7,23 @@ import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui
 import { Input } from '@/components/ui/input';
 import * as AuthActions from '@/actions/AuthActions';
 import Link from 'next/link';
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 import { AlertError } from './AlertError';
+import type { AuthState } from '../types/Auth.d.ts';
+import { useRouter } from 'next/navigation';
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
     const [state, formAction] = useActionState(AuthActions.signIn, {
         statusCode: -1,
+        redirectTo: '',
     });
+    const router = useRouter(); // access to next.js navigation controls
+
+    useEffect(() => {
+        if (state?.statusCode === 200 && state.redirectTo) {
+            router.push(state.redirectTo);
+        }
+    }, [state]);
 
     // Props come from parent component div and only accepts div attributes, also pulling the className
     return (

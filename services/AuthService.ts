@@ -19,7 +19,7 @@ export async function signUp(prevState: any, formData: FormData) {
             },
         });
 
-        return { statusCode: 200 };
+        return { statusCode: 200, redirectTo: '/' };
     } catch (error) {
         if (isAPIError(error)) {
             // console.log('code: ' + error.statusCode);
@@ -42,7 +42,7 @@ export async function signIn(prevState: any, formData: FormData) {
             },
         });
 
-        return { statusCode: 200 };
+        return { statusCode: 200, redirectTo: '/' };
     } catch (error) {
         if (isAPIError(error)) {
             return { statusCode: error.statusCode };

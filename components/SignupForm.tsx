@@ -7,13 +7,22 @@ import { Input } from '@/components/ui/input';
 import * as AuthActions from '@/actions/AuthActions';
 import Link from 'next/link';
 import { APP_NAME } from '@/utils/app-constants';
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 import { AlertError } from './AlertError';
+import { useRouter } from 'next/navigation';
 
 export function SignupForm() {
     const [state, formAction] = useActionState(AuthActions.signUp, {
         statusCode: -1,
+        redirectTo: '',
     });
+    const router = useRouter(); // access to next.js navigation controls
+
+    useEffect(() => {
+        if (state?.statusCode === 200 && state.redirectTo) {
+            router.push(state.redirectTo);
+        }
+    }, [state]);
 
     let errorStr = '';
 

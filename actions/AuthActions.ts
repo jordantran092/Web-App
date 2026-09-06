@@ -15,7 +15,7 @@ export async function signUp(prevState: any, formData: FormData) {
     // If not logged in, allow sign up
     const state = await AuthService.signUp(prevState, formData);
 
-    if (state?.statusCode === 200) redirect('/'); // If don't check state now, then it will be returned into the state for the useActionState of the form which won't trigger redirect
+    // if (state?.statusCode === 200) redirect('/');
 
     return state;
 }
@@ -29,8 +29,6 @@ export async function signIn(prevState: any, formData: FormData) {
 
     // If not logged in, allow sign in
     const state = await AuthService.signIn(prevState, formData);
-
-    if (state?.statusCode === 200) redirect('/');
 
     return state;
 }
