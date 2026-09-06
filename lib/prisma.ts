@@ -12,6 +12,9 @@ if (!databaseUrl) {
 
 const adapter = new PrismaPg({
     connectionString: databaseUrl,
+    ssl: {
+        rejectUnauthorized: false,
+    },
 });
 export const prisma = globalForPrisma.prisma || new PrismaClient({ adapter: adapter }); // passing in object that has property adapter using your adapter var
 
