@@ -7,7 +7,7 @@ import { Block } from '@blocknote/core/blocks';
 import * as ERROR from '@/utils/app-constants';
 import { forbidden, notFound } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { EMPTY, NOT_FOUND } from '@/utils/app-constants';
+import { NOT_FOUND } from '@/utils/app-constants';
 import { MyDefaultBlockSchema } from '@/components/editor/schema/CustomSchema';
 import { Page } from '@/app/generated/prisma/client';
 import { getText } from '@/utils/block-utils';
@@ -80,7 +80,7 @@ export async function getContentOfPage(session: Session, id: string) {
 }
 
 export async function createPage({ parentId, ...data }: PageCreateInput, session: Session) {
-    if (parentId !== EMPTY && !(await doesUserOwnPage(session, parentId))) {
+    if (parentId !== null && !(await doesUserOwnPage(session, parentId))) {
         return forbidden();
     }
 
@@ -89,12 +89,20 @@ export async function createPage({ parentId, ...data }: PageCreateInput, session
             favorite: data.favorite,
             title: data.title,
             blocks: data.blocks,
-            parentId: parentId,
+
+            // Connect parentId, using parent relation, using ... spread operator conditionally to include in data object if eval to true. Because parentId could be null, and trying to assign it to a page with id null does not make sense and gives error
+            ...(parentId !== null && {
+                parent: {
+                    connect: {
+                        id: parentId,
+                    },
+                },
+            }),
 
             // Need to fill in user. Page has to be connected to the user's id because they are related in the schema
             user: {
                 connect: {
-                    id: data.user, // id referred to here is the User entity
+                    id: data.user, // id referred to here is the User entity's id attribute
                 },
             },
         },
@@ -130,7 +138,7 @@ export async function renameTitleForParentOfThisPage(
     const parentId = page.parentId;
 
     // If page has a parent, if not it could be a root page which is fine
-    if (parentId !== EMPTY) {
+    if (parentId !== null) {
         const parentPage = await getPage(parentId, session);
 
         // Shouldn't happen, but in case
@@ -180,7 +188,7 @@ export async function getBreadcrumb(session: Session, id: string) {
 
     const breadcrumbArr: Page[] = [currentPage];
     let parentId = currentPage.parentId;
-    while (parentId !== EMPTY) {
+    while (parentId !== null) {
         currentPage = await getPage(parentId, session);
 
         // addFirst so that root page is first, ultimately
@@ -283,6 +291,8 @@ export async function deletePage(session: Session, id: string) {
     await prisma.page.delete({
         where: { id },
     });
+
+    // On delete cascade in schema will delete all child pages for us, when this current page is deleted
 }
 
 /* 
@@ -331,7 +341,7 @@ async function deleteBlockInParentPage(session: Session, id: string) {
     const parentId = page.parentId;
 
     // If page has a parent, if not it could be a root page which is fine
-    if (parentId !== EMPTY) {
+    if (parentId !== null) {
         const parentPage = await getPage(parentId, session);
 
         // Shouldn't happen, but in case

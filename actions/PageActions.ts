@@ -5,7 +5,7 @@ import { MyDefaultBlockSchema } from '@/components/editor/schema/CustomSchema';
 import { auth } from '@/lib/auth';
 import * as PageService from '@/services/PageService';
 import { PageCreateInput, PageUpdateInput } from '@/types/Page';
-import { EMPTY, NOT_FOUND } from '@/utils/app-constants';
+import { NOT_FOUND } from '@/utils/app-constants';
 import { Block } from '@blocknote/core/blocks';
 import { headers } from 'next/headers';
 import { notFound, redirect, unauthorized } from 'next/navigation';
@@ -90,7 +90,7 @@ export async function createNewPageInLibrary() {
 
     const page = await PageService.createPage(
         {
-            parentId: EMPTY,
+            parentId: null,
             title: 'New page',
             user: session.user.id,
         },

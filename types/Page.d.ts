@@ -13,7 +13,7 @@ export type PageCreateInput = {
     blocks?: string;
     textContent?: string;
     user: string; // user id to connect to
-    parentId: string;
+    parentId: string | null;
 };
 
 export type Headline = {
