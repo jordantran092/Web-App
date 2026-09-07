@@ -84,7 +84,7 @@ export default function Editor({
                                 .trim();
 
                             // debug
-                            console.log(textContent);
+                            // console.log(textContent);
 
                             const pageEntity: PageUpdateInput = {
                                 id: id,

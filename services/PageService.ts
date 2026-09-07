@@ -228,7 +228,7 @@ export async function getPagesFromFullTextSearch(
     // ts_rank_cd for higher prio if search words closer together instead of ts_rank which favors word frequency
     const result = (await prisma.$queryRaw`
         SELECT "id", "favorite", "title", "blocks", "textContent", "parentId", "userId", ts_rank_cd("searchVector", query) AS rank
-        FROM "Page", websearch_to_tsquery(${search}) query
+        FROM "Page", websearch_to_tsquery('english', ${search}) query
         WHERE "userId" = ${userId}
             AND "searchVector" @@ query -- fts query using search var input with alias 'query', on searchVector column
         ORDER BY rank DESC -- higher rank rows first
