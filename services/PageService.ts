@@ -12,6 +12,7 @@ import { MyDefaultBlockSchema } from '@/components/editor/schema/CustomSchema';
 import { Page } from '@/app/generated/prisma/client';
 import { getText } from '@/utils/block-utils';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
+import { blocksToMarkdown } from '@blocknote/core';
 
 export async function updatePage({ id, ...data }: PageUpdateInput, session: Session) {
     if (!(await doesUserOwnPage(session, id))) {
@@ -138,18 +139,12 @@ export async function renameTitleForParentOfThisPage(
         // Must type correctly or else won't recognize pageBlock type
         const blocks = JSON.parse(parentPage.blocks) as Block<MyDefaultBlockSchema, any, any>[];
 
-        let foundParentBlock = false;
-        // We know it's a Block<MyDefaultBlockSchema, any, any>[] and specifically a page block which has no actual typescript type, so use any to make it simpler
-        let block: any = null;
-        let foundIdx = -1;
-        for (let i = 0; !foundParentBlock && i < blocks.length; ++i) {
-            block = blocks.at(i);
-            foundParentBlock = block.props.pageId === id;
-            foundIdx = i;
-        }
+        const blockInfoInParentPage = getBlockInfoInParentPage(blocks, id);
 
-        // Replace parentBlock at its index with the new block with new title
-        const parentBlock = block as Block<MyDefaultBlockSchema, any, any>;
+        const parentBlock = blockInfoInParentPage.parentBlock;
+        const foundIdx = blockInfoInParentPage.idxOfBlockInParent;
+
+        /* Replace parentBlock at its index with the new block with new title */
 
         // Must type correctly or else won't recognize pageBlock type
         const newParentBlock: Block<MyDefaultBlockSchema, any, any> = {
@@ -278,6 +273,18 @@ export async function getSidebarStarredPages(session: Session) {
     });
 }
 
+export async function deletePage(session: Session, id: string) {
+    if (!(await doesUserOwnPage(session, id))) {
+        return forbidden();
+    }
+
+    await deleteBlockInParentPage(session, id);
+
+    await prisma.page.delete({
+        where: { id },
+    });
+}
+
 /* 
 
 Helper Methods
@@ -297,12 +304,57 @@ async function doesUserOwnPage(session: Session, id: string) {
     return page?.userId == userId ? true : false;
 }
 
-export async function deletePage(session: Session, id: string) {
-    if (!(await doesUserOwnPage(session, id))) {
-        return forbidden();
+function getBlockInfoInParentPage(
+    blocks: Block<MyDefaultBlockSchema, any, any>[],
+    childPageId: string
+) {
+    // blocks refer to parent page's blocks
+
+    let foundParentBlock = false;
+    // We know it's a Block<MyDefaultBlockSchema, any, any>[] and specifically a page block which has no actual typescript type, so use any to make it simpler
+    let block: any = null;
+    let foundIdx = -1;
+    for (let i = 0; !foundParentBlock && i < blocks.length; ++i) {
+        block = blocks.at(i);
+        foundParentBlock = block.props.pageId === childPageId;
+        foundIdx = i;
     }
 
-    await prisma.page.delete({
-        where: { id },
-    });
+    const parentBlock = block as Block<MyDefaultBlockSchema, any, any>;
+
+    return { parentBlock: parentBlock, idxOfBlockInParent: foundIdx };
+}
+
+async function deleteBlockInParentPage(session: Session, id: string) {
+    const page = await getPage(id, session);
+
+    const parentId = page.parentId;
+
+    // If page has a parent, if not it could be a root page which is fine
+    if (parentId !== EMPTY) {
+        const parentPage = await getPage(parentId, session);
+
+        // Shouldn't happen, but in case
+        if (!parentPage.blocks) throw new Error('No parent page blocks found');
+
+        // Must type correctly or else won't recognize pageBlock type
+        const blocks = JSON.parse(parentPage.blocks) as Block<MyDefaultBlockSchema, any, any>[];
+
+        const blockInfoInParentPage = getBlockInfoInParentPage(blocks, id);
+
+        // const parentBlock = blockInfoInParentPage.parentBlock;
+        const foundIdx = blockInfoInParentPage.idxOfBlockInParent;
+
+        // Delete block at foundIdx
+        blocks.splice(foundIdx, 1);
+
+        // Not related to autosave
+        const pageEntity: PageUpdateInput = {
+            id: parentId,
+            blocks: JSON.stringify(blocks),
+            textContent: getText(blocks),
+        };
+
+        updatePage(pageEntity, session);
+    }
 }
