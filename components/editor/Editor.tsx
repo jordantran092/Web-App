@@ -78,13 +78,18 @@ export default function Editor({
                     'Mod-s': ({ editor }) => {
                         // do not allow saving if already in process of saving to avoid any desync of values
                         if (!(isSavingRef.current || isSavingTimerOnRef.current)) {
+                            const textContent = editor._tiptapEditor
+                                .getText()
+                                .replace(/\s+/g, ' ')
+                                .trim();
+
+                            // debug
+                            console.log(textContent);
+
                             const pageEntity: PageUpdateInput = {
                                 id: id,
                                 blocks: JSON.stringify(editor.document),
-                                textContent: editor._tiptapEditor
-                                    .getText()
-                                    .replace(/\s+/g, ' ')
-                                    .trim(), // to get only text content, multi spaces removed so words still stay separate
+                                textContent, // to get only text content, multi spaces removed so words still stay separate
                             };
 
                             // update refs immediately so any subsequent fast events see the in-flight save
